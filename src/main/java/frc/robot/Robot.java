@@ -4,9 +4,15 @@
 
 package frc.robot;
 
+import com.revrobotics.REVPhysicsSim;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Drive;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -16,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  private Drive m_drive;
 
   private RobotContainer m_robotContainer;
 
@@ -95,7 +102,10 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+    REVPhysicsSim.getInstance().addSparkMax(m_drive.getLeft(), DCMotor.getNEO(2));
+    REVPhysicsSim.getInstance().addSparkMax(m_drive.getRight(), DCMotor.getNEO(2));
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
