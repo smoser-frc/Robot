@@ -22,7 +22,7 @@ import frc.robot.subsystems.Drive;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  private Drive m_drive;
+  private Drive m_drive = new Drive();
 
   private RobotContainer m_robotContainer;
 
@@ -103,8 +103,6 @@ public class Robot extends TimedRobot {
   /** This function is called once when the robot is first started up. */
   @Override
   public void simulationInit() {
-    REVPhysicsSim.getInstance().addSparkMax(m_drive.getLeft(), DCMotor.getNEO(2));
-    REVPhysicsSim.getInstance().addSparkMax(m_drive.getRight(), DCMotor.getNEO(2));
   }
 
   /** This function is called periodically whilst in simulation. */
