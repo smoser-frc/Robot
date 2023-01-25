@@ -10,10 +10,12 @@ import frc.robot.commands.DriveTank;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.SimDrive;
 
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -30,6 +32,7 @@ public class RobotContainer {
   //Dont remove example until autons are programmed
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Drive m_drive = new Drive();
+  private final SimDrive m_simDrive = new SimDrive();
 
   private final XboxController leftStick = new XboxController(0);
   private final XboxController rightStick = new XboxController(1);
@@ -43,7 +46,12 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
 
-    m_drive.setDefaultCommand(new DriveTank(m_drive, leftStick::getLeftY, leftStick::getRightY, speed));
+    if(RobotBase.isSimulation()){
+      m_simDrive.setDefaultCommand(new DriveTank(m_simDrive, leftStick::getLeftY, rightStick::getLeftY, speed));
+    }
+    else{
+      m_drive.setDefaultCommand(new DriveTank(m_drive, leftStick::getLeftY, rightStick::getLeftY, speed));
+    }
   }
 
   /**
