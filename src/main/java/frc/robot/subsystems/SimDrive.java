@@ -39,7 +39,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class SimDrive extends SubsystemBase {
+public class SimDrive extends Drive {
   
   public SimDrive() {
 
@@ -82,15 +82,6 @@ public class SimDrive extends SubsystemBase {
 
     driveTrain.tankDrive(lSpeed.getAsDouble() * pOutput, rSpeed.getAsDouble() * pOutput);
   }
-
-  public PWMSparkMax getLeft(){
-    return leftFront;
-  }
-
-public PWMSparkMax getRight(){
-  return rightFront;
-}
-
 
   @Override
   public void periodic() {

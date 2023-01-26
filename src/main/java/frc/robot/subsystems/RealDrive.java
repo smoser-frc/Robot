@@ -14,15 +14,22 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Drive extends SubsystemBase {
+public class RealDrive extends Drive {
   
-  public Drive() {}
+  public RealDrive() {
+    leftGroup.setInverted(true);
+  }
 
-  private static CANSparkMax leftMotor = new CANSparkMax(8, MotorType.kBrushless);
-  private static CANSparkMax rightMotor = new CANSparkMax(9, MotorType.kBrushless);
+  private CANSparkMax leftFront = new CANSparkMax(1, MotorType.kBrushless);
+  private CANSparkMax leftBack = new CANSparkMax(2, MotorType.kBrushless);
+  private CANSparkMax rightFront = new CANSparkMax(3, MotorType.kBrushless);
+  private CANSparkMax rightBack = new CANSparkMax(4, MotorType.kBrushless);
 
-  private DifferentialDrive driveTrain = new DifferentialDrive(leftMotor, rightMotor);
+  private MotorControllerGroup leftGroup = new MotorControllerGroup(leftBack, leftFront);
+  private MotorControllerGroup rightGroup = new MotorControllerGroup(rightFront, rightBack);
 
+  private DifferentialDrive driveTrain = new DifferentialDrive(leftGroup, rightGroup);
+  
   public void setTankDrive(DoubleSupplier lSpeed, DoubleSupplier rSpeed, Double pOutput){
 
     driveTrain.tankDrive(lSpeed.getAsDouble() * pOutput, rSpeed.getAsDouble() * pOutput);

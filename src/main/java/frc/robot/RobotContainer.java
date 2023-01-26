@@ -10,6 +10,7 @@ import frc.robot.commands.DriveTank;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.RealDrive;
 import frc.robot.subsystems.SimDrive;
 
 import java.util.function.DoubleSupplier;
@@ -31,7 +32,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //Dont remove example until autons are programmed
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final Drive m_drive = new Drive();
+  private final Drive m_realDrive = new RealDrive();
   private final SimDrive m_simDrive = new SimDrive();
 
   private final XboxController leftStick = new XboxController(0);
@@ -47,10 +48,10 @@ public class RobotContainer {
     configureBindings();
 
     if(RobotBase.isSimulation()){
-      m_simDrive.setDefaultCommand(new DriveTank(m_simDrive, leftStick::getLeftY, rightStick::getLeftY, speed));
+      m_simDrive.setDefaultCommand(new DriveTank(m_simDrive, leftStick::getLeftY, leftStick::getRightY, speed));
     }
     else{
-      m_drive.setDefaultCommand(new DriveTank(m_drive, leftStick::getLeftY, rightStick::getLeftY, speed));
+      m_realDrive.setDefaultCommand(new DriveTank(m_realDrive, leftStick::getLeftY, rightStick::getLeftY, speed));
     }
   }
 
