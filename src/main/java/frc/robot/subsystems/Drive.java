@@ -6,25 +6,26 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 public class Drive extends SubsystemBase {
   
-  public Drive() {}
+  protected final Field2d m_field = new Field2d();
+  protected DifferentialDrive driveTrain;
+  protected MotorControllerGroup leftGroup;
+  protected MotorControllerGroup rightGroup;
+  protected DifferentialDriveOdometry odometer;
 
-  private static CANSparkMax leftMotor = new CANSparkMax(8, MotorType.kBrushless);
-  private static CANSparkMax rightMotor = new CANSparkMax(9, MotorType.kBrushless);
-
-  private DifferentialDrive driveTrain = new DifferentialDrive(leftMotor, rightMotor);
+  public Drive() {
+    SmartDashboard.putData("field", m_field);
+  }
 
   public void setTankDrive(DoubleSupplier lSpeed, DoubleSupplier rSpeed, Double pOutput){
-
     driveTrain.tankDrive(lSpeed.getAsDouble() * pOutput, rSpeed.getAsDouble() * pOutput);
   }
 

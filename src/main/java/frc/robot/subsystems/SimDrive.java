@@ -4,83 +4,46 @@
 
 package frc.robot.subsystems;
 
-import java.util.function.DoubleSupplier;
-
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.EncoderType;
-import com.revrobotics.REVPhysicsSim;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxRelativeEncoder;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import edu.wpi.first.hal.SimDouble;
-import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.simulation.ADXRS450_GyroSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SimDrive extends Drive {
-  
-  public SimDrive() {
 
-    SmartDashboard.putData("field", m_field);
-
-    odometer = new DifferentialDriveOdometry(dtSim.getHeading(), leftEncoder.getDistance(), rightEncoder.getDistance());
-    if(RobotBase.isSimulation()){
-    gyroSim = new ADXRS450_GyroSim(m_gyro);
-    }
-    else{
-      gyroSim = null;
-    }
-  }
-
-  private final Field2d m_field = new Field2d();
-
-  private final DifferentialDriveOdometry odometer;
   private static PWMSparkMax leftFront = new PWMSparkMax(0);
   private static PWMSparkMax leftBack = new PWMSparkMax(1);
   private static PWMSparkMax rightFront = new PWMSparkMax(2);
   private static PWMSparkMax rightBack = new PWMSparkMax(3);
-
   private static Encoder leftEncoder = new Encoder(1, 2);
   private static Encoder rightEncoder = new Encoder(3, 4);
-
   private EncoderSim lEncSim = new EncoderSim(leftEncoder);
   private EncoderSim rEncSim = new EncoderSim(rightEncoder);
-
-  private static MotorControllerGroup leftGroup = new MotorControllerGroup(leftBack, leftFront);
-  private static MotorControllerGroup rightGroup = new MotorControllerGroup(rightFront, rightBack);
-
-  private static DifferentialDrive driveTrain = new DifferentialDrive(leftGroup, rightGroup);
-
-  private static DifferentialDrivetrainSim dtSim = new DifferentialDrivetrainSim(DCMotor.getNeo550(2), 8.451, 6, 57, Units.inchesToMeters(3), Units.inchesToMeters(22.5), null);
-
+  private static DifferentialDrivetrainSim dtSim;
   private static ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
   private final ADXRS450_GyroSim gyroSim;
   
-  public void setTankDrive(DoubleSupplier lSpeed, DoubleSupplier rSpeed, Double pOutput){
+  public SimDrive() {
+    super();
 
-    driveTrain.tankDrive(lSpeed.getAsDouble() * pOutput, rSpeed.getAsDouble() * pOutput);
+    leftGroup = new MotorControllerGroup(leftBack, leftFront);
+    rightGroup = new MotorControllerGroup(rightFront, rightBack);
+    leftGroup.setInverted(true);
+    driveTrain = new DifferentialDrive(leftGroup, rightGroup);
+    dtSim = new DifferentialDrivetrainSim(DCMotor.getNeo550(2), 8.451, 6, 57, Units.inchesToMeters(3), Units.inchesToMeters(22.5), null);
+
+    odometer = new DifferentialDriveOdometry(dtSim.getHeading(), leftEncoder.getDistance(), rightEncoder.getDistance());
+    gyroSim = new ADXRS450_GyroSim(m_gyro);
   }
 
   @Override
