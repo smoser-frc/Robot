@@ -9,8 +9,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.ArmForeward;
+import frc.robot.commands.ArmReverse;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DriveTank;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.RealDrive;
@@ -29,12 +32,12 @@ public class RobotContainer {
   private Drive m_drive;
   private final Drive m_realDrive = new RealDrive();
   private final SimDrive m_simDrive = new SimDrive();
+  private final Arm m_arm = new Arm();
 
   private final XboxController leftStick = new XboxController(0);
   private final XboxController rightStick = new XboxController(1);
+  private final XboxController coDriver = new XboxController(2);
   // private final XboxController xboxController = new XboxController(2);
-
-  private Double speed = 1.0;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -43,11 +46,13 @@ public class RobotContainer {
 
     if (RobotBase.isSimulation()) {
       m_simDrive.setDefaultCommand(
-          new DriveTank(m_simDrive, leftStick::getLeftY, leftStick::getRightY, speed));
+          new DriveTank(
+              m_simDrive, leftStick::getLeftY, leftStick::getRightY, Constants.driveSpeed));
       m_drive = m_simDrive;
     } else {
       m_realDrive.setDefaultCommand(
-          new DriveTank(m_realDrive, leftStick::getLeftY, rightStick::getLeftY, speed));
+          new DriveTank(
+              m_realDrive, leftStick::getLeftY, rightStick::getLeftY, Constants.driveSpeed));
       m_drive = m_realDrive;
     }
   }
@@ -61,7 +66,13 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  private void configureBindings() {}
+  private void configureBindings() {
+    final Trigger codriverA = new Trigger(coDriver::getAButton);
+    final Trigger codriverB = new Trigger(coDriver::getBButton);
+
+    codriverA.whileTrue(new ArmForeward(m_arm));
+    codriverB.whileTrue(new ArmReverse(m_arm));
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
