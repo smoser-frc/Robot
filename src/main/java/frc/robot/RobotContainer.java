@@ -32,7 +32,7 @@ public class RobotContainer {
 
   private final XboxController leftStick = new XboxController(0);
   private final XboxController rightStick = new XboxController(1);
-  // private final XboxController xboxController = new XboxController(2);
+  private final XboxController xboxController = new XboxController(2);
 
   private Double speed = 1.0;
 
