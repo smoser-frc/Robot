@@ -9,15 +9,5 @@ import java.util.function.DoubleSupplier;
 
 public class Drive extends SubsystemBase {
 
-  public void setTankDrive(DoubleSupplier lSpeed, DoubleSupplier rSpeed, Double pOutput) {}
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
-
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-  }
+  public void setTankDrive(DoubleSupplier m_lSpeed, DoubleSupplier m_rSpeed, double m_pOutput) {}
 }
