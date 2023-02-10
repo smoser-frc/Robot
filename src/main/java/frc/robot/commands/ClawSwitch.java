@@ -7,14 +7,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Claw;
 
-
 public class ClawSwitch extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Claw m_subsystem;
+
   private boolean isClosed;
   private boolean isOpen;
   private boolean startClosed;
-
 
   public ClawSwitch(Claw subsystem) {
     m_subsystem = subsystem;
@@ -30,11 +29,10 @@ public class ClawSwitch extends CommandBase {
     isClosed = m_subsystem.queryClosed();
     isOpen = m_subsystem.queryOpen();
 
-    if(isClosed){
+    if (isClosed) {
       m_subsystem.setMotorReverse();
       startClosed = true;
-    }
-    else{
+    } else {
       m_subsystem.setMotorForeward();
       startClosed = false;
     }
@@ -57,13 +55,11 @@ public class ClawSwitch extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(isClosed && !startClosed){
+    if (isClosed && !startClosed) {
       return true;
-    }
-    else if(isOpen && startClosed){
+    } else if (isOpen && startClosed) {
       return true;
-    }
-    else{
+    } else {
       return false;
     }
   }
