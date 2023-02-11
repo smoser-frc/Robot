@@ -71,7 +71,8 @@ public class SimDrive extends Drive {
   private static ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
   private final ADXRS450_GyroSim gyroSim;
 
-  public void setTankDrive(DoubleSupplier lSpeed, DoubleSupplier rSpeed, Double pOutput) {
+  @Override
+  public void setTankDrive(DoubleSupplier lSpeed, DoubleSupplier rSpeed, double pOutput) {
 
     driveTrain.tankDrive(lSpeed.getAsDouble() * pOutput, rSpeed.getAsDouble() * pOutput);
   }

@@ -20,5 +20,5 @@ public class Constants {
   public double driveSpeed = 0;
   public double armSpeed = 0;
   public double clawSpeed = 0;
-
+  public int kCPR = 0;
 }

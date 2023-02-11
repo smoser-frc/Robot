@@ -4,9 +4,22 @@
 
 package frc.robot;
 
+import java.util.List;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -35,10 +48,8 @@ public class RobotContainer {
   // Dont remove example until autons are programmed
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private Drive m_drive;
-  private final Drive m_realDrive = new RealDrive();
-  private final SimDrive m_simDrive = new SimDrive();
-  private final Arm m_arm = new Arm();
-  private final Claw m_claw = new Claw();
+  //private final Arm m_arm = new Arm();
+  //private final Claw m_claw = new Claw();
   private final GearShifter m_gearShifter = new GearShifter();
   private Constants m_constants;
   private final Constants m_realConstants = new RealConstants();
@@ -55,17 +66,17 @@ public class RobotContainer {
     configureBindings();
 
     if (RobotBase.isSimulation()) {
-      m_drive = m_simDrive;
+      m_drive = new SimDrive();
       m_constants = m_simConstants;
       m_drive.setDefaultCommand(
           new DriveTank(
-              m_simDrive, leftStick::getLeftY, leftStick::getRightY, m_constants.driveSpeed));
+              m_drive, leftStick::getLeftY, leftStick::getRightY, m_constants.driveSpeed));
     } else {
-      m_drive = m_realDrive;
+      m_drive = new RealDrive();
       m_constants = m_realConstants;
       m_drive.setDefaultCommand(
           new DriveTank(
-              m_realDrive, leftStick::getLeftY, rightStick::getLeftY, m_constants.driveSpeed));
+              m_drive, leftStick::getLeftY, leftStick::getRightY, m_constants.driveSpeed));
     }
   }
 
@@ -84,9 +95,9 @@ public class RobotContainer {
     final JoystickButton leftStickTrigger = new JoystickButton(leftStick, 1);
     final JoystickButton rightStickTrigger = new JoystickButton(rightStick, 1);
 
-    codriverA.whileTrue(new ArmForward(m_arm));
-    codriverB.whileTrue(new ArmReverse(m_arm));
-    leftStickTrigger.onTrue(new ClawSwitch(m_claw));
+    //codriverA.whileTrue(new ArmForward(m_arm));
+    //codriverB.whileTrue(new ArmReverse(m_arm));
+    //leftStickTrigger.onTrue(new ClawSwitch(m_claw));
     rightStickTrigger.whileTrue(new SwitchGears(m_gearShifter));
   }
 
@@ -97,6 +108,58 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    var autoVoltageConstraint =
+        new DifferentialDriveVoltageConstraint(
+            new SimpleMotorFeedforward(
+                RealConstants.ksVolts,
+                RealConstants.kvVoltSecondsPerMeter,
+                RealConstants.kaVoltSecondsSquaredPerMeter),
+            RealConstants.kDriveKinematics,
+            5);
+
+    // Create config for trajectory
+    TrajectoryConfig config =
+        new TrajectoryConfig(
+                RealConstants.kMaxSpeedMetersPerSecond,
+                RealConstants.kMaxAccelerationMetersPerSecondSquared)
+            // Add kinematics to ensure max speed is actually obeyed
+            .setKinematics(RealConstants.kDriveKinematics)
+            // Apply the voltage constraint
+            .addConstraint(autoVoltageConstraint);
+
+    // An example trajectory to follow.  All units in meters.
+    Trajectory exampleTrajectory =
+        TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(0)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+            // End 3 meters straight ahead of where we started, facing forward
+            new Pose2d(3, 0, new Rotation2d(0)),
+            // Pass config
+            config);
+
+    RamseteCommand ramseteCommand =
+        new RamseteCommand(
+            exampleTrajectory,
+            m_drive::getPose,
+            new RamseteController(RealConstants.kRamseteB, RealConstants.kRamseteZeta),
+            new SimpleMotorFeedforward(
+                RealConstants.ksVolts,
+                RealConstants.kvVoltSecondsPerMeter,
+                RealConstants.kaVoltSecondsSquaredPerMeter),
+            RealConstants.kDriveKinematics,
+            m_drive::getWheelSpeeds,
+            new PIDController(RealConstants.kPDriveVel, 0, 0),
+            new PIDController(RealConstants.kPDriveVel, 0, 0),
+            // RamseteCommand passes volts to the callback
+            m_drive::tankDriveVolts,
+            m_drive);
+
+    // Reset odometry to the starting pose of the trajectory.
+    m_drive.resetOdometry(exampleTrajectory.getInitialPose());
+
+    // Run path following command, then stop at the end.
+    return ramseteCommand.andThen(() -> m_drive.tankDriveVolts(0, 0));
   }
 }

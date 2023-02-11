@@ -8,11 +8,10 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.RealConstants;
 
 public class Arm extends SubsystemBase {
-  private CANSparkMax armMotor = new CANSparkMax(1, MotorType.kBrushless);
+  private CANSparkMax armMotor = new CANSparkMax(7, MotorType.kBrushless);
 
   private SparkMaxLimitSwitch forwardLimit =
       armMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
