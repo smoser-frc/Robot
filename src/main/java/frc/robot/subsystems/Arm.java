@@ -11,9 +11,18 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Arm extends SubsystemBase {
+  private CANSparkMax armMotor = new CANSparkMax(1, MotorType.kBrushless);
+
+  private SparkMaxLimitSwitch forewardLimit =
+      armMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+  private SparkMaxLimitSwitch reverseLimit =
+      armMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+
+  private boolean isFront;
+  private boolean isBack;
+
   /** Creates a new Arm subsystem. */
   public Arm() {
-
     forewardLimit.enableLimitSwitch(false);
     reverseLimit.enableLimitSwitch(false);
 
@@ -29,16 +38,6 @@ public class Arm extends SubsystemBase {
       isBack = false;
     }
   }
-
-  private CANSparkMax armMotor = new CANSparkMax(1, MotorType.kBrushless);
-
-  private SparkMaxLimitSwitch forewardLimit =
-      armMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-  private SparkMaxLimitSwitch reverseLimit =
-      armMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-
-  private boolean isFront;
-  private boolean isBack;
 
   public boolean queryFront() {
     return isFront;
