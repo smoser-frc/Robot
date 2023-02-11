@@ -14,8 +14,6 @@ public class ArmReverse extends CommandBase {
 
   public ArmReverse(Arm subsystem) {
     m_subsystem = subsystem;
-    System.out.println("Ignore a warning about not using m_subsystem:" + m_subsystem);
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
 
