@@ -10,8 +10,6 @@ import frc.robot.subsystems.Arm;
 public class ArmForward extends CommandBase {
   private final Arm m_arm;
 
-  private boolean atFront;
-
   public ArmForward(Arm subsystem) {
     m_arm = subsystem;
     addRequirements(subsystem);
@@ -25,10 +23,7 @@ public class ArmForward extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    m_arm.checkLimits();
-    atFront = m_arm.queryFront();
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
@@ -39,10 +34,6 @@ public class ArmForward extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (atFront) {
-      return true;
-    } else {
-      return false;
-    }
+    return m_arm.queryFront();
   }
 }

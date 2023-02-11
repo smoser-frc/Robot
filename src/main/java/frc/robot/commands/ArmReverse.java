@@ -10,8 +10,6 @@ import frc.robot.subsystems.Arm;
 public class ArmReverse extends CommandBase {
   private final Arm m_arm;
 
-  private boolean atBack;
-
   public ArmReverse(Arm subsystem) {
     m_arm = subsystem;
     addRequirements(subsystem);
@@ -25,10 +23,7 @@ public class ArmReverse extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    m_arm.checkLimits();
-    atBack = m_arm.queryBack();
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
@@ -39,10 +34,6 @@ public class ArmReverse extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (atBack) {
-      return true;
-    } else {
-      return false;
-    }
+    return m_arm.queryBack();
   }
 }

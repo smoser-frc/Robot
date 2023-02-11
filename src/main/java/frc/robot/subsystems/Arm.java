@@ -13,7 +13,7 @@ import frc.robot.Constants;
 public class Arm extends SubsystemBase {
   private CANSparkMax armMotor = new CANSparkMax(1, MotorType.kBrushless);
 
-  private SparkMaxLimitSwitch forewardLimit =
+  private SparkMaxLimitSwitch forwardLimit =
       armMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
   private SparkMaxLimitSwitch reverseLimit =
       armMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
@@ -23,20 +23,11 @@ public class Arm extends SubsystemBase {
 
   /** Creates a new Arm subsystem. */
   public Arm() {
-    forewardLimit.enableLimitSwitch(false);
+    forwardLimit.enableLimitSwitch(false);
     reverseLimit.enableLimitSwitch(false);
 
-    if (forewardLimit.isPressed()) {
-      isFront = true;
-    } else {
-      isFront = false;
-    }
-
-    if (reverseLimit.isPressed()) {
-      isBack = true;
-    } else {
-      isBack = false;
-    }
+    isFront = forwardLimit.isPressed();
+    isBack = reverseLimit.isPressed();
   }
 
   public boolean queryFront() {
@@ -45,17 +36,6 @@ public class Arm extends SubsystemBase {
 
   public boolean queryBack() {
     return isBack;
-  }
-
-  public void checkLimits() {
-    if (forewardLimit.isPressed()) {
-      isFront = true;
-    } else if (reverseLimit.isPressed()) {
-      isBack = true;
-    } else {
-      isFront = false;
-      isBack = false;
-    }
   }
 
   public void setMotorForward() {
@@ -73,6 +53,8 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    isFront = forwardLimit.isPressed();
+    isBack = reverseLimit.isPressed();
   }
 
   @Override

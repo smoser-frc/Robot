@@ -37,11 +37,6 @@ public class Claw extends SubsystemBase {
     return isOpen;
   }
 
-  public void checkLimits() {
-    isClosed = forewardLimit.isPressed();
-    isOpen = reverseLimit.isPressed();
-  }
-
   public void setMotorForward() {
     clawMotor.set(Constants.clawSpeed);
   }
@@ -57,6 +52,8 @@ public class Claw extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    isClosed = forewardLimit.isPressed();
+    isOpen = reverseLimit.isPressed();
   }
 
   @Override
