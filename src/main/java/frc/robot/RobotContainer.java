@@ -42,13 +42,13 @@ public class RobotContainer {
     configureBindings();
 
     if (RobotBase.isSimulation()) {
-      m_simDrive.setDefaultCommand(
-          new DriveTank(m_simDrive, leftStick::getLeftY, leftStick::getRightY, speed));
       m_drive = m_simDrive;
+      m_drive.setDefaultCommand(
+          new DriveTank(m_drive, leftStick::getLeftY, leftStick::getRightY, speed));
     } else {
-      m_realDrive.setDefaultCommand(
-          new DriveTank(m_realDrive, leftStick::getLeftY, rightStick::getLeftY, speed));
       m_drive = m_realDrive;
+      m_drive.setDefaultCommand(
+          new DriveTank(m_drive, leftStick::getLeftY, rightStick::getLeftY, speed));
     }
   }
 

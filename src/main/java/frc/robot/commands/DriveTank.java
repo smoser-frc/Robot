@@ -27,8 +27,7 @@ public class DriveTank extends CommandBase {
     m_lSpeed = lSpeed;
     m_rSpeed = rSpeed;
     m_pOutput = pOutput;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+    addRequirements(m_subsystem);
   }
 
   // Called when the command is initially scheduled.

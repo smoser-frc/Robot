@@ -9,5 +9,5 @@ import java.util.function.DoubleSupplier;
 
 public class Drive extends SubsystemBase {
 
-  public void setTankDrive(DoubleSupplier m_lSpeed, DoubleSupplier m_rSpeed, double m_pOutput) {}
+  public void setTankDrive(DoubleSupplier lSpeed, DoubleSupplier rSpeed, double pOutput) {}
 }
