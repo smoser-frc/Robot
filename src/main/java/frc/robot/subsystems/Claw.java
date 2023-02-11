@@ -11,15 +11,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Claw extends SubsystemBase {
-  public Claw() {
-
-    forewardLimit.enableLimitSwitch(false);
-    reverseLimit.enableLimitSwitch(false);
-
-    isClosed = forewardLimit.isPressed();
-    isOpen = reverseLimit.isPressed();
-  }
-
   private CANSparkMax clawMotor = new CANSparkMax(8, MotorType.kBrushless);
 
   private SparkMaxLimitSwitch forewardLimit =
@@ -29,6 +20,14 @@ public class Claw extends SubsystemBase {
 
   private boolean isClosed;
   private boolean isOpen;
+
+  public Claw() {
+    forewardLimit.enableLimitSwitch(false);
+    reverseLimit.enableLimitSwitch(false);
+
+    isClosed = forewardLimit.isPressed();
+    isOpen = reverseLimit.isPressed();
+  }
 
   public boolean queryClosed() {
     return isClosed;
@@ -43,7 +42,7 @@ public class Claw extends SubsystemBase {
     isOpen = reverseLimit.isPressed();
   }
 
-  public void setMotorForeward() {
+  public void setMotorForward() {
     clawMotor.set(Constants.clawSpeed);
   }
 
