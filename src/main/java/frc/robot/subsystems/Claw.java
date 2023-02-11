@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RealConstants;
 
 public class Claw extends SubsystemBase {
   private CANSparkMax clawMotor = new CANSparkMax(8, MotorType.kBrushless);
@@ -38,11 +39,11 @@ public class Claw extends SubsystemBase {
   }
 
   public void setMotorForward() {
-    clawMotor.set(Constants.clawSpeed);
+    clawMotor.set(RealConstants.clawSpeed);
   }
 
   public void setMotorReverse() {
-    clawMotor.set(-Constants.clawSpeed);
+    clawMotor.set(-RealConstants.clawSpeed);
   }
 
   public void stopMotor() {

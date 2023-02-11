@@ -40,6 +40,9 @@ public class RobotContainer {
   private final Arm m_arm = new Arm();
   private final Claw m_claw = new Claw();
   private final GearShifter m_gearShifter = new GearShifter();
+  private Constants m_constants;
+  private final Constants m_realConstants = new RealConstants();
+  private final Constants m_simConstants = new SimConstants();
 
   private final XboxController leftStick = new XboxController(0);
   private final XboxController rightStick = new XboxController(1);
@@ -52,15 +55,17 @@ public class RobotContainer {
     configureBindings();
 
     if (RobotBase.isSimulation()) {
-      m_simDrive.setDefaultCommand(
-          new DriveTank(
-              m_simDrive, leftStick::getLeftY, leftStick::getRightY, Constants.driveSpeed));
       m_drive = m_simDrive;
-    } else {
-      m_realDrive.setDefaultCommand(
+      m_constants = m_simConstants;
+      m_drive.setDefaultCommand(
           new DriveTank(
-              m_realDrive, leftStick::getLeftY, rightStick::getLeftY, Constants.driveSpeed));
+              m_simDrive, leftStick::getLeftY, leftStick::getRightY, m_constants.driveSpeed));
+    } else {
       m_drive = m_realDrive;
+      m_constants = m_realConstants;
+      m_drive.setDefaultCommand(
+          new DriveTank(
+              m_realDrive, leftStick::getLeftY, rightStick::getLeftY, m_constants.driveSpeed));
     }
   }
 
