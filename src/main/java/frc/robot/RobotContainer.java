@@ -15,10 +15,12 @@ import frc.robot.commands.ArmReverse;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ClawSwitch;
 import frc.robot.commands.DriveTank;
+import frc.robot.commands.SwitchGears;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.GearShifter;
 import frc.robot.subsystems.RealDrive;
 import frc.robot.subsystems.SimDrive;
 
@@ -37,6 +39,7 @@ public class RobotContainer {
   private final SimDrive m_simDrive = new SimDrive();
   private final Arm m_arm = new Arm();
   private final Claw m_claw = new Claw();
+  private final GearShifter m_gearShifter = new GearShifter();
 
   private final XboxController leftStick = new XboxController(0);
   private final XboxController rightStick = new XboxController(1);
@@ -74,10 +77,12 @@ public class RobotContainer {
     final JoystickButton codriverA = new JoystickButton(coDriver, XboxController.Button.kA.value);
     final JoystickButton codriverB = new JoystickButton(coDriver, XboxController.Button.kB.value);
     final JoystickButton leftStickTrigger = new JoystickButton(leftStick, 1);
+    final JoystickButton rightStickTrigger = new JoystickButton(rightStick, 1);
 
     codriverA.whileTrue(new ArmForward(m_arm));
     codriverB.whileTrue(new ArmReverse(m_arm));
-    leftStickTrigger.whileTrue(new ClawSwitch(m_claw));
+    leftStickTrigger.onTrue(new ClawSwitch(m_claw));
+    rightStickTrigger.whileTrue(new SwitchGears(m_gearShifter));
   }
 
   /**
