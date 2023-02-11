@@ -59,7 +59,7 @@ public class Arm extends SubsystemBase {
     }
   }
 
-  public void setMotorForeward() {
+  public void setMotorForward() {
     armMotor.set(Constants.armSpeed);
   }
 

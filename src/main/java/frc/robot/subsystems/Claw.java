@@ -43,7 +43,7 @@ public class Claw extends SubsystemBase {
     isOpen = reverseLimit.isPressed();
   }
 
-  public void setMotorForeward() {
+  public void setMotorForward() {
     clawMotor.set(Constants.clawSpeed);
   }
 
