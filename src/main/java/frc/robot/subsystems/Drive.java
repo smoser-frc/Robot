@@ -14,6 +14,7 @@ public class Drive extends SubsystemBase {
   public void setTankDrive(DoubleSupplier m_lSpeed, DoubleSupplier m_rSpeed, double m_pOutput) {
     throw new java.lang.UnsupportedOperationException();
   }
+
   public Pose2d getPose() {
     throw new java.lang.UnsupportedOperationException();
   }
@@ -34,15 +35,15 @@ public class Drive extends SubsystemBase {
     throw new java.lang.UnsupportedOperationException();
   }
 
-  public void zeroHeading(){
+  public void zeroHeading() {
     throw new java.lang.UnsupportedOperationException();
   }
 
-  public double getHeading(){
+  public double getHeading() {
     throw new java.lang.UnsupportedOperationException();
   }
 
-  public double getTurnRate(){
+  public double getTurnRate() {
     throw new java.lang.UnsupportedOperationException();
   }
 }

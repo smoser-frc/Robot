@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import java.util.List;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -23,19 +21,14 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.ArmForward;
-import frc.robot.commands.ArmReverse;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ClawSwitch;
 import frc.robot.commands.DriveTank;
 import frc.robot.commands.SwitchGears;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.GearShifter;
 import frc.robot.subsystems.RealDrive;
 import frc.robot.subsystems.SimDrive;
+import java.util.List;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -48,8 +41,8 @@ public class RobotContainer {
   // Dont remove example until autons are programmed
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private Drive m_drive;
-  //private final Arm m_arm = new Arm();
-  //private final Claw m_claw = new Claw();
+  // private final Arm m_arm = new Arm();
+  // private final Claw m_claw = new Claw();
   private final GearShifter m_gearShifter = new GearShifter();
   private Constants m_constants;
   private final Constants m_realConstants = new RealConstants();
@@ -95,9 +88,9 @@ public class RobotContainer {
     final JoystickButton leftStickTrigger = new JoystickButton(leftStick, 1);
     final JoystickButton rightStickTrigger = new JoystickButton(rightStick, 1);
 
-    //codriverA.whileTrue(new ArmForward(m_arm));
-    //codriverB.whileTrue(new ArmReverse(m_arm));
-    //leftStickTrigger.onTrue(new ClawSwitch(m_claw));
+    // codriverA.whileTrue(new ArmForward(m_arm));
+    // codriverB.whileTrue(new ArmReverse(m_arm));
+    // leftStickTrigger.onTrue(new ClawSwitch(m_claw));
     rightStickTrigger.whileTrue(new SwitchGears(m_gearShifter));
   }
 

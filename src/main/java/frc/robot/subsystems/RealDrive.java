@@ -12,6 +12,7 @@ import com.revrobotics.SparkMaxRelativeEncoder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import frc.robot.RealConstants;
@@ -42,7 +43,7 @@ public class RealDrive extends Drive {
   private RelativeEncoder rightEnc =
       rightFront.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, RealConstants.kCPR);
 
-  private final AHRS m_gyro = new AHRS();
+  private final AHRS m_gyro = new AHRS(SerialPort.Port.kMXP);
 
   private DifferentialDriveOdometry m_odometry =
       new DifferentialDriveOdometry(
@@ -63,10 +64,7 @@ public class RealDrive extends Drive {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    m_odometry.update(
-        m_gyro.getRotation2d(),
-        leftEnc.getPosition(),
-        rightEnc.getPosition());
+    m_odometry.update(m_gyro.getRotation2d(), leftEnc.getPosition(), rightEnc.getPosition());
   }
 
   @Override
@@ -80,7 +78,8 @@ public class RealDrive extends Drive {
 
   public void resetOdometry(Pose2d pose) {
     zeroEncoders();
-    m_odometry.resetPosition(m_gyro.getRotation2d(), leftEnc.getPosition(), rightEnc.getPosition(), pose);
+    m_odometry.resetPosition(
+        m_gyro.getRotation2d(), leftEnc.getPosition(), rightEnc.getPosition(), pose);
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
@@ -100,15 +99,15 @@ public class RealDrive extends Drive {
         rightEnc.getVelocity() * RealConstants.speedConversionFactor);
   }
 
-  public void zeroHeading(){
+  public void zeroHeading() {
     m_gyro.reset();
   }
 
-  public double getHeading(){
+  public double getHeading() {
     return m_gyro.getAngle();
   }
 
-  public double getTurnRate(){
+  public double getTurnRate() {
     return m_gyro.getRate();
   }
 }
