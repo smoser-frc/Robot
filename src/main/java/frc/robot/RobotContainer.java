@@ -21,8 +21,13 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.ArmForward;
+import frc.robot.commands.ArmReverse;
+import frc.robot.commands.ClawSwitch;
 import frc.robot.commands.DriveTank;
 import frc.robot.commands.SwitchGears;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.GearShifter;
@@ -47,6 +52,8 @@ public class RobotContainer {
   private Constants m_constants;
   private final Constants m_realConstants = new RealConstants();
   private final Constants m_simConstants = new SimConstants();
+  private final Arm m_arm = new Arm();
+  private final Claw m_claw = new Claw();
 
   private final XboxController leftStick = new XboxController(0);
   private final XboxController rightStick = new XboxController(1);
@@ -88,9 +95,9 @@ public class RobotContainer {
     final JoystickButton leftStickTrigger = new JoystickButton(leftStick, 1);
     final JoystickButton rightStickTrigger = new JoystickButton(rightStick, 1);
 
-    // codriverA.whileTrue(new ArmForward(m_arm));
-    // codriverB.whileTrue(new ArmReverse(m_arm));
-    // leftStickTrigger.onTrue(new ClawSwitch(m_claw));
+    codriverA.whileTrue(new ArmForward(m_arm));
+    codriverB.whileTrue(new ArmReverse(m_arm));
+    leftStickTrigger.onTrue(new ClawSwitch(m_claw));
     rightStickTrigger.whileTrue(new SwitchGears(m_gearShifter));
   }
 

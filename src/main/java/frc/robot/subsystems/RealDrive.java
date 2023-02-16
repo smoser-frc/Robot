@@ -51,7 +51,8 @@ public class RealDrive extends Drive {
 
   private DifferentialDrive driveTrain = new DifferentialDrive(leftGroup, rightGroup);
 
-  public void setTankDrive(DoubleSupplier lSpeed, DoubleSupplier rSpeed, Double pOutput) {
+  @Override
+  public void setTankDrive(DoubleSupplier lSpeed, DoubleSupplier rSpeed, double pOutput) {
 
     driveTrain.tankDrive(lSpeed.getAsDouble() * pOutput, rSpeed.getAsDouble() * pOutput);
   }
@@ -72,41 +73,49 @@ public class RealDrive extends Drive {
     // This method will be called once per scheduler run during simulation
   }
 
+  @Override
   public Pose2d getPose() {
     return m_odometry.getPoseMeters();
   }
 
+  @Override
   public void resetOdometry(Pose2d pose) {
     zeroEncoders();
     m_odometry.resetPosition(
         m_gyro.getRotation2d(), leftEnc.getPosition(), rightEnc.getPosition(), pose);
   }
 
+  @Override
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     leftGroup.setVoltage(leftVolts);
     rightGroup.setVoltage(rightVolts);
     driveTrain.feed();
   }
 
+  @Override
   public void zeroEncoders() {
     leftEnc.setPosition(0);
     rightEnc.setPosition(0);
   }
 
+  @Override
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(
         leftEnc.getVelocity() * RealConstants.speedConversionFactor,
         rightEnc.getVelocity() * RealConstants.speedConversionFactor);
   }
 
+  @Override
   public void zeroHeading() {
     m_gyro.reset();
   }
 
+  @Override
   public double getHeading() {
     return m_gyro.getAngle();
   }
 
+  @Override
   public double getTurnRate() {
     return m_gyro.getRate();
   }
