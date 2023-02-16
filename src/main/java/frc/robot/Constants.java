@@ -17,7 +17,7 @@ public class Constants {
     public static final int kDriverControllerPort = 0;
   }
 
-  public double driveSpeed = 0;
+  public double driveSpeed = 0.7;
   public double armSpeed = 0;
   public double clawSpeed = 0;
   public int kCPR = 0;
