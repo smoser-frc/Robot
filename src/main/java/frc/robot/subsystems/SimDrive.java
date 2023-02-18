@@ -23,8 +23,6 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.SimConstants;
-
 import java.util.function.DoubleSupplier;
 
 public class SimDrive extends Drive {
@@ -90,9 +88,7 @@ public class SimDrive extends Drive {
     // This method will be called once per scheduler run
 
     odometer.update(
-        Rotation2d.fromDegrees(getHeading()),
-        lEncSimoder.getDistance(),
-        rEncSimoder.getDistance());
+        Rotation2d.fromDegrees(getHeading()), lEncSimoder.getDistance(), rEncSimoder.getDistance());
     m_field.setRobotPose(odometer.getPoseMeters());
   }
 
@@ -144,9 +140,7 @@ public class SimDrive extends Drive {
 
   @Override
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(
-        lEncSim.getRate(),
-        rEncSim.getRate());
+    return new DifferentialDriveWheelSpeeds(lEncSim.getRate(), rEncSim.getRate());
   }
 
   @Override
