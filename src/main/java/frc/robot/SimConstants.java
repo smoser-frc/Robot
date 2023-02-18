@@ -12,13 +12,12 @@ package frc.robot;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public class Constants {
+public final class SimConstants extends Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
 
-  public double driveSpeed = 0.7;
-  public double armSpeed = 0;
-  public double clawSpeed = 0;
-  public int kCPR = 0;
+  public static double armSpeed = 0.75;
+  public static double driveSpeed = 0.8;
+  public static double clawSpeed = 0.5;
 }
