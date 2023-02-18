@@ -5,8 +5,10 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
@@ -21,6 +23,8 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.SimConstants;
+
 import java.util.function.DoubleSupplier;
 
 public class SimDrive extends Drive {
@@ -31,7 +35,7 @@ public class SimDrive extends Drive {
 
     odometer =
         new DifferentialDriveOdometry(
-            dtSim.getHeading(), leftEncoder.getDistance(), rightEncoder.getDistance());
+            dtSim.getHeading(), lEncSimoder.getDistance(), rEncSimoder.getDistance());
     if (RobotBase.isSimulation()) {
       gyroSim = new ADXRS450_GyroSim(m_gyro);
     } else {
@@ -47,11 +51,11 @@ public class SimDrive extends Drive {
   private static PWMSparkMax rightFront = new PWMSparkMax(2);
   private static PWMSparkMax rightBack = new PWMSparkMax(3);
 
-  private static Encoder leftEncoder = new Encoder(1, 2);
-  private static Encoder rightEncoder = new Encoder(3, 4);
+  private static Encoder lEncSimoder = new Encoder(1, 2);
+  private static Encoder rEncSimoder = new Encoder(3, 4);
 
-  private EncoderSim lEncSim = new EncoderSim(leftEncoder);
-  private EncoderSim rEncSim = new EncoderSim(rightEncoder);
+  private EncoderSim lEncSim = new EncoderSim(lEncSimoder);
+  private EncoderSim rEncSim = new EncoderSim(rEncSimoder);
 
   private static MotorControllerGroup leftGroup = new MotorControllerGroup(leftBack, leftFront);
   private static MotorControllerGroup rightGroup = new MotorControllerGroup(rightFront, rightBack);
@@ -87,8 +91,8 @@ public class SimDrive extends Drive {
 
     odometer.update(
         Rotation2d.fromDegrees(getHeading()),
-        leftEncoder.getDistance(),
-        rightEncoder.getDistance());
+        lEncSimoder.getDistance(),
+        rEncSimoder.getDistance());
     m_field.setRobotPose(odometer.getPoseMeters());
   }
 
@@ -111,5 +115,47 @@ public class SimDrive extends Drive {
 
   public double getHeading() {
     return Math.IEEEremainder(m_gyro.getAngle(), 360) * -1;
+  }
+
+  @Override
+  public Pose2d getPose() {
+    return odometer.getPoseMeters();
+  }
+
+  @Override
+  public void resetOdometry(Pose2d pose) {
+    zeroEncoders();
+    odometer.resetPosition(
+        m_gyro.getRotation2d(), lEncSim.getDistance(), rEncSim.getDistance(), pose);
+  }
+
+  @Override
+  public void tankDriveVolts(double leftVolts, double rightVolts) {
+    leftGroup.setVoltage(leftVolts);
+    rightGroup.setVoltage(rightVolts);
+    driveTrain.feed();
+  }
+
+  @Override
+  public void zeroEncoders() {
+    lEncSim.setDistance(0);
+    rEncSim.setDistance(0);
+  }
+
+  @Override
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(
+        lEncSim.getRate(),
+        rEncSim.getRate());
+  }
+
+  @Override
+  public void zeroHeading() {
+    m_gyro.reset();
+  }
+
+  @Override
+  public double getTurnRate() {
+    return m_gyro.getRate();
   }
 }
