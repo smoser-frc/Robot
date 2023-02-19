@@ -6,9 +6,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 
 /** A command that will turn the robot to the specified angle using a motion profile. */
 public class TurnToAngleProfiled extends ProfiledPIDCommand {
