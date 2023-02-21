@@ -6,12 +6,15 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class GearShifter extends SubsystemBase {
-  public GearShifter() {}
+  public GearShifter() {
+    gearShift.set(Value.kForward);
+  }
 
-  private DoubleSolenoid gearShift = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
+  private DoubleSolenoid gearShift = new DoubleSolenoid(12, PneumaticsModuleType.CTREPCM, 0, 1);
 
   public void switchGear() {
     gearShift.toggle();
