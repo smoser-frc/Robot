@@ -77,7 +77,9 @@ public class RobotContainer {
       m_constants = m_realConstants;
       m_drive.setDefaultCommand(
           new DriveTank(
-              m_drive, leftStick::getLeftY, leftStick::getRightY, m_constants.driveSpeed));
+              m_drive, leftStick::getLeftY, rightStick::getLeftY, m_constants.driveSpeed));
+      m_arm.setDefaultCommand(new ArmForward(m_arm, coDriver::getLeftY));
+      m_claw.setDefaultCommand(new ManualClaw(m_claw, coDriver::getRightY));
     }
   }
 
@@ -96,9 +98,9 @@ public class RobotContainer {
     final JoystickButton leftStickTrigger = new JoystickButton(leftStick, 1);
     final JoystickButton rightStickTrigger = new JoystickButton(rightStick, 1);
 
-    codriverA.whileTrue(new ArmForward(m_arm));
-    codriverB.whileTrue(new ArmReverse(m_arm));
-    leftStickTrigger.onTrue(new ClawSwitch(m_claw));
+    //codriverA.whileTrue(new ArmForward(m_arm));
+    //codriverB.whileTrue(new ArmReverse(m_arm));
+    leftStickTrigger.whileTrue(new ClawSwitch(m_claw));
     rightStickTrigger.whileTrue(new SwitchGears(m_gearShifter));
   }
 
