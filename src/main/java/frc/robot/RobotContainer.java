@@ -25,6 +25,7 @@ import frc.robot.commands.ArmForward;
 import frc.robot.commands.ArmReverse;
 import frc.robot.commands.ClawSwitch;
 import frc.robot.commands.DriveTank;
+import frc.robot.commands.ManualClaw;
 import frc.robot.commands.SwitchGears;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
