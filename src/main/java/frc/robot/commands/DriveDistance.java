@@ -5,12 +5,20 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
 /** A command that will move the robot forward */
-public class DriveDistance extends PIDCommand {
+public class DriveDistance extends CommandBase {
+
+  private DriveSubsystem m_drive;
+  private PIDController m_PidControl;
+  private double m_distance;
+  private double setPoint;
+
   /**
    * Moves the robot a specified distance forward.
    *
@@ -18,28 +26,50 @@ public class DriveDistance extends PIDCommand {
    * @param drive The drive subsystem to use
    */
   public DriveDistance(double distance, DriveSubsystem drive) {
-    super(
-        new PIDController(DriveConstants.kDriveP, DriveConstants.kDriveI, DriveConstants.kDriveD),
-        // Close loop on heading
-        drive::getAverageEncoderDistance,
-        // Set reference to target
-        drive.getAverageEncoderDistance() + distance,
-        // Pipe output to turn robot
-        output -> drive.arcadeDrive(output, 0),
-        // Require the drive
-        drive);
+    m_drive = drive;
+    m_distance = distance;
 
-    // Set the controller to be continuous (because it is an angle controller)
-    getController().enableContinuousInput(-180, 180);
+    m_PidControl =
+        new PIDController(DriveConstants.kDriveP, DriveConstants.kDriveI, DriveConstants.kDriveD);
+    m_PidControl.setTolerance(
+        Constants.DriveConstants.kDriveToleranceInches,
+        Constants.DriveConstants.kDriveRateToleranceInchesPerS);
+
+    addRequirements(drive);
+  }
+
+  @Override
+  public void initialize() {
+
+    double target = m_distance + m_drive.getAverageEncoderDistance();
+    System.out.println("At " + m_drive.getAverageEncoderDistance() + " going to " + target);
+
+    setPoint = m_drive.getAverageEncoderDistance() + m_distance;
+
+    m_drive.setMaxOutput(1.0);
+
     // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
     // setpoint before it is considered as having reached the reference
-    getController()
-        .setTolerance(DriveConstants.kTurnToleranceDeg, DriveConstants.kTurnRateToleranceDegPerS);
+  }
+
+  @Override
+  public void execute() {
+    m_drive.arcadeDrive(m_PidControl.calculate(m_drive.getAverageEncoderDistance(), setPoint), 0);
+    SmartDashboard.putNumber(
+        "Wheel Speed via PID",
+        m_PidControl.calculate(m_drive.getAverageEncoderDistance(), setPoint));
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    m_drive.setMaxOutput(1);
+    System.out.println(
+        "At " + m_drive.getAverageEncoderDistance() + " target " + setPoint + " Done!");
   }
 
   @Override
   public boolean isFinished() {
     // End when the controller is at the reference.
-    return getController().atSetpoint();
+    return m_PidControl.atSetpoint();
   }
 }
