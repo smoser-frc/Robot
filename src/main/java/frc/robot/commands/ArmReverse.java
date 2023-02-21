@@ -9,21 +9,23 @@ import frc.robot.subsystems.Arm;
 
 public class ArmReverse extends CommandBase {
   private final Arm m_arm;
+  private double m_speed;
 
-  public ArmReverse(Arm subsystem) {
+  public ArmReverse(Arm subsystem, double speed) {
     m_arm = subsystem;
+    m_speed = speed;
     addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    m_arm.setMotorReverse();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    m_arm.setMotorReverse(m_speed);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
