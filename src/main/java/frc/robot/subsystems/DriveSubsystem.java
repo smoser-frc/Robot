@@ -60,6 +60,8 @@ public class DriveSubsystem extends SubsystemBase {
     m_leftBackEncoder.setPositionConversionFactor(DriveConstants.kEncoderDistancePerPulse);
     m_rightFrontEncoder.setPositionConversionFactor(DriveConstants.kEncoderDistancePerPulse);
     m_rightBackEncoder.setPositionConversionFactor(DriveConstants.kEncoderDistancePerPulse);
+
+    resetEncoders();
   }
 
   /**
