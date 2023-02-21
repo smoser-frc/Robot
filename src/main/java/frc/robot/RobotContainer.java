@@ -4,19 +4,14 @@
 
 package frc.robot;
 
-import static edu.wpi.first.wpilibj.PS4Controller.Button;
-
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.PS4Controller;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.TurnToAngle;
-import frc.robot.commands.TurnToAngleProfiled;
+import frc.robot.commands.DriveDistance;
 import frc.robot.subsystems.DriveSubsystem;
 
 /**
@@ -57,34 +52,40 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Drive at half speed when the right bumper is held
-    new JoystickButton(m_driverController, Button.kR1.value)
-        .onTrue(new InstantCommand(() -> m_robotDrive.setMaxOutput(0.5)))
-        .onFalse(new InstantCommand(() -> m_robotDrive.setMaxOutput(1)));
+    /*new JoystickButton(m_driverController, Button.kR1.value)
+    .onTrue(new InstantCommand(() -> m_robotDrive.setMaxOutput(0.5)))
+    .onFalse(new InstantCommand(() -> m_robotDrive.setMaxOutput(1)));*/
 
     // Stabilize robot to drive straight with gyro when left bumper is held
-    new JoystickButton(m_driverController, Button.kL1.value)
-        .whileTrue(
-            new PIDCommand(
-                new PIDController(
-                    DriveConstants.kStabilizationP,
-                    DriveConstants.kStabilizationI,
-                    DriveConstants.kStabilizationD),
-                // Close the loop on the turn rate
-                m_robotDrive::getTurnRate,
-                // Setpoint is 0
-                0,
-                // Pipe the output to the turning controls
-                output -> m_robotDrive.arcadeDrive(-m_driverController.getLeftY(), output),
-                // Require the robot drive
-                m_robotDrive));
+    /*new JoystickButton(m_driverController, Button.kL1.value)
+    .whileTrue(
+        new PIDCommand(
+            new PIDController(
+                DriveConstants.kStabilizationP,
+                DriveConstants.kStabilizationI,
+                DriveConstants.kStabilizationD),
+            // Close the loop on the turn rate
+            m_robotDrive::getTurnRate,
+            // Setpoint is 0
+            0,
+            // Pipe the output to the turning controls
+            output -> m_robotDrive.arcadeDrive(-m_driverController.getLeftY(), output),
+            // Require the robot drive
+            m_robotDrive));*/
 
     // Turn to 90 degrees when the 'X' button is pressed, with a 5 second timeout
-    new JoystickButton(m_driverController, Button.kCross.value)
-        .onTrue(new TurnToAngle(90, m_robotDrive).withTimeout(5));
+    // new JoystickButton(m_driverController, Button.kCross.value)
+    // .onTrue(new TurnToAngle(90, m_robotDrive).withTimeout(5));
 
     // Turn to -90 degrees with a profile when the Circle button is pressed, with a 5 second timeout
-    new JoystickButton(m_driverController, Button.kCircle.value)
-        .onTrue(new TurnToAngleProfiled(-90, m_robotDrive).withTimeout(5));
+    // new JoystickButton(m_driverController, Button.kCircle.value)
+    // .onTrue(new TurnToAngleProfiled(-90, m_robotDrive).withTimeout(5));
+
+    new JoystickButton(m_driverController, XboxController.Button.kA.value)
+        .onTrue(new DriveDistance(6 * Math.PI, m_robotDrive));
+
+    new JoystickButton(m_driverController, XboxController.Button.kB.value)
+        .onTrue(new DriveDistance(-6 * Math.PI, m_robotDrive));
   }
 
   /**
