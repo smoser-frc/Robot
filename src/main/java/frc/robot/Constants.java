@@ -31,8 +31,8 @@ public final class Constants {
     public static final double kTurnI = 0;
     public static final double kTurnD = 0;
 
-    public static final double kDriveP = 1;
-    public static final double kDriveI = 0;
+    public static final double kDriveP = .10;
+    public static final double kDriveI = .005;
     public static final double kDriveD = 0;
 
     public static final double kMaxTurnRateDegPerS = 100;
@@ -41,7 +41,7 @@ public final class Constants {
     public static final double kTurnToleranceDeg = 5;
     public static final double kTurnRateToleranceDegPerS = 10; // degrees per second
 
-    public static final double kDriveToleranceInches = 2;
+    public static final double kDriveToleranceInches = 1;
     public static final double kDriveRateToleranceInchesPerS = 10; // inches per second
   }
 
