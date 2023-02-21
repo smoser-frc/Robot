@@ -52,7 +52,8 @@ public class DriveSubsystem extends SubsystemBase {
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
-    m_leftMotors.setInverted(true);
+    m_leftMotors.setInverted(false);
+    m_rightMotors.setInverted(true);
 
     // Sets the distance per pulse for the encoders
     m_leftFrontEncoder.setPositionConversionFactor(DriveConstants.kEncoderDistancePerPulse);
