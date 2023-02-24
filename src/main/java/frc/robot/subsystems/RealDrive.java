@@ -62,7 +62,6 @@ public class RealDrive extends Drive {
 
   @Override
   public void setArcadeDrive(double speed, double rotation) {
-
     driveTrain.arcadeDrive(speed, rotation);
   }
 

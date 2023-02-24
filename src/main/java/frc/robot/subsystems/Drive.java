@@ -46,4 +46,12 @@ public class Drive extends SubsystemBase {
   public double getTurnRate() {
     throw new java.lang.UnsupportedOperationException();
   }
+
+  public double getAverageEncoderDistance() {
+    throw new java.lang.UnsupportedOperationException();
+  }
+
+  public void setArcadeDrive(double calculate, double rotation) {
+    throw new java.lang.UnsupportedOperationException();
+  }
 }

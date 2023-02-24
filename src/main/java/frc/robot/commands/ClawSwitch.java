@@ -29,7 +29,7 @@ public class ClawSwitch extends CommandBase {
       m_claw.setMotorReverse();
       startClosed = true;
     } else {
-      m_claw.setMotorForward();
+      // FIXME: m_claw.setMotorForward();
       startClosed = false;
     }
   }
