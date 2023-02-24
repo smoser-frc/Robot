@@ -59,6 +59,7 @@ public class RealDrive extends Drive {
     driveTrain.tankDrive(lSpeed.getAsDouble() * pOutput, rSpeed.getAsDouble() * pOutput);
   }
 
+  @Override
   public void setArcadeDrive(double speed, double rotation) {
 
     driveTrain.arcadeDrive(speed, rotation);
@@ -120,5 +121,10 @@ public class RealDrive extends Drive {
   @Override
   public double getTurnRate() {
     return m_gyro.getRate();
+  }
+
+  @Override 
+  public double getAverageEncoderDistance(){
+    return (leftEnc.getPosition() + rightEnc.getPosition()) / 2;
   }
 }
