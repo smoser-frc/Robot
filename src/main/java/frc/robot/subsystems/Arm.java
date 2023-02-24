@@ -5,10 +5,11 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RealConstants;
+import java.util.function.DoubleSupplier;
 
 public class Arm extends SubsystemBase {
   private CANSparkMax armMotor = new CANSparkMax(7, MotorType.kBrushless);
@@ -23,11 +24,13 @@ public class Arm extends SubsystemBase {
 
   /** Creates a new Arm subsystem. */
   public Arm() {
-    forwardLimit.enableLimitSwitch(false);
-    reverseLimit.enableLimitSwitch(false);
+    forwardLimit.enableLimitSwitch(true);
+    reverseLimit.enableLimitSwitch(true);
 
     isFront = forwardLimit.isPressed();
     isBack = reverseLimit.isPressed();
+
+    armMotor.setIdleMode(IdleMode.kBrake);
   }
 
   public boolean queryFront() {
@@ -38,12 +41,12 @@ public class Arm extends SubsystemBase {
     return isBack;
   }
 
-  public void setMotorForward() {
-    armMotor.set(RealConstants.armSpeed);
+  public void setMotorForward(DoubleSupplier speed) {
+    armMotor.set(speed.getAsDouble());
   }
 
-  public void setMotorReverse() {
-    armMotor.set(-RealConstants.armSpeed);
+  public void setMotorReverse(double speed) {
+    armMotor.set(speed);
   }
 
   public void stopMotor() {

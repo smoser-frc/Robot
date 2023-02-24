@@ -21,4 +21,13 @@ public class Constants {
   public double armSpeed = 0;
   public double clawSpeed = 0;
   public int kCPR = 0;
+
+  public static class DriveConstants {
+    public static double kDriveP = 0.0;
+    public static double kDriveI = 0.0;
+    public static double kDriveD = 0.0;
+
+    public static double kDriveDistanceToleranceMeters = 1.0;
+    public static double kDriveDistanceRateToleranceMetersPerS = 1.0;
+  }
 }

@@ -5,10 +5,12 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RealConstants;
+import java.util.function.DoubleSupplier;
 
 public class Claw extends SubsystemBase {
   private CANSparkMax clawMotor = new CANSparkMax(8, MotorType.kBrushless);
@@ -22,11 +24,13 @@ public class Claw extends SubsystemBase {
   private boolean isOpen;
 
   public Claw() {
-    forewardLimit.enableLimitSwitch(false);
-    reverseLimit.enableLimitSwitch(false);
+    forewardLimit.enableLimitSwitch(true);
+    reverseLimit.enableLimitSwitch(true);
 
     isClosed = forewardLimit.isPressed();
     isOpen = reverseLimit.isPressed();
+
+    clawMotor.setIdleMode(IdleMode.kBrake);
   }
 
   public boolean queryClosed() {
@@ -37,8 +41,8 @@ public class Claw extends SubsystemBase {
     return isOpen;
   }
 
-  public void setMotorForward() {
-    clawMotor.set(RealConstants.clawSpeed);
+  public void setMotorForward(DoubleSupplier speed) {
+    clawMotor.set(speed.getAsDouble());
   }
 
   public void setMotorReverse() {

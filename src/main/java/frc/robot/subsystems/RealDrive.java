@@ -28,15 +28,18 @@ public class RealDrive extends Drive {
   }
 
   private CANSparkMax leftFront = new CANSparkMax(1, MotorType.kBrushless);
-  private CANSparkMax leftBack = new CANSparkMax(2, MotorType.kBrushless);
-  private CANSparkMax rightFront = new CANSparkMax(3, MotorType.kBrushless);
-  private CANSparkMax rightBack = new CANSparkMax(4, MotorType.kBrushless);
+  private CANSparkMax leftMid = new CANSparkMax(2, MotorType.kBrushless);
+  private CANSparkMax leftBack = new CANSparkMax(3, MotorType.kBrushless);
+  private CANSparkMax rightFront = new CANSparkMax(4, MotorType.kBrushless);
+  private CANSparkMax rightMid = new CANSparkMax(5, MotorType.kBrushless);
+  private CANSparkMax rightBack = new CANSparkMax(6, MotorType.kBrushless);
 
   private double leftZero = 0;
   private double rightZero = 0;
 
-  private MotorControllerGroup leftGroup = new MotorControllerGroup(leftBack, leftFront);
-  private MotorControllerGroup rightGroup = new MotorControllerGroup(rightFront, rightBack);
+  private MotorControllerGroup leftGroup = new MotorControllerGroup(leftBack, leftMid, leftFront);
+  private MotorControllerGroup rightGroup =
+      new MotorControllerGroup(rightFront, rightMid, rightBack);
 
   private RelativeEncoder leftEnc =
       leftFront.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, RealConstants.kCPR);
@@ -57,8 +60,8 @@ public class RealDrive extends Drive {
     driveTrain.tankDrive(lSpeed.getAsDouble() * pOutput, rSpeed.getAsDouble() * pOutput);
   }
 
+  @Override
   public void setArcadeDrive(double speed, double rotation) {
-
     driveTrain.arcadeDrive(speed, rotation);
   }
 
@@ -118,5 +121,10 @@ public class RealDrive extends Drive {
   @Override
   public double getTurnRate() {
     return m_gyro.getRate();
+  }
+
+  @Override
+  public double getAverageEncoderDistance() {
+    return (leftEnc.getPosition() + rightEnc.getPosition()) / 2;
   }
 }

@@ -5,15 +5,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
 import java.util.function.DoubleSupplier;
 
-public class ArmForward extends CommandBase {
-  private final Arm m_arm;
+public class ManualClaw extends CommandBase {
+  private final Claw m_claw;
   private DoubleSupplier m_speed;
 
-  public ArmForward(Arm subsystem, DoubleSupplier speed) {
-    m_arm = subsystem;
+  public ManualClaw(Claw subsystem, DoubleSupplier speed) {
+    m_claw = subsystem;
     m_speed = speed;
     addRequirements(subsystem);
   }
@@ -25,18 +25,18 @@ public class ArmForward extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_arm.setMotorForward(m_speed);
+    m_claw.setMotorForward(m_speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_arm.stopMotor();
+    m_claw.stopMotor();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_arm.queryFront();
+    return false;
   }
 }
