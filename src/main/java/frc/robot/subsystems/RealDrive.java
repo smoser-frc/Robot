@@ -37,8 +37,9 @@ public class RealDrive extends Drive {
   private double leftZero = 0;
   private double rightZero = 0;
 
-  private MotorControllerGroup leftGroup = new MotorControllerGroup(leftBack, leftMid,  leftFront);
-  private MotorControllerGroup rightGroup = new MotorControllerGroup(rightFront, rightMid, rightBack);
+  private MotorControllerGroup leftGroup = new MotorControllerGroup(leftBack, leftMid, leftFront);
+  private MotorControllerGroup rightGroup =
+      new MotorControllerGroup(rightFront, rightMid, rightBack);
 
   private RelativeEncoder leftEnc =
       leftFront.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, RealConstants.kCPR);
@@ -123,8 +124,8 @@ public class RealDrive extends Drive {
     return m_gyro.getRate();
   }
 
-  @Override 
-  public double getAverageEncoderDistance(){
+  @Override
+  public double getAverageEncoderDistance() {
     return (leftEnc.getPosition() + rightEnc.getPosition()) / 2;
   }
 }

@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.ArmForward;
-import frc.robot.commands.ArmReverse;
 import frc.robot.commands.ClawSwitch;
 import frc.robot.commands.DriveTank;
 import frc.robot.commands.ManualClaw;
@@ -98,8 +97,8 @@ public class RobotContainer {
     final JoystickButton leftStickTrigger = new JoystickButton(leftStick, 1);
     final JoystickButton rightStickTrigger = new JoystickButton(rightStick, 1);
 
-    //codriverA.whileTrue(new ArmForward(m_arm));
-    //codriverB.whileTrue(new ArmReverse(m_arm));
+    // codriverA.whileTrue(new ArmForward(m_arm));
+    // codriverB.whileTrue(new ArmReverse(m_arm));
     leftStickTrigger.whileTrue(new ClawSwitch(m_claw));
     rightStickTrigger.whileTrue(new SwitchGears(m_gearShifter));
   }

@@ -52,7 +52,8 @@ public class DriveDistance extends CommandBase {
 
   @Override
   public void execute() {
-    m_drive.setArcadeDrive(m_PidControl.calculate(m_drive.getAverageEncoderDistance(), setPoint), 0);
+    m_drive.setArcadeDrive(
+        m_PidControl.calculate(m_drive.getAverageEncoderDistance(), setPoint), 0);
     SmartDashboard.putNumber(
         "Wheel Speed via PID",
         m_PidControl.calculate(m_drive.getAverageEncoderDistance(), setPoint));

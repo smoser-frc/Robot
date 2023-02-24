@@ -4,15 +4,12 @@
 
 package frc.robot.subsystems;
 
-import java.util.function.DoubleSupplier;
-
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch;
-import com.revrobotics.CANSparkMax.IdleMode;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RealConstants;
+import java.util.function.DoubleSupplier;
 
 public class Arm extends SubsystemBase {
   private CANSparkMax armMotor = new CANSparkMax(7, MotorType.kBrushless);
