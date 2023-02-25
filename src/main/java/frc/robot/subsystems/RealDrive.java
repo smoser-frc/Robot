@@ -15,17 +15,11 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RealConstants;
 import java.util.function.DoubleSupplier;
 
 public class RealDrive extends Drive {
-
-  public RealDrive() {
-    leftGroup.setInverted(true);
-
-    leftEnc.setPositionConversionFactor(RealConstants.kMetersPerRev);
-    rightEnc.setPositionConversionFactor(RealConstants.kMetersPerRev);
-  }
 
   private CANSparkMax leftFront = new CANSparkMax(1, MotorType.kBrushless);
   private CANSparkMax leftMid = new CANSparkMax(2, MotorType.kBrushless);
@@ -42,9 +36,9 @@ public class RealDrive extends Drive {
       new MotorControllerGroup(rightFront, rightMid, rightBack);
 
   private RelativeEncoder leftEnc =
-      leftFront.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, RealConstants.kCPR);
+      leftFront.getEncoder();
   private RelativeEncoder rightEnc =
-      rightFront.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, RealConstants.kCPR);
+      rightFront.getEncoder();
 
   private final AHRS m_gyro = new AHRS(SerialPort.Port.kMXP);
 
@@ -53,6 +47,14 @@ public class RealDrive extends Drive {
           m_gyro.getRotation2d(), leftEnc.getPosition(), rightEnc.getPosition());
 
   private DifferentialDrive driveTrain = new DifferentialDrive(leftGroup, rightGroup);
+
+  public RealDrive() {
+    leftGroup.setInverted(true);
+    rightGroup.setInverted(false);
+
+    leftEnc.setPositionConversionFactor(RealConstants.kMetersPerRev);
+    rightEnc.setPositionConversionFactor(RealConstants.kMetersPerRev);
+  }
 
   @Override
   public void setTankDrive(DoubleSupplier lSpeed, DoubleSupplier rSpeed, double pOutput) {
@@ -69,6 +71,12 @@ public class RealDrive extends Drive {
   public void periodic() {
     // This method will be called once per scheduler run
     m_odometry.update(m_gyro.getRotation2d(), leftEnc.getPosition(), rightEnc.getPosition());
+
+    SmartDashboard.putNumber("Left Drive Position", leftEnc.getPosition());
+    SmartDashboard.putNumber(" L Conversion", leftEnc.getPositionConversionFactor());
+    SmartDashboard.putNumber("Right Drive Position", rightEnc.getPosition());
+    SmartDashboard.putNumber("ConversionFactor R", rightEnc.getPositionConversionFactor());
+    SmartDashboard.putNumber("Drive Position", getAverageEncoderDistance());
   }
 
   @Override
@@ -125,6 +133,6 @@ public class RealDrive extends Drive {
 
   @Override
   public double getAverageEncoderDistance() {
-    return (leftEnc.getPosition() + rightEnc.getPosition()) / 2;
+    return (-leftEnc.getPosition() + rightEnc.getPosition()) / 2;
   }
 }
