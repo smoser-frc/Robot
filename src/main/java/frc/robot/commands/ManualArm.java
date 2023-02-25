@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import java.util.function.DoubleSupplier;
 
-public class ArmForward extends CommandBase {
+public class ManualArm extends CommandBase {
   private final Arm m_arm;
   private DoubleSupplier m_speed;
 
-  public ArmForward(Arm subsystem, DoubleSupplier speed) {
+  public ManualArm(Arm subsystem, DoubleSupplier speed) {
     m_arm = subsystem;
     m_speed = speed;
     addRequirements(subsystem);
@@ -25,7 +25,12 @@ public class ArmForward extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_arm.setMotorForward(m_speed);
+    double dSpeed = m_speed.getAsDouble();
+    if (dSpeed >= 0.1 || dSpeed <= -0.1) {
+      m_arm.setMotor(dSpeed);
+    } else {
+      m_arm.hold();
+    }
   }
 
   // Called once the command ends or is interrupted.

@@ -21,9 +21,8 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.ArmForward;
-import frc.robot.commands.ClawSwitch;
 import frc.robot.commands.DriveTank;
+import frc.robot.commands.ManualArm;
 import frc.robot.commands.ManualClaw;
 import frc.robot.commands.SwitchGears;
 import frc.robot.subsystems.Arm;
@@ -77,7 +76,7 @@ public class RobotContainer {
       m_drive.setDefaultCommand(
           new DriveTank(
               m_drive, leftStick::getLeftY, rightStick::getLeftY, m_constants.driveSpeed));
-      m_arm.setDefaultCommand(new ArmForward(m_arm, coDriver::getLeftY));
+      m_arm.setDefaultCommand(new ManualArm(m_arm, coDriver::getLeftY));
       m_claw.setDefaultCommand(new ManualClaw(m_claw, coDriver::getRightY));
     }
   }
@@ -92,14 +91,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    final JoystickButton codriverA = new JoystickButton(coDriver, XboxController.Button.kA.value);
-    final JoystickButton codriverB = new JoystickButton(coDriver, XboxController.Button.kB.value);
-    final JoystickButton leftStickTrigger = new JoystickButton(leftStick, 1);
     final JoystickButton rightStickTrigger = new JoystickButton(rightStick, 1);
 
-    // codriverA.whileTrue(new ArmForward(m_arm));
-    // codriverB.whileTrue(new ArmReverse(m_arm));
-    leftStickTrigger.whileTrue(new ClawSwitch(m_claw));
     rightStickTrigger.whileTrue(new SwitchGears(m_gearShifter));
   }
 

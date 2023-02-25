@@ -50,4 +50,24 @@ public final class RealConstants extends Constants {
   // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
   public static final double kRamseteB = 2;
   public static final double kRamseteZeta = 0.7;
+
+  public static final double kArmP = 0;
+  public static final double kArmI = 0;
+  public static final double kArmD = 0;
+
+  public static final double kClawP = 0;
+  public static final double kClawI = 0;
+  public static final double kClawD = 0;
+
+  public static final float armForwardLimit = 300;
+  public static final float armReverseLimit = 0;
+
+  public static final double armGearRatio = 192;
+  public static final double armConversionFactor = 360 / armGearRatio;
+
+  public static final double clawGearRatio = 144;
+  public static final double clawConversionFactor = 360 / clawGearRatio;
+
+  public static final float clawForwardLimit = 135;
+  public static final float clawReverseLimit = 10;
 }

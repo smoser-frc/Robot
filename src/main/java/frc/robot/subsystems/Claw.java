@@ -6,11 +6,13 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RealConstants;
-import java.util.function.DoubleSupplier;
 
 public class Claw extends SubsystemBase {
   private CANSparkMax clawMotor = new CANSparkMax(8, MotorType.kBrushless);
@@ -23,6 +25,11 @@ public class Claw extends SubsystemBase {
   private boolean isClosed;
   private boolean isOpen;
 
+  private PIDController holdPID =
+      new PIDController(RealConstants.kClawP, RealConstants.kClawI, RealConstants.kClawD);
+
+  private RelativeEncoder clawEnc = clawMotor.getEncoder();
+
   public Claw() {
     forewardLimit.enableLimitSwitch(true);
     reverseLimit.enableLimitSwitch(true);
@@ -31,6 +38,12 @@ public class Claw extends SubsystemBase {
     isOpen = reverseLimit.isPressed();
 
     clawMotor.setIdleMode(IdleMode.kBrake);
+
+    clawEnc.setPositionConversionFactor(RealConstants.clawConversionFactor);
+    clawEnc.setPosition(25);
+
+    clawMotor.setSoftLimit(SoftLimitDirection.kForward, RealConstants.clawForwardLimit);
+    clawMotor.setSoftLimit(SoftLimitDirection.kReverse, RealConstants.clawReverseLimit);
   }
 
   public boolean queryClosed() {
@@ -41,8 +54,8 @@ public class Claw extends SubsystemBase {
     return isOpen;
   }
 
-  public void setMotorForward(DoubleSupplier speed) {
-    clawMotor.set(speed.getAsDouble());
+  public void setMotor(double speed) {
+    clawMotor.set(speed);
   }
 
   public void setMotorReverse() {
@@ -51,6 +64,10 @@ public class Claw extends SubsystemBase {
 
   public void stopMotor() {
     clawMotor.set(0);
+  }
+
+  public void hold() {
+    clawMotor.set(holdPID.calculate(clawEnc.getVelocity(), 0));
   }
 
   @Override
