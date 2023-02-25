@@ -5,41 +5,73 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
-/** A command that will turn the robot to the specified angle. */
-public class TurnToAngle extends PIDCommand {
+/** A command that will move the robot forward */
+public class TurnToAngle extends CommandBase {
+
+  private DriveSubsystem m_drive;
+  private PIDController m_PidControl;
+  private double m_angle;
+  private double setPoint;
+
   /**
-   * Turns to robot to the specified angle.
+   * Moves the robot a specified distance forward.
    *
-   * @param targetAngleDegrees The angle to turn to
+   * @param angle Angle to go to.
    * @param drive The drive subsystem to use
    */
-  public TurnToAngle(double targetAngleDegrees, DriveSubsystem drive) {
-    super(
-        new PIDController(DriveConstants.kTurnP, DriveConstants.kTurnI, DriveConstants.kTurnD),
-        // Close loop on heading
-        drive::getHeading,
-        // Set reference to target
-        targetAngleDegrees,
-        // Pipe output to turn robot
-        output -> drive.arcadeDrive(0, output),
-        // Require the drive
-        drive);
+  public TurnToAngle(double angle, DriveSubsystem drive) {
+    m_drive = drive;
+    m_angle = angle;
 
-    // Set the controller to be continuous (because it is an angle controller)
-    getController().enableContinuousInput(-180, 180);
+    m_PidControl =
+        new PIDController(DriveConstants.kTurnP, DriveConstants.kTurnI, DriveConstants.kTurnD);
+    m_PidControl.setTolerance(
+        Constants.DriveConstants.kTurnToleranceDeg,
+        Constants.DriveConstants.kTurnRateToleranceDegPerS);
+
+    addRequirements(drive);
+  }
+
+  @Override
+  public void initialize() {
+
+    double heading = m_drive.getHeading();
+    double target = m_angle + heading;
+    System.out.println("At " + heading + " going to " + target);
+
+    setPoint = heading + m_angle;
+
+    m_drive.setMaxOutput(1.0);
+
     // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
     // setpoint before it is considered as having reached the reference
-    getController()
-        .setTolerance(DriveConstants.kTurnToleranceDeg, DriveConstants.kTurnRateToleranceDegPerS);
+  }
+
+  @Override
+  public void execute() {
+    double heading = m_drive.getHeading();
+    double output = m_PidControl.calculate(heading, setPoint);
+    m_drive.arcadeDrive(0, output);
+    SmartDashboard.putNumber("Heading", heading);
+    SmartDashboard.putNumber("TurnOutput", output);
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    m_drive.setMaxOutput(1);
+    System.out.println(
+        "At " + m_drive.getHeading() + " target " + setPoint + " Done!");
   }
 
   @Override
   public boolean isFinished() {
     // End when the controller is at the reference.
-    return getController().atSetpoint();
+    return m_PidControl.atSetpoint();
   }
 }

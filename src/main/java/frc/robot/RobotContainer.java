@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DriveDistance;
+import frc.robot.commands.TurnToAngle;
 import frc.robot.subsystems.DriveSubsystem;
 
 /**
@@ -82,10 +83,16 @@ public class RobotContainer {
     // .onTrue(new TurnToAngleProfiled(-90, m_robotDrive).withTimeout(5));
 
     new JoystickButton(m_driverController, XboxController.Button.kA.value)
-        .onTrue(new DriveDistance(6 * Math.PI, m_robotDrive));
+        .onTrue(new DriveDistance(6 * Math.PI * 4, m_robotDrive));
 
     new JoystickButton(m_driverController, XboxController.Button.kB.value)
-        .onTrue(new DriveDistance(-6 * Math.PI, m_robotDrive));
+        .onTrue(new DriveDistance(-6 * Math.PI * 4, m_robotDrive));
+
+    new JoystickButton(m_driverController, XboxController.Button.kX.value)
+        .onTrue(new TurnToAngle(180, m_robotDrive));
+
+    new JoystickButton(m_driverController, XboxController.Button.kY.value)
+        .onTrue(new TurnToAngle(0, m_robotDrive));
   }
 
   /**
