@@ -4,12 +4,8 @@
 
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.RelativeEncoder;
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,70 +13,25 @@ import frc.robot.Constants.DriveConstants;
 
 public class DriveSubsystem extends SubsystemBase {
   // The motors on the left side of the drive.
-  private CANSparkMax leftFront, leftMid, leftBack, rightFront, rightMid, rightBack;
-  private final MotorControllerGroup m_leftMotors, m_rightMotors;
+  protected MotorControllerGroup m_leftMotors, m_rightMotors;
 
   // The robot's drive
-  private final DifferentialDrive m_drive;
-
-  // The left-side drive encoder
-  private final RelativeEncoder m_leftFrontEncoder,
-      m_leftBackEncoder,
-      m_rightFrontEncoder,
-      m_rightBackEncoder;
+  protected DifferentialDrive m_drive;
 
   // The gyro sensor
-  private final AHRS m_gyro = new AHRS(SerialPort.Port.kMXP);
+  protected Gyro m_gyro;
 
-  private boolean six = true;
-  private boolean debug = false;
-
-  public DriveSubsystem(boolean six, boolean debug) {
-    this();
-    this.debug = debug;
-    this.six = six;
-  }
+  protected boolean debug = false;
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
-    if (six) {
-      leftFront = new CANSparkMax(1, MotorType.kBrushless);
-      leftMid = new CANSparkMax(2, MotorType.kBrushless);
-      leftBack = new CANSparkMax(3, MotorType.kBrushless);
-      rightFront = new CANSparkMax(4, MotorType.kBrushless);
-      rightMid = new CANSparkMax(5, MotorType.kBrushless);
-      rightBack = new CANSparkMax(6, MotorType.kBrushless);
-      m_leftMotors = new MotorControllerGroup(leftFront, leftMid, leftBack);
-      m_rightMotors = new MotorControllerGroup(rightFront, rightMid, rightBack);
-    } else {
-      leftFront = new CANSparkMax(1, MotorType.kBrushless);
-      leftBack = new CANSparkMax(2, MotorType.kBrushless);
-      rightFront = new CANSparkMax(3, MotorType.kBrushless);
-      rightBack = new CANSparkMax(4, MotorType.kBrushless);
-      m_leftMotors = new MotorControllerGroup(leftFront, leftBack);
-      m_rightMotors = new MotorControllerGroup(rightFront, rightBack);
-    }
-
     m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
-
-    m_leftFrontEncoder = leftFront.getEncoder();
-    m_leftBackEncoder = leftBack.getEncoder();
-    m_rightFrontEncoder = leftFront.getEncoder();
-    m_rightBackEncoder = leftBack.getEncoder();
 
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     m_leftMotors.setInverted(false);
     m_rightMotors.setInverted(true);
-
-    // Sets the distance per pulse for the encoders
-    m_leftFrontEncoder.setPositionConversionFactor(DriveConstants.kEncoderDistancePerPulse);
-    m_leftBackEncoder.setPositionConversionFactor(DriveConstants.kEncoderDistancePerPulse);
-    m_rightFrontEncoder.setPositionConversionFactor(DriveConstants.kEncoderDistancePerPulse);
-    m_rightBackEncoder.setPositionConversionFactor(DriveConstants.kEncoderDistancePerPulse);
-
-    resetEncoders();
   }
 
   /**
@@ -93,44 +44,6 @@ public class DriveSubsystem extends SubsystemBase {
     m_drive.arcadeDrive(fwd, rot);
   }
 
-  /** Resets the drive encoders to currently read a position of 0. */
-  public void resetEncoders() {
-    m_leftFrontEncoder.setPosition(0);
-    m_leftBackEncoder.setPosition(0);
-    m_rightFrontEncoder.setPosition(0);
-    m_rightBackEncoder.setPosition(0);
-  }
-
-  /**
-   * Gets the average distance of the two encoders.
-   *
-   * @return the average of the encoder readings
-   */
-  public double getAverageEncoderDistance() {
-    return (m_leftFrontEncoder.getPosition()
-            + m_leftBackEncoder.getPosition()
-            + m_rightFrontEncoder.getPosition()
-            + m_rightBackEncoder.getPosition())
-        / 4.0;
-  }
-
-  /**
-   * Gets the left drive encoder.
-   *
-   * @return the left drive encoder
-   */
-  public RelativeEncoder getLeftEncoder() {
-    return m_leftFrontEncoder;
-  }
-
-  /**
-   * Gets the right drive encoder.
-   *
-   * @return the right drive encoder
-   */
-  public RelativeEncoder getRightEncoder() {
-    return m_rightFrontEncoder;
-  }
   /**
    * Sets the max output of the drive. Useful for scaling the drive to drive more slowly.
    *
@@ -166,11 +79,22 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (debug) {
-      SmartDashboard.putNumber("LeftFDist", m_leftFrontEncoder.getPosition());
-      SmartDashboard.putNumber("RightFDist", m_rightFrontEncoder.getPosition());
       SmartDashboard.putNumber("Drive Distance", getAverageEncoderDistance());
       SmartDashboard.putNumber("Turn Rate", getTurnRate());
       SmartDashboard.putNumber("Heading", getHeading());
     }
+  }
+
+  /**
+   * Gets the average distance of the drive encoders.
+   *
+   * @return the average of the encoder readings
+   */
+  public double getAverageEncoderDistance() {
+    throw new java.lang.UnsupportedOperationException();
+  }
+
+  public void resetEncoders() {
+    throw new java.lang.UnsupportedOperationException();
   }
 }
