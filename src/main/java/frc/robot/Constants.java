@@ -16,10 +16,11 @@ public final class Constants {
   public static final class DriveConstants {
     public static final double kEncoderCPR = 1;
     public static final double kWheelDiameterInches = 6;
-    public static final double kGearRatio = 10.71;
+    public static final double kGearRatioHigh = 4.77;
+    public static final double kGearRatioLow = 20.2;
     public static final double kEncoderDistancePerPulse =
         // Assumes the encoders are directly mounted on the wheel shafts
-        (kWheelDiameterInches * Math.PI) / kGearRatio / (double) kEncoderCPR;
+        (kWheelDiameterInches * Math.PI) / kGearRatioHigh / (double) kEncoderCPR;
 
     public static final boolean kGyroReversed = false;
 
