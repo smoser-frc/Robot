@@ -17,7 +17,7 @@ import frc.robot.Constants.DriveConstants;
 
 public class DriveSubsystem extends SubsystemBase {
   // The motors on the left side of the drive.
-  private CANSparkMax leftFront, leftBack, rightFront, rightBack;
+  private CANSparkMax leftFront, leftMid, leftBack, rightFront, rightMid, rightBack;
   private final MotorControllerGroup m_leftMotors, m_rightMotors;
 
   // The robot's drive
@@ -32,15 +32,34 @@ public class DriveSubsystem extends SubsystemBase {
   // The gyro sensor
   private final AHRS m_gyro = new AHRS(SerialPort.Port.kMXP);
 
+  private boolean six = true;
+  private boolean debug = false;
+
+  public DriveSubsystem(boolean six, boolean debug) {
+    this();
+    this.debug = debug;
+    this.six = six;
+  }
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
-    leftFront = new CANSparkMax(1, MotorType.kBrushless);
-    leftBack = new CANSparkMax(2, MotorType.kBrushless);
-    rightFront = new CANSparkMax(3, MotorType.kBrushless);
-    rightBack = new CANSparkMax(4, MotorType.kBrushless);
-
-    m_leftMotors = new MotorControllerGroup(leftFront, leftBack);
-    m_rightMotors = new MotorControllerGroup(rightFront, rightBack);
+    if (six) {
+      leftFront = new CANSparkMax(1, MotorType.kBrushless);
+      leftMid = new CANSparkMax(2, MotorType.kBrushless);
+      leftBack = new CANSparkMax(3, MotorType.kBrushless);
+      rightFront = new CANSparkMax(4, MotorType.kBrushless);
+      rightMid = new CANSparkMax(5, MotorType.kBrushless);
+      rightBack = new CANSparkMax(6, MotorType.kBrushless);
+      m_leftMotors = new MotorControllerGroup(leftFront, leftMid, leftBack);
+      m_rightMotors = new MotorControllerGroup(rightFront, rightMid, rightBack);
+    } else {
+      leftFront = new CANSparkMax(1, MotorType.kBrushless);
+      leftBack = new CANSparkMax(2, MotorType.kBrushless);
+      rightFront = new CANSparkMax(3, MotorType.kBrushless);
+      rightBack = new CANSparkMax(4, MotorType.kBrushless);
+      m_leftMotors = new MotorControllerGroup(leftFront, leftBack);
+      m_rightMotors = new MotorControllerGroup(rightFront, rightBack);
+    }
 
     m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 
@@ -146,8 +165,12 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Drive Distance", getAverageEncoderDistance());
-    SmartDashboard.putNumber("Turn Rate", getTurnRate());
-    SmartDashboard.putNumber("Heading", getHeading());
+    if (debug) {
+      SmartDashboard.putNumber("LeftFDist", m_leftFrontEncoder.getPosition());
+      SmartDashboard.putNumber("RightFDist", m_rightFrontEncoder.getPosition());
+      SmartDashboard.putNumber("Drive Distance", getAverageEncoderDistance());
+      SmartDashboard.putNumber("Turn Rate", getTurnRate());
+      SmartDashboard.putNumber("Heading", getHeading());
+    }
   }
 }
