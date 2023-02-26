@@ -13,6 +13,8 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DriveDistance;
 import frc.robot.commands.TurnToAngle;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.RealDrive;
+import frc.robot.subsystems.SimDrive;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -22,13 +24,19 @@ import frc.robot.subsystems.DriveSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems
-  private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final DriveSubsystem m_robotDrive;
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    if (Robot.isReal()) {
+      m_robotDrive = new RealDrive();
+    } else {
+      m_robotDrive = new SimDrive();
+    }
+
     // Configure the button bindings
     configureButtonBindings();
 
@@ -100,5 +108,9 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // no auto
     return new InstantCommand();
+  }
+
+  public void autonomousInit() {
+    m_robotDrive.resetPosition();
   }
 }

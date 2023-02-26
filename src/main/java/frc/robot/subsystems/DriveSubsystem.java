@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Robot;
 
 public class DriveSubsystem extends SubsystemBase {
   // The motors on the left side of the drive.
@@ -30,17 +31,17 @@ public class DriveSubsystem extends SubsystemBase {
 
   protected boolean debug = false;
 
-  /** Creates a new DriveSubsystem. */
-  public DriveSubsystem() {}
-
   public void _init() {
     m_leftMotors.setInverted(false);
     m_rightMotors.setInverted(true);
+    m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 
     m_odometry =
         new DifferentialDriveOdometry(
             Rotation2d.fromDegrees(getHeading()), getLeftDistance(), getRightDistance());
     m_fieldSim = new Field2d();
+
+    SmartDashboard.putData("Field", m_fieldSim);
   }
 
   /**
@@ -100,6 +101,21 @@ public class DriveSubsystem extends SubsystemBase {
   public Pose2d getPose() {
     return m_odometry.getPoseMeters();
   }
+
+  public void resetPosition() {
+    resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
+  }
+
+  public void resetOdometry(Pose2d pose) {
+    resetEncoders();
+    if (Robot.isSimulation()) {
+      setSimPose(pose);
+    }
+    m_odometry.resetPosition(
+        Rotation2d.fromDegrees(getHeading()), getLeftDistance(), getRightDistance(), pose);
+  }
+
+  public void setSimPose(Pose2d pose) {}
 
   /**
    * Gets the average distance of the drive encoders.

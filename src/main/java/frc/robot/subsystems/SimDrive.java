@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -56,8 +57,8 @@ public class SimDrive extends DriveSubsystem {
             SimDriveConstants.kRightEncoderPorts[0], SimDriveConstants.kRightEncoderPorts[1]);
 
     // Sets the distance per pulse for the encoders
-    m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
-    m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+    m_leftEncoder.setDistancePerPulse(SimDriveConstants.kEncoderDistancePerPulse);
+    m_rightEncoder.setDistancePerPulse(SimDriveConstants.kEncoderDistancePerPulse);
 
     if (RobotBase.isSimulation()) { // If our robot is simulated
       // This class simulates our drivetrain's motion around the field.
@@ -67,7 +68,7 @@ public class SimDrive extends DriveSubsystem {
               SimDriveConstants.kDriveGearbox,
               DriveConstants.kGearRatioHigh,
               DriveConstants.kTrackwidthMeters,
-              SimDriveConstants.kWheelDiameterMeters / 2.0,
+              DriveConstants.kWheelDiameterMeters / 2.0,
               VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005));
 
       // The encoder and gyro angle sims let us set simulated sensor readings
@@ -87,6 +88,21 @@ public class SimDrive extends DriveSubsystem {
   public void resetEncoders() {
     m_leftEncoder.reset();
     m_rightEncoder.reset();
+  }
+
+  @Override
+  public void setSimPose(Pose2d pose) {
+    m_drivetrainSimulator.setPose(pose);
+  }
+
+  @Override
+  public double getLeftDistance() {
+    return m_leftEncoder.getDistance();
+  }
+
+  @Override
+  public double getRightDistance() {
+    return m_rightEncoder.getDistance();
   }
 
   /**
@@ -128,6 +144,12 @@ public class SimDrive extends DriveSubsystem {
     public static final boolean kLeftEncoderReversed = false;
     public static final boolean kRightEncoderReversed = false;
 
+    public static final double kEncoderCPR = 1024;
+    public static final double kEncoderDistancePerPulse =
+        // Assumes the encoders are directly mounted on the wheel shafts
+        (DriveConstants.kWheelDiameterMeters * Math.PI)
+            / DriveConstants.kGearRatioHigh
+            / (double) kEncoderCPR;
     // These are taken from StateSpaceDriveSimulation example.
 
     // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!

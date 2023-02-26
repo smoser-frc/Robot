@@ -9,19 +9,17 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import frc.robot.Constants.DriveConstants;
 
 public class RealDrive extends DriveSubsystem {
   private CANSparkMax leftFront, leftMid, leftBack, rightFront, rightMid, rightBack;
-
-  protected boolean six = true;
-
   private final RelativeEncoder m_leftFrontEncoder,
       m_leftBackEncoder,
       m_rightFrontEncoder,
       m_rightBackEncoder;
+
+  protected boolean six = true;
 
   /** Creates a new RealDrive. */
   public RealDrive() {
@@ -50,7 +48,7 @@ public class RealDrive extends DriveSubsystem {
       m_rightMotors = new MotorControllerGroup(rightFront, rightBack);
     }
     m_gyro = new AHRS(SerialPort.Port.kMXP);
-    m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
+    System.out.println("Yeah, set gyyro to" + m_gyro);
 
     m_leftFrontEncoder = leftFront.getEncoder();
     m_leftBackEncoder = leftBack.getEncoder();
@@ -63,7 +61,7 @@ public class RealDrive extends DriveSubsystem {
     m_rightFrontEncoder.setPositionConversionFactor(DriveConstants.kEncoderDistancePerPulse);
     m_rightBackEncoder.setPositionConversionFactor(DriveConstants.kEncoderDistancePerPulse);
 
-    resetEncoders();
+    _init();
   }
 
   /** Resets the drive encoders to currently read a position of 0. */
@@ -91,6 +89,6 @@ public class RealDrive extends DriveSubsystem {
 
   @Override
   public double getRightDistance() {
-    return (m_leftFrontEncoder.getPosition() + m_leftBackEncoder.getPosition()) / 2;
+    return (m_rightFrontEncoder.getPosition() + m_rightBackEncoder.getPosition()) / 2;
   }
 }
