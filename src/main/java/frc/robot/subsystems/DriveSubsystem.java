@@ -4,9 +4,13 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
@@ -21,17 +25,22 @@ public class DriveSubsystem extends SubsystemBase {
   // The gyro sensor
   protected Gyro m_gyro;
 
+  protected DifferentialDriveOdometry m_odometry;
+  protected Field2d m_fieldSim;
+
   protected boolean debug = false;
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem() {
-    m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
+  public DriveSubsystem() {}
 
-    // We need to invert one side of the drivetrain so that positive voltages
-    // result in both sides moving forward. Depending on how your robot's
-    // gearbox is constructed, you might have to invert the left side instead.
+  public void _init() {
     m_leftMotors.setInverted(false);
     m_rightMotors.setInverted(true);
+
+    m_odometry =
+        new DifferentialDriveOdometry(
+            Rotation2d.fromDegrees(getHeading()), getLeftDistance(), getRightDistance());
+    m_fieldSim = new Field2d();
   }
 
   /**
@@ -83,6 +92,13 @@ public class DriveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("Turn Rate", getTurnRate());
       SmartDashboard.putNumber("Heading", getHeading());
     }
+    m_odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftDistance(), getRightDistance());
+
+    m_fieldSim.setRobotPose(getPose());
+  }
+
+  public Pose2d getPose() {
+    return m_odometry.getPoseMeters();
   }
 
   /**
@@ -95,6 +111,14 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void resetEncoders() {
+    throw new java.lang.UnsupportedOperationException();
+  }
+
+  public double getLeftDistance() {
+    throw new java.lang.UnsupportedOperationException();
+  }
+
+  public double getRightDistance() {
     throw new java.lang.UnsupportedOperationException();
   }
 }

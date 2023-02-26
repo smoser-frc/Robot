@@ -83,4 +83,14 @@ public class RealDrive extends DriveSubsystem {
             + m_rightBackEncoder.getPosition())
         / 4.0;
   }
+
+  @Override
+  public double getLeftDistance() {
+    return (m_leftFrontEncoder.getPosition() + m_leftBackEncoder.getPosition()) / 2;
+  }
+
+  @Override
+  public double getRightDistance() {
+    return (m_leftFrontEncoder.getPosition() + m_leftBackEncoder.getPosition()) / 2;
+  }
 }
