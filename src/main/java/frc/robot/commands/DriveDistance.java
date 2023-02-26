@@ -32,8 +32,8 @@ public class DriveDistance extends CommandBase {
     m_PidControl =
         new PIDController(DriveConstants.kDriveP, DriveConstants.kDriveI, DriveConstants.kDriveD);
     m_PidControl.setTolerance(
-        Constants.DriveConstants.kDriveToleranceInches,
-        Constants.DriveConstants.kDriveRateToleranceInchesPerS);
+        Constants.DriveConstants.kDriveToleranceMeters,
+        Constants.DriveConstants.kDriveRateToleranceMetersPerS);
 
     addRequirements(drive);
   }

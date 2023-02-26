@@ -17,8 +17,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
   public static final class DriveConstants {
     public static final double kEncoderCPR = 1;
-    public static final double kWheelDiameterInches = 6;
-    public static final double kWheelDiameterMeters = Units.inchesToMeters(kWheelDiameterInches);
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(6);
     public static final double kGearRatioHigh = 4.77;
     public static final double kGearRatioLow = 20.2;
     public static final double kTrackwidthMeters = Units.inchesToMeters(21.75);
@@ -46,8 +45,9 @@ public final class Constants {
     public static final double kTurnToleranceDeg = 5;
     public static final double kTurnRateToleranceDegPerS = 10; // degrees per second
 
-    public static final double kDriveToleranceInches = 1;
-    public static final double kDriveRateToleranceInchesPerS = 10; // inches per second
+    public static final double cm = 0.01;
+    public static final double kDriveToleranceMeters = 3 * cm; // 2.54 cm is one inch.
+    public static final double kDriveRateToleranceMetersPerS = 1 * cm;
   }
 
   public static final class OIConstants {

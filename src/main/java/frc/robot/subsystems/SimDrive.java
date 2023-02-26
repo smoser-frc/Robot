@@ -180,9 +180,5 @@ public class SimDrive extends DriveSubsystem {
 
     // Example value only - as above, this must be tuned for your drive!
     public static final double kPDriveVel = 8.5;
-    public static final double kTrackwidthMeters = 0.69;
-    public static final double inchesPerMeter = 0.0254;
-    public static final double kWheelDiameterMeters =
-        DriveConstants.kWheelDiameterInches * inchesPerMeter;
   }
 }
