@@ -4,14 +4,24 @@
 
 package frc.robot.subsystems;
 
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPRamseteCommand;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Robot;
@@ -22,6 +32,9 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The robot's drive
   protected DifferentialDrive m_drive;
+
+  DifferentialDriveKinematics kinematics =
+      new DifferentialDriveKinematics(DriveConstants.kTrackwidthMeters);
 
   // The gyro sensor
   protected Gyro m_gyro;
@@ -86,6 +99,18 @@ public class DriveSubsystem extends SubsystemBase {
     return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 
+  /*
+   * Controls the left and right sides of the drive directly with voltages.
+   *
+   * @param leftVolts the commanded left output
+   * @param rightVolts the commanded right output
+   */
+  public void tankDriveVolts(double leftVolts, double rightVolts) {
+    m_leftMotors.setVoltage(leftVolts);
+    m_rightMotors.setVoltage(rightVolts);
+    m_drive.feed();
+  }
+
   @Override
   public void periodic() {
     if (debug) {
@@ -136,5 +161,50 @@ public class DriveSubsystem extends SubsystemBase {
 
   public double getRightDistance() {
     throw new java.lang.UnsupportedOperationException();
+  }
+
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(getLeftSpeed(), getRightSpeed());
+  }
+
+  public double getLeftSpeed() {
+    throw new java.lang.UnsupportedOperationException();
+  }
+
+  public double getRightSpeed() {
+    throw new java.lang.UnsupportedOperationException();
+  }
+
+  public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
+    // These are taken from picture at
+    // https://docs.wpilib.org/en/stable/docs/software/pathplanning/trajectory-tutorial/characterizing-drive.html
+    // oh how we need sysid.
+    double ks = 0.52269, kv = 2.4021, ka = 0.43354;
+
+    return new SequentialCommandGroup(
+        new InstantCommand(
+            () -> {
+              // Reset odometry for the first path you run during auto
+              if (isFirstPath) {
+                this.resetOdometry(traj.getInitialPose());
+              }
+            }),
+        new PPRamseteCommand(
+            traj,
+            this::getPose, // Pose supplier,
+            new RamseteController(),
+            new SimpleMotorFeedforward(ks, kv, ka),
+            this.kinematics, // DifferentialDriveKinematics
+            this::getWheelSpeeds, // DifferentialDriveWheelSpeeds supplier
+            // left and right pid controllers
+            new PIDController(
+                DriveConstants.kDriveP, DriveConstants.kDriveI, DriveConstants.kDriveD),
+            new PIDController(
+                DriveConstants.kDriveP, DriveConstants.kDriveI, DriveConstants.kDriveD),
+            this::tankDriveVolts, // Voltage biconsumer
+            true, // Should the path be automatically mirrored depending on alliance color.
+            // Optional, defaults to true
+            this // Requires this drive subsystem
+            ));
   }
 }

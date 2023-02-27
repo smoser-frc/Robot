@@ -105,6 +105,14 @@ public class SimDrive extends DriveSubsystem {
     return m_rightEncoder.getDistance();
   }
 
+  public double getLeftSpeed() {
+    return m_leftEncoder.getRate();
+  }
+
+  public double getRightSpeed() {
+    return m_rightEncoder.getRate();
+  }
+
   /**
    * Gets the average distance of the two encoders.
    *

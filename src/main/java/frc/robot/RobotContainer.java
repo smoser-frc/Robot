@@ -4,9 +4,11 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
@@ -25,6 +27,7 @@ import frc.robot.subsystems.SimDrive;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive;
+  PathPlannerTrajectory demo1;
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -39,6 +42,7 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+    loadPaths();
 
     // Configure default commands
     // Set the default drive command to split-stick arcade drive
@@ -107,10 +111,14 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // no auto
-    return new InstantCommand();
+    return m_robotDrive.followTrajectoryCommand(demo1, true);
   }
 
   public void autonomousInit() {
     m_robotDrive.resetPosition();
+  }
+
+  public void loadPaths() {
+    demo1 = PathPlanner.loadPath("Demo1", new PathConstraints(4, 3));
   }
 }
