@@ -106,6 +106,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new DriveDistance(5.486, m_drive);
+    return new DriveDistance(-5.486, m_drive);
   }
 }
