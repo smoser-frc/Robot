@@ -74,7 +74,7 @@ public class RobotContainer {
       m_arm.setDefaultCommand(new ManualArm(m_arm, coDriver::getLeftY));
       m_claw.setDefaultCommand(new ManualClaw(m_claw, coDriver::getRightY));
     }
-    
+
     Command basicAuto = new BasicAuto(m_arm, m_claw, m_drive);
 
     m_Chooser.setDefaultOption("Basic Auton", basicAuto);
