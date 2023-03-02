@@ -58,7 +58,6 @@ public class Claw extends SubsystemBase {
   public void setMotor(double speed) {
     double position = clawEnc.getPosition();
     clawMotor.set(speed * RealConstants.clawSpeed);
-    
   }
 
   public void setMotorReverse() {
@@ -78,7 +77,7 @@ public class Claw extends SubsystemBase {
     // This method will be called once per scheduler run
     isClosed = forewardLimit.isPressed();
     isOpen = reverseLimit.isPressed();
-    
+
     SmartDashboard.putNumber("Claw Position", clawEnc.getPosition());
     SmartDashboard.putNumber("Claw Velocity", clawEnc.getVelocity());
     SmartDashboard.putNumber("Claw Hold PID", holdPID.calculate(clawEnc.getVelocity(), 0));

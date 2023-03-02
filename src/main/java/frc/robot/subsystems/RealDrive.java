@@ -8,7 +8,6 @@ import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxRelativeEncoder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
@@ -35,10 +34,8 @@ public class RealDrive extends Drive {
   private MotorControllerGroup rightGroup =
       new MotorControllerGroup(rightFront, rightMid, rightBack);
 
-  private RelativeEncoder leftEnc =
-      leftFront.getEncoder();
-  private RelativeEncoder rightEnc =
-      rightFront.getEncoder();
+  private RelativeEncoder leftEnc = leftFront.getEncoder();
+  private RelativeEncoder rightEnc = rightFront.getEncoder();
 
   private final AHRS m_gyro = new AHRS(SerialPort.Port.kMXP);
 

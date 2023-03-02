@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
@@ -52,14 +51,12 @@ public class Arm extends SubsystemBase {
 
   public void setMotor(double speed) {
     double position = armEnc.getPosition();
-    if(position <= -RealConstants.armForwardLimit && speed < 0){
+    if (position <= -RealConstants.armForwardLimit && speed < 0) {
       armMotor.set(0);
-    }
-    else if(position >= -RealConstants.armReverseLimit && speed > 0){
+    } else if (position >= -RealConstants.armReverseLimit && speed > 0) {
       armMotor.set(0);
-    }
-    else{
-    armMotor.set(speed * RealConstants.armSpeed);
+    } else {
+      armMotor.set(speed * RealConstants.armSpeed);
     }
   }
 
@@ -71,7 +68,7 @@ public class Arm extends SubsystemBase {
     armMotor.set(0);
   }
 
-  public double getPosition(){
+  public double getPosition() {
     return armEnc.getPosition();
   }
 

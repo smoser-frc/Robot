@@ -8,7 +8,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drive;
 
 /** A command that will move the robot forward */
@@ -43,8 +42,7 @@ public class DriveDistance extends CommandBase {
     double i = SmartDashboard.getNumber("Drive I", 0);
     double d = SmartDashboard.getNumber("Drive D", 0);
 
-    m_PidControl =
-        new PIDController(p, i, d);
+    m_PidControl = new PIDController(p, i, d);
     m_PidControl.setTolerance(
         Constants.DriveConstants.kDriveDistanceToleranceMeters,
         Constants.DriveConstants.kDriveDistanceRateToleranceMetersPerS);
@@ -61,10 +59,9 @@ public class DriveDistance extends CommandBase {
   @Override
   public void execute() {
     double pidSpeed = m_PidControl.calculate(m_drive.getAverageEncoderDistance(), setPoint);
-    if(pidSpeed > 0.9){
+    if (pidSpeed > 0.9) {
       pidSpeed = 0.9;
-    }
-    else if(pidSpeed < -0.9){
+    } else if (pidSpeed < -0.9) {
       pidSpeed = -0.9;
     }
     m_drive.setArcadeDrive(pidSpeed, 0);

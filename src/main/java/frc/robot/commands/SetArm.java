@@ -7,11 +7,8 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.RealConstants;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Drive;
 
 /** A command that will move the robot forward */
 public class SetArm extends CommandBase {
@@ -44,10 +41,8 @@ public class SetArm extends CommandBase {
     double i = SmartDashboard.getNumber("Arm I", 0);
     double d = SmartDashboard.getNumber("Arm D", 0);
 
-    m_PidControl =
-        new PIDController(0.01, 0, 0);
-    m_PidControl.setTolerance(
-        RealConstants.kArmPositionToleranceDegrees);
+    m_PidControl = new PIDController(0.01, 0, 0);
+    m_PidControl.setTolerance(RealConstants.kArmPositionToleranceDegrees);
 
     System.out.println("At " + m_arm.getPosition() + " going to " + m_position);
 
@@ -64,8 +59,7 @@ public class SetArm extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    System.out.println(
-        "At " + m_arm.getPosition() + " target " + m_position + " Done!");
+    System.out.println("At " + m_arm.getPosition() + " target " + m_position + " Done!");
   }
 
   @Override

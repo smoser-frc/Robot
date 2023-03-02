@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -25,7 +26,6 @@ import frc.robot.commands.DriveDistance;
 import frc.robot.commands.DriveTank;
 import frc.robot.commands.ManualArm;
 import frc.robot.commands.ManualClaw;
-import frc.robot.commands.SetArm;
 import frc.robot.commands.SwitchGears;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
@@ -78,6 +78,8 @@ public class RobotContainer {
               m_drive, leftStick::getLeftY, rightStick::getLeftY, m_constants.driveSpeed));
       m_arm.setDefaultCommand(new ManualArm(m_arm, coDriver::getLeftY));
       m_claw.setDefaultCommand(new ManualClaw(m_claw, coDriver::getRightY));
+
+      CameraServer.startAutomaticCapture();
     }
 
     // Configure the trigger bindings
@@ -100,12 +102,11 @@ public class RobotContainer {
     final JoystickButton coDriverY = new JoystickButton(coDriver, XboxController.Button.kY.value);
     final JoystickButton coDriverX = new JoystickButton(coDriver, XboxController.Button.kX.value);
 
-
     rightStickTrigger.whileTrue(new SwitchGears(m_gearShifter));
     coDriverA.onTrue(new DriveDistance(2, m_drive));
     coDriverB.onTrue(new DriveDistance(-2, m_drive));
-    //coDriverY.onTrue(new SetArm(-190.0, m_arm));
-    //coDriverX.onTrue(new SetArm(-10, m_arm));
+    // coDriverY.onTrue(new SetArm(-190.0, m_arm));
+    // coDriverX.onTrue(new SetArm(-10, m_arm));
 
   }
 
