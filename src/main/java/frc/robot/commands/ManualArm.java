@@ -29,7 +29,7 @@ public class ManualArm extends CommandBase {
     if (dSpeed >= 0.1 || dSpeed <= -0.1) {
       m_arm.setMotor(dSpeed);
     } else {
-      //m_arm.hold();
+      m_arm.setMotor(0);
     }
   }
 

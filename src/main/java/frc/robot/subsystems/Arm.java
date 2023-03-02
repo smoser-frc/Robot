@@ -58,9 +58,6 @@ public class Arm extends SubsystemBase {
     else if(position >= -RealConstants.armReverseLimit && speed > 0){
       armMotor.set(0);
     }
-    else if(speed > 0.3 && position > 100){
-      armMotor.set(0.3);
-    }
     else{
     armMotor.set(speed * RealConstants.armSpeed);
     }

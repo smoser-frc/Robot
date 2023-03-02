@@ -57,15 +57,8 @@ public class Claw extends SubsystemBase {
 
   public void setMotor(double speed) {
     double position = clawEnc.getPosition();
-    if(position <= -RealConstants.clawForwardLimit && speed < 0){
-      clawMotor.set(0);
-    }
-    else if(position >= -RealConstants.clawReverseLimit && speed > 0){
-      clawMotor.set(0);
-    }
-    else{
     clawMotor.set(speed * RealConstants.clawSpeed);
-    }
+    
   }
 
   public void setMotorReverse() {

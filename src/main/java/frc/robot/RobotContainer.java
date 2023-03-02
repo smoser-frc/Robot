@@ -104,8 +104,8 @@ public class RobotContainer {
     rightStickTrigger.whileTrue(new SwitchGears(m_gearShifter));
     coDriverA.onTrue(new DriveDistance(2, m_drive));
     coDriverB.onTrue(new DriveDistance(-2, m_drive));
-    coDriverY.onTrue(new SetArm(-190.0, m_arm));
-    coDriverX.onTrue(new SetArm(-10, m_arm));
+    //coDriverY.onTrue(new SetArm(-190.0, m_arm));
+    //coDriverX.onTrue(new SetArm(-10, m_arm));
 
   }
 

@@ -22,7 +22,7 @@ public final class RealConstants extends Constants {
 
   public static final double armSpeed = 0.55;
   public static final double driveSpeed = 0.95;
-  public static final double clawSpeed = 0.6;
+  public static final double clawSpeed = 0.9;
   public static final int kCPR = 42;
   public static final double speedConversionFactor = 1;
   public static final double gearRatioHigh = 4.77;
@@ -71,7 +71,7 @@ public final class RealConstants extends Constants {
   public static final double clawConversionFactor = 360 / clawGearRatio;
 
   public static final float clawForwardLimit = 90;
-  public static final float clawReverseLimit = 5;
+  public static final float clawReverseLimit = -20;
 
   public static final double kArmPositionToleranceDegrees = 5;
 }
