@@ -4,38 +4,34 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
 
-public class SetArmPosition extends CommandBase {
+public class SetClawPosition extends CommandBase {
   /** Creates a new SetArmPosition. */
   private double m_position;
 
-  private Arm m_arm;
+  private Claw m_claw;
   private PIDController m_Controller;
-  private ArmFeedforward m_feed;
 
-  public SetArmPosition(Arm arm, double position) {
+  public SetClawPosition(Claw claw, double position) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_position = position;
-    m_arm = arm;
-    addRequirements(arm);
+    m_claw = claw;
+    addRequirements(claw);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    double kG = SmartDashboard.getNumber("arm kG", 0);
-    double kV = SmartDashboard.getNumber("arm kV", 0);
-    double kP = SmartDashboard.getNumber("arm kP", 0);
-    double kI = SmartDashboard.getNumber("arm kI", 0);
-    double kD = SmartDashboard.getNumber("arm kD", 0);
+    double kG = SmartDashboard.getNumber("claw kG", 0);
+    double kV = SmartDashboard.getNumber("claw kV", 0);
+    double kP = SmartDashboard.getNumber("claw kP", 0);
+    double kI = SmartDashboard.getNumber("claw kI", 0);
+    double kD = SmartDashboard.getNumber("claw kD", 0);
 
-    m_feed = new ArmFeedforward(0, kG, kV);
     m_Controller = new PIDController(kP, kI, kD);
 
     m_Controller.setTolerance(2, 2);
@@ -44,16 +40,14 @@ public class SetArmPosition extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed =
-        m_Controller.calculate(m_arm.getPosition(), m_position)
-            + m_feed.calculate(Units.degreesToRadians(m_position), m_arm.getVelocityRad());
-    m_arm.setMotorVolts(speed);
+    double speed = m_Controller.calculate(m_claw.getPosition(), m_position);
+    m_claw.setMotorVolts(speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_arm.setMotor(0);
+    m_claw.setMotor(0);
   }
 
   // Returns true when the command should end.

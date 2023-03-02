@@ -70,6 +70,14 @@ public class Claw extends SubsystemBase {
     clawMotor.set(holdPID.calculate(clawEnc.getVelocity(), 0));
   }
 
+  public double getPosition() {
+    return clawEnc.getPosition();
+  }
+
+  public void setMotorVolts(double speed) {
+    clawMotor.setVoltage(speed);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

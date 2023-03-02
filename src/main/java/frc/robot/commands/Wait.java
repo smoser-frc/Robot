@@ -4,44 +4,38 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Claw;
-import java.util.function.DoubleSupplier;
 
-public class ManualClaw extends CommandBase {
-  private final Claw m_claw;
-  private DoubleSupplier m_speed;
+public class Wait extends CommandBase {
 
-  public ManualClaw(Claw subsystem, DoubleSupplier speed) {
-    m_claw = subsystem;
-    m_speed = speed;
-    addRequirements(subsystem);
+  private Timer m_timer;
+  private double m_time;
+  /** Creates a new Wait. */
+  public Wait(double time) {
+    m_time = time;
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_timer.restart();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    double dSpeed = m_speed.getAsDouble();
-    if (dSpeed <= -0.1 || dSpeed >= 0.1) {
-      m_claw.setMotor(dSpeed);
-    } else {
-      m_claw.hold();
-    }
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_claw.stopMotor();
+    m_timer.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return m_timer.get() > m_time;
   }
 }
