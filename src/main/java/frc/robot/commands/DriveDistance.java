@@ -42,7 +42,7 @@ public class DriveDistance extends CommandBase {
     double i = SmartDashboard.getNumber("Drive I", 0);
     double d = SmartDashboard.getNumber("Drive D", 0);
 
-    m_PidControl = new PIDController(p, i, d);
+    m_PidControl = new PIDController(Constants.DriveConstants.kDriveP, Constants.DriveConstants.kDriveI, Constants.DriveConstants.kDriveD);
     m_PidControl.setTolerance(
         Constants.DriveConstants.kDriveDistanceToleranceMeters,
         Constants.DriveConstants.kDriveDistanceRateToleranceMetersPerS);
