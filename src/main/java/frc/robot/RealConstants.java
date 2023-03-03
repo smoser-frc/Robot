@@ -71,7 +71,7 @@ public final class RealConstants extends Constants {
   public static final double clawConversionFactor = 360 / clawGearRatio;
 
   public static final float clawForwardLimit = 90;
-  public static final float clawReverseLimit = -20;
+  public static final float clawReverseLimit = -39;
 
   public static final double kArmPositionToleranceDegrees = 5;
 }

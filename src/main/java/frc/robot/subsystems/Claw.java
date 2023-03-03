@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import javax.swing.text.Position;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
@@ -38,13 +40,15 @@ public class Claw extends SubsystemBase {
     isClosed = forewardLimit.isPressed();
     isOpen = reverseLimit.isPressed();
 
-    clawMotor.setIdleMode(IdleMode.kCoast);
+    clawMotor.setIdleMode(IdleMode.kBrake);
 
     clawEnc.setPositionConversionFactor(RealConstants.clawConversionFactor);
     clawEnc.setPosition(25);
 
     clawMotor.setSoftLimit(SoftLimitDirection.kForward, RealConstants.clawForwardLimit);
     clawMotor.setSoftLimit(SoftLimitDirection.kReverse, RealConstants.clawReverseLimit);
+
+    clawEnc.setPosition(0);
   }
 
   public boolean queryClosed() {
@@ -57,7 +61,15 @@ public class Claw extends SubsystemBase {
 
   public void setMotor(double speed) {
     double position = clawEnc.getPosition();
-    clawMotor.set(speed * RealConstants.clawSpeed);
+    if(position <= -RealConstants.clawForwardLimit && speed < 0){
+      clawMotor.set(0);
+    }
+    else if(position >= -RealConstants.clawReverseLimit && speed > 0){
+      clawMotor.set(0);
+    }
+    else{
+      clawMotor.set(speed * RealConstants.clawSpeed);
+    }
   }
 
   public void setMotorReverse() {
@@ -83,8 +95,8 @@ public class Claw extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    isClosed = forewardLimit.isPressed();
-    isOpen = reverseLimit.isPressed();
+    //isClosed = forewardLimit.isPressed();
+    //isOpen = reverseLimit.isPressed();
 
     SmartDashboard.putNumber("Claw Position", clawEnc.getPosition());
     SmartDashboard.putNumber("Claw Velocity", clawEnc.getVelocity());
