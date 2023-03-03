@@ -89,7 +89,18 @@ public class Claw extends SubsystemBase {
   }
 
   public void setMotorVolts(double speed) {
-    clawMotor.setVoltage(speed);
+    double position = getPosition();
+    if(position <= -RealConstants.clawForwardLimit && speed < 0){
+      clawMotor.setVoltage(0);
+    }
+    else if(position >= -RealConstants.clawReverseLimit && speed > 0){
+      clawMotor.setVoltage(0);
+    }
+    else{
+      clawMotor.setVoltage(speed);
+    }
+
+    SmartDashboard.putNumber("Claw Speed", speed);
   }
 
   @Override

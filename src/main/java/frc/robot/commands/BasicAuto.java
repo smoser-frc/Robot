@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
@@ -16,11 +17,10 @@ public class BasicAuto extends SequentialCommandGroup {
   /** Creates a new BasicAuto. */
   public BasicAuto(Arm arm, Claw claw, Drive drive) {
     addCommands(
-        new SetArmPosition(arm, 190),
-        new SetClawPosition(claw, 90),
-        new Wait(1),
-        new SetClawPosition(claw, 0),
-        new SetArmPosition(arm, 25),
-        new DriveDistance(5, drive));
-  }
+        new SetArmPosition(arm, -175),
+        new SetClawPosition(claw, -25),
+        new SetArmPosition(arm, -40),
+        new DriveDistance(Units.inchesToMeters(15 * 12), drive)
+    );
+      }
 }

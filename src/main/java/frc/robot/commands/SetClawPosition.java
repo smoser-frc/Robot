@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RealConstants;
 import frc.robot.subsystems.Claw;
 
 public class SetClawPosition extends CommandBase {
@@ -20,17 +21,22 @@ public class SetClawPosition extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     m_position = position;
     m_claw = claw;
+
+    SmartDashboard.putNumber("claw P", 0);
+    SmartDashboard.putNumber("claw I", 0);
+    SmartDashboard.putNumber("claw D", 0);
     addRequirements(claw);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    double kG = SmartDashboard.getNumber("claw kG", 0);
-    double kV = SmartDashboard.getNumber("claw kV", 0);
-    double kP = SmartDashboard.getNumber("claw kP", 0);
-    double kI = SmartDashboard.getNumber("claw kI", 0);
-    double kD = SmartDashboard.getNumber("claw kD", 0);
+    
+    double kP = RealConstants.kClawP;
+    double kI = RealConstants.kClawI;
+    double kD = RealConstants.kClawD;
+
+    SmartDashboard.putString("Claw PIDS", " P = " + kP + " I = " + kI + " kD = " + kD);
 
     m_Controller = new PIDController(kP, kI, kD);
 
@@ -41,6 +47,7 @@ public class SetClawPosition extends CommandBase {
   @Override
   public void execute() {
     double speed = m_Controller.calculate(m_claw.getPosition(), m_position);
+    SmartDashboard.putNumber("CalculatedSpeed", speed); 
     m_claw.setMotorVolts(speed);
   }
 

@@ -14,6 +14,7 @@ public class Wait extends CommandBase {
   /** Creates a new Wait. */
   public Wait(double time) {
     m_time = time;
+    m_timer = new Timer();
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

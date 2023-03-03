@@ -102,10 +102,10 @@ public class RobotContainer {
     final JoystickButton coDriverX = new JoystickButton(coDriver, XboxController.Button.kX.value);
 
     rightStickTrigger.whileTrue(new SwitchGears(m_gearShifter));
-    coDriverA.onTrue(new SetArmPosition(m_arm, 190));
-    coDriverB.onTrue(new SetArmPosition(m_arm, 15));
-    coDriverX.onTrue(new SetClawPosition(m_claw, 90));
-    coDriverY.onTrue(new SetClawPosition(m_claw, 10));
+    coDriverA.whileTrue(new SetArmPosition(m_arm, -190));
+    coDriverB.whileTrue(new SetArmPosition(m_arm, -15));
+    coDriverX.whileTrue(new SetClawPosition(m_claw, -90));
+    coDriverY.whileTrue(new SetClawPosition(m_claw, 40));
   }
 
   /**

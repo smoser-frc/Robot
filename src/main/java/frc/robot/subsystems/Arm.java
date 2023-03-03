@@ -77,8 +77,16 @@ public class Arm extends SubsystemBase {
     return armEnc.getPosition();
   }
 
-  public void setMotorVolts(double voltage) {
-    armMotor.setVoltage(voltage);
+  public void setMotorVolts(double speed) {
+    double position = getPosition();
+
+    if (position <= -RealConstants.armForwardLimit && speed < 0) {
+      armMotor.setVoltage(0);
+    } else if (position >= -RealConstants.armReverseLimit && speed > 0) {
+      armMotor.setVoltage(0);
+    } else {
+      armMotor.setVoltage(speed);
+    }
   }
 
   @Override

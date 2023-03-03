@@ -53,12 +53,14 @@ public final class RealConstants extends Constants {
   public static final double kRamseteB = 2;
   public static final double kRamseteZeta = 0.7;
 
-  public static final double kArmP = 0;
+  public static final double kArmP = 0.08;
   public static final double kArmI = 0;
   public static final double kArmD = 0;
+  public static final double kArmG = -0.3;
+  public static final double kArmV = 0;
 
-  public static final double kClawP = 0;
-  public static final double kClawI = 0;
+  public static final double kClawP = 0.1;
+  public static final double kClawI = 0.01;
   public static final double kClawD = 0;
 
   public static final float armForwardLimit = 255;
