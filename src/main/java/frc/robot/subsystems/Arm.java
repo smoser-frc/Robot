@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RealConstants;
@@ -68,8 +69,16 @@ public class Arm extends SubsystemBase {
     armMotor.set(0);
   }
 
+  public double getVelocityRad() {
+    return Units.degreesToRadians(armEnc.getVelocity());
+  }
+
   public double getPosition() {
     return armEnc.getPosition();
+  }
+
+  public void setMotorVolts(double voltage) {
+    armMotor.setVoltage(voltage);
   }
 
   @Override

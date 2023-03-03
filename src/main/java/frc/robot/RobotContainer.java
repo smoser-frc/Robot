@@ -7,15 +7,18 @@ package frc.robot;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.DriveDistance;
+import frc.robot.commands.BasicAuto;
 import frc.robot.commands.DriveTank;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ManualArm;
 import frc.robot.commands.ManualClaw;
+import frc.robot.commands.SetArmPosition;
+import frc.robot.commands.SetClawPosition;
 import frc.robot.commands.SwitchGears;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
@@ -45,6 +48,8 @@ public class RobotContainer {
   private final Arm m_arm = new Arm();
   private final Claw m_claw = new Claw();
 
+  SendableChooser<Command> m_Chooser = new SendableChooser<>();
+
   private final XboxController leftStick = new XboxController(0);
   private final XboxController rightStick = new XboxController(1);
   private final XboxController coDriver = new XboxController(2);
@@ -73,6 +78,11 @@ public class RobotContainer {
 
     // Configure the trigger bindings
     configureBindings();
+    Command basicAuto = new BasicAuto(m_arm, m_claw, m_drive);
+
+    m_Chooser.setDefaultOption("Basic Auton", basicAuto);
+
+    SmartDashboard.putData(m_Chooser);
   }
 
   /**
@@ -92,11 +102,10 @@ public class RobotContainer {
     final JoystickButton coDriverX = new JoystickButton(coDriver, XboxController.Button.kX.value);
 
     rightStickTrigger.whileTrue(new SwitchGears(m_gearShifter));
-    coDriverA.onTrue(new DriveDistance(2, m_drive));
-    coDriverB.onTrue(new DriveDistance(-2, m_drive));
-    // coDriverY.onTrue(new SetArm(-190.0, m_arm));
-    // coDriverX.onTrue(new SetArm(-10, m_arm));
-
+    coDriverA.onTrue(new SetArmPosition(m_arm, 190));
+    coDriverB.onTrue(new SetArmPosition(m_arm, 15));
+    coDriverX.onTrue(new SetClawPosition(m_claw, 90));
+    coDriverY.onTrue(new SetClawPosition(m_claw, 10));
   }
 
   /**
@@ -105,7 +114,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return new DriveDistance(-5.486, m_drive);
+    // return new DriveDistance(-5.486, m_drive);
+    Command autoCommand = m_Chooser.getSelected();
+
+    return autoCommand;
   }
 }
