@@ -4,38 +4,39 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Arm;
 
-public class ArmReverse extends CommandBase {
-  private final Arm m_arm;
-  private double m_speed;
+public class Wait extends CommandBase {
 
-  public ArmReverse(Arm subsystem, double speed) {
-    m_arm = subsystem;
-    m_speed = speed;
-    addRequirements(subsystem);
+  private Timer m_timer;
+  private double m_time;
+  /** Creates a new Wait. */
+  public Wait(double time) {
+    m_time = time;
+    m_timer = new Timer();
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_timer.restart();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    m_arm.setMotorReverse(m_speed);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_arm.stopMotor();
+    m_timer.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_arm.queryBack();
+    return m_timer.get() > m_time;
   }
 }

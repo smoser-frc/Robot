@@ -7,30 +7,42 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import java.util.function.DoubleSupplier;
+import frc.robot.RealConstants;
 
 public class Arm extends SubsystemBase {
   private CANSparkMax armMotor = new CANSparkMax(7, MotorType.kBrushless);
 
-  private SparkMaxLimitSwitch forwardLimit =
-      armMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
   private SparkMaxLimitSwitch reverseLimit =
       armMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
 
   private boolean isFront;
   private boolean isBack;
 
+  private PIDController holdPID =
+      new PIDController(RealConstants.kArmP, RealConstants.kArmI, RealConstants.kArmD);
+
+  private RelativeEncoder armEnc = armMotor.getEncoder();
+
+  private DigitalInput armProxSensor = new DigitalInput(0);
+
   /** Creates a new Arm subsystem. */
   public Arm() {
-    forwardLimit.enableLimitSwitch(true);
     reverseLimit.enableLimitSwitch(true);
 
-    isFront = forwardLimit.isPressed();
     isBack = reverseLimit.isPressed();
 
     armMotor.setIdleMode(IdleMode.kBrake);
+    armMotor.setInverted(true);
+
+    armEnc.setPosition(0);
+    armEnc.setPositionConversionFactor(RealConstants.armConversionFactor);
   }
 
   public boolean queryFront() {
@@ -41,8 +53,15 @@ public class Arm extends SubsystemBase {
     return isBack;
   }
 
-  public void setMotorForward(DoubleSupplier speed) {
-    armMotor.set(speed.getAsDouble());
+  public void setMotor(double speed) {
+    double position = armEnc.getPosition();
+    if (position <= -RealConstants.armForwardLimit && speed < 0) {
+      armMotor.set(0);
+    } else if (position >= -RealConstants.armReverseLimit && speed > 0) {
+      armMotor.set(0);
+    } else {
+      armMotor.set(speed * RealConstants.armSpeed);
+    }
   }
 
   public void setMotorReverse(double speed) {
@@ -53,11 +72,31 @@ public class Arm extends SubsystemBase {
     armMotor.set(0);
   }
 
+  public double getVelocityRad() {
+    return Units.degreesToRadians(armEnc.getVelocity());
+  }
+
+  public double getPosition() {
+    return armEnc.getPosition();
+  }
+
+  public void setMotorVolts(double speed) {
+    double position = getPosition();
+
+    if (position <= -RealConstants.armForwardLimit && speed < 0) {
+      armMotor.setVoltage(0);
+    } else if (position >= -RealConstants.armReverseLimit && speed > 0) {
+      armMotor.setVoltage(0);
+    } else {
+      armMotor.setVoltage(speed);
+    }
+  }
+
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    isFront = forwardLimit.isPressed();
-    isBack = reverseLimit.isPressed();
+    SmartDashboard.putNumber("Arm Position", armEnc.getPosition());
+    SmartDashboard.putNumber("Arm Velocity", armEnc.getVelocity());
+    SmartDashboard.putBoolean("Arm Limit", armProxSensor.get());
   }
 
   @Override

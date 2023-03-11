@@ -6,26 +6,20 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxRelativeEncoder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RealConstants;
 import java.util.function.DoubleSupplier;
 
 public class RealDrive extends Drive {
-
-  public RealDrive() {
-    leftGroup.setInverted(true);
-
-    leftEnc.setPositionConversionFactor(RealConstants.kMetersPerRev);
-    rightEnc.setPositionConversionFactor(RealConstants.kMetersPerRev);
-  }
 
   private CANSparkMax leftFront = new CANSparkMax(1, MotorType.kBrushless);
   private CANSparkMax leftMid = new CANSparkMax(2, MotorType.kBrushless);
@@ -41,10 +35,8 @@ public class RealDrive extends Drive {
   private MotorControllerGroup rightGroup =
       new MotorControllerGroup(rightFront, rightMid, rightBack);
 
-  private RelativeEncoder leftEnc =
-      leftFront.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, RealConstants.kCPR);
-  private RelativeEncoder rightEnc =
-      rightFront.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, RealConstants.kCPR);
+  private RelativeEncoder leftEnc = leftFront.getEncoder();
+  private RelativeEncoder rightEnc = rightFront.getEncoder();
 
   private final AHRS m_gyro = new AHRS(SerialPort.Port.kMXP);
 
@@ -54,10 +46,40 @@ public class RealDrive extends Drive {
 
   private DifferentialDrive driveTrain = new DifferentialDrive(leftGroup, rightGroup);
 
+  public RealDrive() {
+    leftGroup.setInverted(true);
+    rightGroup.setInverted(false);
+
+    setCoastMode();
+
+    leftEnc.setPositionConversionFactor(RealConstants.kMetersPerRev);
+    rightEnc.setPositionConversionFactor(RealConstants.kMetersPerRev);
+  }
+
   @Override
   public void setTankDrive(DoubleSupplier lSpeed, DoubleSupplier rSpeed, double pOutput) {
 
     driveTrain.tankDrive(lSpeed.getAsDouble() * pOutput, rSpeed.getAsDouble() * pOutput);
+  }
+
+  @Override
+  public void setBrakeMode() {
+    leftFront.setIdleMode(IdleMode.kBrake);
+    leftMid.setIdleMode(IdleMode.kBrake);
+    leftBack.setIdleMode(IdleMode.kBrake);
+    rightFront.setIdleMode(IdleMode.kBrake);
+    rightMid.setIdleMode(IdleMode.kBrake);
+    rightBack.setIdleMode(IdleMode.kBrake);
+  }
+
+  @Override
+  public void setCoastMode() {
+    leftFront.setIdleMode(IdleMode.kCoast);
+    leftMid.setIdleMode(IdleMode.kCoast);
+    leftBack.setIdleMode(IdleMode.kCoast);
+    rightFront.setIdleMode(IdleMode.kCoast);
+    rightMid.setIdleMode(IdleMode.kCoast);
+    rightBack.setIdleMode(IdleMode.kCoast);
   }
 
   @Override
@@ -69,6 +91,12 @@ public class RealDrive extends Drive {
   public void periodic() {
     // This method will be called once per scheduler run
     m_odometry.update(m_gyro.getRotation2d(), leftEnc.getPosition(), rightEnc.getPosition());
+
+    SmartDashboard.putNumber("Left Drive Position", leftEnc.getPosition());
+    SmartDashboard.putNumber(" L Conversion", leftEnc.getPositionConversionFactor());
+    SmartDashboard.putNumber("Right Drive Position", rightEnc.getPosition());
+    SmartDashboard.putNumber("ConversionFactor R", rightEnc.getPositionConversionFactor());
+    SmartDashboard.putNumber("Drive Position", getAverageEncoderDistance());
   }
 
   @Override
@@ -125,6 +153,6 @@ public class RealDrive extends Drive {
 
   @Override
   public double getAverageEncoderDistance() {
-    return (leftEnc.getPosition() + rightEnc.getPosition()) / 2;
+    return (-leftEnc.getPosition() + rightEnc.getPosition()) / 2;
   }
 }

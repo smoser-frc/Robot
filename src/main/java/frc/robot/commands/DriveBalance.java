@@ -11,7 +11,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Drive;
 
 /** A command that will move the robot forward */
-public class DriveDistance extends CommandBase {
+public class DriveBalance extends CommandBase {
 
   private Drive m_drive;
   private PIDController m_PidControl;
@@ -24,7 +24,7 @@ public class DriveDistance extends CommandBase {
    * @param distance Distance in inches to drive.
    * @param drive The drive subsystem to use
    */
-  public DriveDistance(double distance, Drive drive) {
+  public DriveBalance(double distance, Drive drive) {
     m_drive = drive;
     m_distance = distance;
 
@@ -42,11 +42,7 @@ public class DriveDistance extends CommandBase {
     double i = SmartDashboard.getNumber("Drive I", 0);
     double d = SmartDashboard.getNumber("Drive D", 0);
 
-    m_PidControl =
-        new PIDController(
-            Constants.DriveConstants.kDriveP,
-            Constants.DriveConstants.kDriveI,
-            Constants.DriveConstants.kDriveD);
+    m_PidControl = new PIDController(p, i, d);
     m_PidControl.setTolerance(
         Constants.DriveConstants.kDriveDistanceToleranceMeters,
         Constants.DriveConstants.kDriveDistanceRateToleranceMetersPerS);
@@ -55,8 +51,6 @@ public class DriveDistance extends CommandBase {
     System.out.println("At " + m_drive.getAverageEncoderDistance() + " going to " + target);
 
     setPoint = m_drive.getAverageEncoderDistance() + m_distance;
-
-    m_drive.setBrakeMode();
 
     // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
     // setpoint before it is considered as having reached the reference
@@ -78,7 +72,6 @@ public class DriveDistance extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    m_drive.setCoastMode();
     System.out.println(
         "At " + m_drive.getAverageEncoderDistance() + " target " + setPoint + " Done!");
   }
