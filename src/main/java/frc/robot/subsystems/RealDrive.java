@@ -8,6 +8,8 @@ import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
@@ -49,6 +51,8 @@ public class RealDrive extends Drive {
     leftGroup.setInverted(true);
     rightGroup.setInverted(false);
 
+    setCoastMode();
+
     leftEnc.setPositionConversionFactor(RealConstants.kMetersPerRev);
     rightEnc.setPositionConversionFactor(RealConstants.kMetersPerRev);
   }
@@ -57,6 +61,26 @@ public class RealDrive extends Drive {
   public void setTankDrive(DoubleSupplier lSpeed, DoubleSupplier rSpeed, double pOutput) {
 
     driveTrain.tankDrive(lSpeed.getAsDouble() * pOutput, rSpeed.getAsDouble() * pOutput);
+  }
+
+  @Override
+  public void setBrakeMode(){
+    leftFront.setIdleMode(IdleMode.kBrake);
+    leftMid.setIdleMode(IdleMode.kBrake);
+    leftBack.setIdleMode(IdleMode.kBrake);
+    rightFront.setIdleMode(IdleMode.kBrake);
+    rightMid.setIdleMode(IdleMode.kBrake);
+    rightBack.setIdleMode(IdleMode.kBrake);
+  }
+
+  @Override
+  public void setCoastMode(){
+    leftFront.setIdleMode(IdleMode.kCoast);
+    leftMid.setIdleMode(IdleMode.kCoast);
+    leftBack.setIdleMode(IdleMode.kCoast);
+    rightFront.setIdleMode(IdleMode.kCoast);
+    rightMid.setIdleMode(IdleMode.kCoast);
+    rightBack.setIdleMode(IdleMode.kCoast);
   }
 
   @Override

@@ -13,14 +13,13 @@ import frc.robot.subsystems.Drive;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class BasicAuto extends SequentialCommandGroup {
+public class DrivelessAuto extends SequentialCommandGroup {
   /** Creates a new BasicAuto. */
-  public BasicAuto(Arm arm, Claw claw, Drive drive) {
+  public DrivelessAuto(Arm arm, Claw claw, Drive drive) {
     addCommands(
         new SetArmPosition(arm, -175),
         new SetClawPosition(claw, -25),
-        new SetArmPosition(arm, -20),
-        new DriveDistance(Units.inchesToMeters(6 * 12), drive)
+        new SetArmPosition(arm, -20)
     );
       }
 }

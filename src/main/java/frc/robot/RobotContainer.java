@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -14,7 +15,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.BasicAuto;
+import frc.robot.commands.DriveBalance;
 import frc.robot.commands.DriveTank;
+import frc.robot.commands.DrivelessAuto;
 import frc.robot.commands.ManualArm;
 import frc.robot.commands.ManualClaw;
 import frc.robot.commands.SetArmPosition;
@@ -79,8 +82,10 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     Command basicAuto = new BasicAuto(m_arm, m_claw, m_drive);
+    Command drivelessAuto = new DrivelessAuto(m_arm, m_claw, m_drive);
 
     m_Chooser.setDefaultOption("Basic Auton", basicAuto);
+    m_Chooser.addOption("Driveless Auton", drivelessAuto);
 
     SmartDashboard.putData(m_Chooser);
   }
@@ -104,8 +109,8 @@ public class RobotContainer {
     rightStickTrigger.whileTrue(new SwitchGears(m_gearShifter));
     coDriverA.whileTrue(new SetArmPosition(m_arm, -190));
     coDriverB.whileTrue(new SetArmPosition(m_arm, -15));
-    coDriverX.whileTrue(new SetClawPosition(m_claw, -90));
-    coDriverY.whileTrue(new SetClawPosition(m_claw, 40));
+    coDriverX.whileTrue(new DriveBalance(Units.inchesToMeters(60), m_drive));
+    coDriverY.whileTrue(new DriveBalance(Units.inchesToMeters(-60), m_drive));
   }
 
   /**

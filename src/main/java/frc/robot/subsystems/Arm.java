@@ -11,6 +11,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RealConstants;
@@ -28,6 +29,8 @@ public class Arm extends SubsystemBase {
       new PIDController(RealConstants.kArmP, RealConstants.kArmI, RealConstants.kArmD);
 
   private RelativeEncoder armEnc = armMotor.getEncoder();
+
+  private DigitalInput armProxSensor = new DigitalInput(0);
 
   /** Creates a new Arm subsystem. */
   public Arm() {
@@ -93,6 +96,7 @@ public class Arm extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Arm Position", armEnc.getPosition());
     SmartDashboard.putNumber("Arm Velocity", armEnc.getVelocity());
+    SmartDashboard.putBoolean("Arm Limit", armProxSensor.get());
   }
 
   @Override
