@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RealConstants;
 import frc.robot.subsystems.Claw;
 import java.util.function.DoubleSupplier;
 
@@ -28,10 +27,9 @@ public class ManualClaw extends CommandBase {
   public void execute() {
     double position = m_claw.getPosition();
     double power = m_speed.getAsDouble();
-    if(power <= 0.1 && power >= -0.1){
+    if (power <= 0.1 && power >= -0.1) {
       m_claw.setMotor(0);
-    }
-    else{
+    } else {
       m_claw.setMotor(power);
     }
   }

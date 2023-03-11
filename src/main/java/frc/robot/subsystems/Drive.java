@@ -55,7 +55,7 @@ public class Drive extends SubsystemBase {
     throw new java.lang.UnsupportedOperationException();
   }
 
-  public void setBrakeMode(){}
+  public void setBrakeMode() {}
 
-  public void setCoastMode(){}
+  public void setCoastMode() {}
 }

@@ -20,20 +20,17 @@ public class SetArmPosition extends CommandBase {
   private PIDController m_Controller;
   private ArmFeedforward m_feed;
 
-  
-
   public SetArmPosition(Arm arm, double position) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_position = position;
     m_arm = arm;
 
-    
     SmartDashboard.putNumber("arm kG", 0);
     SmartDashboard.putNumber("arm kV", 0);
     SmartDashboard.putNumber("arm kP", 0);
     SmartDashboard.putNumber("arm kI", 0);
     SmartDashboard.putNumber("arm kD", 0);
-    
+
     addRequirements(arm);
   }
 
@@ -47,7 +44,8 @@ public class SetArmPosition extends CommandBase {
     double kI = RealConstants.kArmI;
     double kD = RealConstants.kArmD;
 
-    SmartDashboard.putString("arm vals", "kG = " + kG + " kV = " + kV + " kP = " + kP + " kI = " + kI + " kD = " + kD);
+    SmartDashboard.putString(
+        "arm vals", "kG = " + kG + " kV = " + kV + " kP = " + kP + " kI = " + kI + " kD = " + kD);
 
     m_feed = new ArmFeedforward(0, kG, kV);
     m_Controller = new PIDController(kP, kI, kD);

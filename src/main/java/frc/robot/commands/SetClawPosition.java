@@ -31,7 +31,7 @@ public class SetClawPosition extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+
     double kP = RealConstants.kClawP;
     double kI = RealConstants.kClawI;
     double kD = RealConstants.kClawD;
@@ -47,7 +47,7 @@ public class SetClawPosition extends CommandBase {
   @Override
   public void execute() {
     double speed = m_Controller.calculate(m_claw.getPosition(), m_position);
-    SmartDashboard.putNumber("CalculatedSpeed", speed); 
+    SmartDashboard.putNumber("CalculatedSpeed", speed);
     m_claw.setMotorVolts(speed);
   }
 

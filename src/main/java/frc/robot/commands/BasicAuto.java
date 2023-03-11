@@ -20,7 +20,6 @@ public class BasicAuto extends SequentialCommandGroup {
         new SetArmPosition(arm, -175),
         new SetClawPosition(claw, -25),
         new SetArmPosition(arm, -20),
-        new DriveDistance(Units.inchesToMeters(6 * 12), drive)
-    );
-      }
+        new DriveDistance(Units.inchesToMeters(6 * 12), drive));
+  }
 }

@@ -21,7 +21,6 @@ import frc.robot.commands.DrivelessAuto;
 import frc.robot.commands.ManualArm;
 import frc.robot.commands.ManualClaw;
 import frc.robot.commands.SetArmPosition;
-import frc.robot.commands.SetClawPosition;
 import frc.robot.commands.SwitchGears;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;

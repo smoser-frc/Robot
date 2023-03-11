@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
@@ -19,7 +18,6 @@ public class DrivelessAuto extends SequentialCommandGroup {
     addCommands(
         new SetArmPosition(arm, -175),
         new SetClawPosition(claw, -25),
-        new SetArmPosition(arm, -20)
-    );
-      }
+        new SetArmPosition(arm, -20));
+  }
 }
