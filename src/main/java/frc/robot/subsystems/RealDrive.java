@@ -99,5 +99,4 @@ public class RealDrive extends DriveSubsystem {
   public double getRightSpeed() {
     return (m_rightFrontEncoder.getVelocity() + m_rightBackEncoder.getVelocity()) / 2;
   }
-
 }
