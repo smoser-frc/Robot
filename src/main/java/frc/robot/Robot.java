@@ -36,9 +36,19 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    // Drive with arcade drive.
-    // That means that the Y axis drives forward
-    // and backward, and the X turns left and right.
-    m_robotDrive.arcadeDrive(-m_xbox1.getLeftY(), -m_xbox1.getLeftX());
+    boolean arcadeDrive = true;
+
+    if (arcadeDrive) {
+      // Drive with arcade drive.
+      // That means that the Y axis drives forward
+      // and backward, and the X turns left and right.
+      m_robotDrive.arcadeDrive(-m_xbox1.getLeftY(), -m_xbox1.getLeftX());
+    } else {
+      // Drive with tank Drive
+      // That means that the left Y access controls the left side motors
+      // and the right Y access controls the right side motors.
+      // the left X and right Y access do not do anything.
+      m_robotDrive.tankDrive(-m_xbox1.getLeftY(), -m_xbox1.getRightY());
+    }
   }
 }
