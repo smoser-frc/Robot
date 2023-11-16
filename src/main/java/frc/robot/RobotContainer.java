@@ -4,31 +4,15 @@
 
 package frc.robot;
 
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.BasicAuto;
-import frc.robot.commands.DriveBalance;
-import frc.robot.commands.DriveTank;
-import frc.robot.commands.DrivelessAuto;
-import frc.robot.commands.ManualArm;
-import frc.robot.commands.ManualClaw;
-import frc.robot.commands.SetArmPosition;
-import frc.robot.commands.SwitchGears;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Claw;
+import frc.robot.commands.Autos;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.SwerveContinuous;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.GearShifter;
-import frc.robot.subsystems.RealDrive;
-import frc.robot.subsystems.SimDrive;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -38,55 +22,23 @@ import frc.robot.subsystems.SimDrive;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  // Dont remove example until autons are programmed
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private Drive m_drive;
-  // private final Arm m_arm = new Arm();
-  // private final Claw m_claw = new Claw();
-  private final GearShifter m_gearShifter = new GearShifter();
-  private Constants m_constants;
-  private final Constants m_realConstants = new RealConstants();
-  private final Constants m_simConstants = new SimConstants();
-  private final Arm m_arm = new Arm();
-  private final Claw m_claw = new Claw();
 
-  SendableChooser<Command> m_Chooser = new SendableChooser<>();
+  // Replace with CommandPS4Controller or CommandJoystick if needed
+  private final CommandJoystick joystick1 = new CommandJoystick(0);
 
-  private final XboxController leftStick = new XboxController(0);
-  private final XboxController rightStick = new XboxController(1);
-  private final XboxController coDriver = new XboxController(2);
-  // private final XboxController xboxController = new XboxController(2);
+  private final Drive m_drive = new Drive();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
-    if (RobotBase.isSimulation()) {
-      m_drive = new SimDrive();
-      m_constants = m_simConstants;
-      m_drive.setDefaultCommand(
-          new DriveTank(
-              m_drive, leftStick::getLeftY, leftStick::getRightY, m_constants.driveSpeed));
-    } else {
-      m_drive = new RealDrive();
-      m_constants = m_realConstants;
-      m_drive.setDefaultCommand(
-          new DriveTank(
-              m_drive, leftStick::getLeftY, rightStick::getLeftY, m_constants.driveSpeed));
-      m_arm.setDefaultCommand(new ManualArm(m_arm, coDriver::getLeftY));
-      m_claw.setDefaultCommand(new ManualClaw(m_claw, coDriver::getRightY));
-
-      CameraServer.startAutomaticCapture();
-    }
-
     // Configure the trigger bindings
     configureBindings();
-    Command basicAuto = new BasicAuto(m_arm, m_claw, m_drive);
-    Command drivelessAuto = new DrivelessAuto(m_arm, m_claw, m_drive);
-
-    m_Chooser.setDefaultOption("Basic Auton", basicAuto);
-    m_Chooser.addOption("Driveless Auton", drivelessAuto);
-
-    SmartDashboard.putData(m_Chooser);
+    m_drive.setDefaultCommand(
+        new SwerveContinuous(
+            joystick1.getDirectionDegrees(),
+            joystick1.getMagnitude(),
+            joystick1.getTwist(),
+            m_drive));
   }
 
   /**
@@ -99,17 +51,13 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    final JoystickButton rightStickTrigger = new JoystickButton(rightStick, 1);
-    final JoystickButton coDriverA = new JoystickButton(coDriver, XboxController.Button.kA.value);
-    final JoystickButton coDriverB = new JoystickButton(coDriver, XboxController.Button.kB.value);
-    final JoystickButton coDriverY = new JoystickButton(coDriver, XboxController.Button.kY.value);
-    final JoystickButton coDriverX = new JoystickButton(coDriver, XboxController.Button.kX.value);
+    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+    new Trigger(m_exampleSubsystem::exampleCondition)
+        .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    rightStickTrigger.whileTrue(new SwitchGears(m_gearShifter));
-    coDriverA.whileTrue(new SetArmPosition(m_arm, -190));
-    coDriverB.whileTrue(new SetArmPosition(m_arm, -15));
-    coDriverX.whileTrue(new DriveBalance(Units.inchesToMeters(60), m_drive));
-    coDriverY.whileTrue(new DriveBalance(Units.inchesToMeters(-60), m_drive));
+    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
+    // cancelling on release.
+    // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 
   /**
@@ -118,9 +66,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // return new DriveDistance(-5.486, m_drive);
-    Command autoCommand = m_Chooser.getSelected();
-
-    return autoCommand;
+    // An example command will be run in autonomous
+    return Autos.exampleAuto(m_exampleSubsystem);
   }
 }

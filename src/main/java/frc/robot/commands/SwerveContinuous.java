@@ -5,17 +5,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Arm;
-import java.util.function.DoubleSupplier;
+import frc.robot.subsystems.Drive;
 
-public class ManualArm extends CommandBase {
-  private final Arm m_arm;
-  private DoubleSupplier m_speed;
+public class SwerveContinuous extends CommandBase {
+  /** Creates a new SwerveContinuous. */
+  double dir;
 
-  public ManualArm(Arm subsystem, DoubleSupplier speed) {
-    m_arm = subsystem;
-    m_speed = speed;
-    addRequirements(subsystem);
+  double speed;
+  double twist;
+  Drive drive;
+
+  public SwerveContinuous(double direction, double speed, double turn, Drive drive) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    dir = direction;
+    this.speed = speed;
+    twist = turn;
+    this.drive = drive;
   }
 
   // Called when the command is initially scheduled.
@@ -25,23 +30,18 @@ public class ManualArm extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double dSpeed = m_speed.getAsDouble();
-    if (dSpeed >= 0.1 || dSpeed <= -0.1) {
-      m_arm.setMotor(dSpeed);
-    } else {
-      m_arm.setMotor(0);
-    }
+    dir -= drive.getGyroPosition();
+
+    drive.setCoordinator(dir, speed, twist);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    m_arm.stopMotor();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_arm.queryFront();
+    return false;
   }
 }
