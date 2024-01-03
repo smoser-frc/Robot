@@ -27,11 +27,11 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final SwerveSubsystem m_swerve =
-      new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
+     new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandJoystick joystick1 = new CommandJoystick(0);
-  private final XboxController driverXbox = new XboxController(1);
+  private final CommandJoystick joystick1 = new CommandJoystick(1);
+  private final XboxController driverXbox = new XboxController(0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -40,7 +40,13 @@ public class RobotContainer {
 
     SwerveCommand driveCommand =
         new SwerveCommand(
-            m_swerve, joystick1::getX, joystick1::getY, () -> joystick1.getRawAxis(0), () -> true);
+            m_swerve,
+            driverXbox::getLeftX,
+            driverXbox::getLeftY,
+            driverXbox::getRightX,
+            () -> true);
+
+    m_swerve.setDefaultCommand(driveCommand);
   }
 
   /**

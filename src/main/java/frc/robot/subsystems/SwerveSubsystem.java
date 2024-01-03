@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.io.File;
 import swervelib.SwerveController;
@@ -19,7 +20,7 @@ public class SwerveSubsystem extends SubsystemBase {
   /** Creates a new SwerveSubsystem. */
   private final SwerveDrive swerveDrive;
 
-  public double maxSpeed = Units.feetToMeters(14);
+  public double maxSpeed = Units.feetToMeters(30);
 
   public SwerveSubsystem(File directory) {
     try {
@@ -27,6 +28,7 @@ public class SwerveSubsystem extends SubsystemBase {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+
   }
 
   public SwerveSubsystem(
@@ -53,5 +55,13 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    double p = SmartDashboard.getNumber("Theta P", 0);
+    double i = SmartDashboard.getNumber("Theta I", 0);
+    double d = SmartDashboard.getNumber("Theta D", 0);
+
+    swerveDrive.getSwerveController().thetaController.setP(p);
+    swerveDrive.getSwerveController().thetaController.setI(i);
+    swerveDrive.getSwerveController().thetaController.setD(d);
+
   }
 }
