@@ -9,8 +9,12 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.io.File;
+
+import com.revrobotics.CANSparkMax;
+
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
+import swervelib.motors.SparkMaxSwerve;
 import swervelib.parser.SwerveControllerConfiguration;
 import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
@@ -21,7 +25,7 @@ public class SwerveSubsystem extends SubsystemBase {
   /** Creates a new SwerveSubsystem. */
   private final SwerveDrive swerveDrive;
 
-  public double maxSpeed = Units.feetToMeters(30);
+  public double maxSpeed = Units.feetToMeters(14.5);
 
   public SwerveSubsystem(File directory) {
     try {
@@ -57,5 +61,6 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  swerveDrive.getSwerveController().thetaController.setP(maxSpeed);
   }
 }
