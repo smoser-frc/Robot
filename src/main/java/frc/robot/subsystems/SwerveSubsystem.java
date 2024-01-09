@@ -4,17 +4,15 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.io.File;
-
-import com.revrobotics.CANSparkMax;
-
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
-import swervelib.motors.SparkMaxSwerve;
 import swervelib.parser.SwerveControllerConfiguration;
 import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
@@ -42,6 +40,11 @@ public class SwerveSubsystem extends SubsystemBase {
     swerveDrive = new SwerveDrive(driveConfig, controlConfig, maxSpeed);
   }
 
+  public Rotation2d getHeading()
+  {
+    return swerveDrive.getYaw();
+  }
+
   public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
     swerveDrive.drive(translation, rotation, fieldRelative, false);
   }
@@ -58,9 +61,44 @@ public class SwerveSubsystem extends SubsystemBase {
     return swerveDrive.swerveController;
   }
 
+  public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, Rotation2d angle)
+  {
+    xInput = Math.pow(xInput, 3);
+    yInput = Math.pow(yInput, 3);
+    return swerveDrive.swerveController.getTargetSpeeds(xInput,
+                                                        yInput,
+                                                        angle.getRadians(),
+                                                        getHeading().getRadians(),
+                                                        maxSpeed);
+  }
+
+  public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, double headingX, double headingY)
+  {
+    xInput = Math.pow(xInput, 3);
+    yInput = Math.pow(yInput, 3);
+    return swerveDrive.swerveController.getTargetSpeeds(xInput, yInput, headingX, headingY, getHeading().getRadians(), maxSpeed);  
+  }
+
+  public ChassisSpeeds getFieldVelocity()
+  {
+    return swerveDrive.getFieldVelocity();
+  }
+
+  public Pose2d getPose()
+  {
+    return swerveDrive.getPose();
+  }
+
+  public SwerveDriveConfiguration getSwerveDriveConfiguration()
+  {
+    return swerveDrive.swerveDriveConfiguration;
+  }
+
+
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-  swerveDrive.getSwerveController().thetaController.setP(maxSpeed);
+    swerveDrive.getSwerveController().thetaController.setP(maxSpeed);
   }
 }
