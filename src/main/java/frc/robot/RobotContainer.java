@@ -55,8 +55,8 @@ public class RobotContainer {
                                          OperatorConstants.LEFT_Y_DEADBAND),
             () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
                                          OperatorConstants.LEFT_X_DEADBAND),
-            () -> -driverXbox.getRightX(),
-            () -> -driverXbox.getRightY());
+            () -> MathUtil.applyDeadband(driverXbox.getRightX(), OperatorConstants.LEFT_Y_DEADBAND),
+            () -> MathUtil.applyDeadband(-driverXbox.getRightY(), OperatorConstants.LEFT_X_DEADBAND));
 
     AbsoluteFieldDrive closedFieldAbsoluteDrive = new AbsoluteFieldDrive(m_swerve,
             () ->
