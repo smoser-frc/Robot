@@ -330,7 +330,12 @@ public class SwerveSubsystem extends SubsystemBase {
     xInput = Math.pow(xInput, 3);
     yInput = Math.pow(yInput, 3);
     return swerveDrive.swerveController.getTargetSpeeds(
-        xInput, yInput, headingX, headingY, getHeading().getRadians() * (RobotBase.isReal() ? -1 : 1), maximumSpeed);
+        xInput,
+        yInput,
+        headingX,
+        headingY,
+        getHeading().getRadians() * (RobotBase.isReal() ? -1 : 1),
+        maximumSpeed);
   }
 
   /**
