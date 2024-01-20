@@ -45,9 +45,8 @@ public class RobotContainer {
             // controls are front-left positive
             () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
             () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-            () -> MathUtil.applyDeadband(driverXbox.getRightX(), OperatorConstants.LEFT_Y_DEADBAND),
-            () ->
-                MathUtil.applyDeadband(-driverXbox.getRightY(), OperatorConstants.LEFT_X_DEADBAND));
+            () -> driverXbox.getRightX(),
+            () -> -driverXbox.getRightY());
 
     m_swerve.setDefaultCommand(
         !RobotBase.isSimulation() ? closedAbsoluteDrive : closedAbsoluteDrive);
