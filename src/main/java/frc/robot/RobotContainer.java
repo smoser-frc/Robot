@@ -70,7 +70,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return m_swerve.getAutonomousCommand("New Path", true);
+    return m_swerve.getAutonomousCommand("Test Drive", true);
   }
 
   public void setDriveMode() {
