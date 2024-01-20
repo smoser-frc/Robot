@@ -14,8 +14,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AbsoluteDrive;
-import frc.robot.commands.AbsoluteFieldDrive;
-import frc.robot.commands.SwerveCommand;
 import frc.robot.subsystems.SwerveSubsystem;
 import java.io.File;
 
@@ -39,14 +37,6 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
 
-    SwerveCommand driveCommand =
-        new SwerveCommand(
-            m_swerve,
-            driverXbox::getLeftY,
-            driverXbox::getLeftX,
-            driverXbox::getRightX,
-            () -> true);
-
     AbsoluteDrive closedAbsoluteDrive = new AbsoluteDrive(m_swerve,
             // Applies deadbands and inverts controls because joysticks
             // are back-right positive while robot
@@ -58,15 +48,7 @@ public class RobotContainer {
             () -> MathUtil.applyDeadband(driverXbox.getRightX(), OperatorConstants.LEFT_Y_DEADBAND),
             () -> MathUtil.applyDeadband(-driverXbox.getRightY(), OperatorConstants.LEFT_X_DEADBAND));
 
-    AbsoluteFieldDrive closedFieldAbsoluteDrive = new AbsoluteFieldDrive(m_swerve,
-            () ->
-                MathUtil.applyDeadband(driverXbox.getLeftY(),
-                                       OperatorConstants.LEFT_Y_DEADBAND),
-            () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
-                                         OperatorConstants.LEFT_X_DEADBAND),
-            () -> driverXbox.getRawAxis(2));
-
-    m_swerve.setDefaultCommand(!RobotBase.isSimulation() ? driveCommand : closedFieldAbsoluteDrive);
+    m_swerve.setDefaultCommand(!RobotBase.isSimulation() ? closedAbsoluteDrive : closedAbsoluteDrive);
   }
 
   /**
