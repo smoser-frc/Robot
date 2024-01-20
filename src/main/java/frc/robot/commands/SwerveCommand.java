@@ -5,13 +5,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SwerveSubsystem;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import swervelib.SwerveController;
 
-public class SwerveCommand extends CommandBase {
+public class SwerveCommand extends Command {
   /** Creates a new SwerveCommand. */
   private final SwerveSubsystem swerve;
 
