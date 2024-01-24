@@ -10,8 +10,9 @@ import frc.robot.subsystems.Launcher;
 public class LaunchWithVelo extends Command {
   /** Creates a new LaunchWithVelo. */
   private Launcher m_launcher;
+
   private double launchVelo;
-  
+
   public LaunchWithVelo(Launcher launcher, double velocity) {
     m_launcher = launcher;
     launchVelo = velocity;
