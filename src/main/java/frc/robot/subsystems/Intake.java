@@ -16,17 +16,28 @@ public class Intake extends SubsystemBase {
   private CANSparkMax motorRight = new CANSparkMax(32, CANSparkLowLevel.MotorType.kBrushless);
 
   double speed = 0.35;
+  double currentSpeed = 0.0;
 
   public Intake() {
     motorLeft.setInverted(false);
     motorCenter.setInverted(false);
     motorRight.setInverted(true);
+    stop();
   }
 
   private void set(double power) {
     motorLeft.set(power);
     motorCenter.set(power);
     motorRight.set(power);
+    currentSpeed = power;
+  }
+
+  public void toggle() {
+    if (currentSpeed == 0.0) {
+      start();
+    } else {
+      stop();
+    }
   }
 
   public void start() {
