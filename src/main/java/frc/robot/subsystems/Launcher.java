@@ -33,7 +33,6 @@ public class Launcher extends SubsystemBase {
     lower.getPIDController().setI(Constants.launcherI);
     lower.getPIDController().setD(Constants.launcherD);
 
-
     SmartDashboard.putNumber("Launch P", upper.getPIDController().getP());
     SmartDashboard.putNumber("Launch I", upper.getPIDController().getI());
     SmartDashboard.putNumber("Launch D", upper.getPIDController().getD());
@@ -42,6 +41,14 @@ public class Launcher extends SubsystemBase {
   public void setLaunchVelocity(double velocity) {
     upper.getPIDController().setReference(velocity, ControlType.kSmartVelocity);
     lower.getPIDController().setReference(velocity, ControlType.kSmartVelocity);
+  }
+
+  public Value getAnglePosition() {
+    return angleSwitcher.get();
+  }
+
+  public void setAngle(Value value) {
+    angleSwitcher.set(value);
   }
 
   public void switchAngle() {
