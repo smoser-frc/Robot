@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Launcher extends SubsystemBase {
   /** Creates a new Launcher. */
@@ -24,6 +25,15 @@ public class Launcher extends SubsystemBase {
   private DoubleSolenoid angleSwitcher = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
 
   public Launcher() {
+    upper.getPIDController().setP(Constants.launcherP);
+    upper.getPIDController().setI(Constants.launcherI);
+    upper.getPIDController().setD(Constants.launcherD);
+
+    lower.getPIDController().setP(Constants.launcherP);
+    lower.getPIDController().setI(Constants.launcherI);
+    lower.getPIDController().setD(Constants.launcherD);
+
+
     SmartDashboard.putNumber("Launch P", upper.getPIDController().getP());
     SmartDashboard.putNumber("Launch I", upper.getPIDController().getI());
     SmartDashboard.putNumber("Launch D", upper.getPIDController().getD());

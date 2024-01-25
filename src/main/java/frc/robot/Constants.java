@@ -28,6 +28,10 @@ public final class Constants {
   public static final Matter CHASSIS =
       new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
 
+  public static final double launcherP = 0.1;
+  public static final double launcherI = 0;
+  public static final double launcherD = 0;
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final double LEFT_X_DEADBAND = 0.01;
