@@ -11,6 +11,7 @@ import frc.robot.subsystems.Launcher;
 public class LaunchWithVelo extends Command {
   /** Creates a new LaunchWithVelo. */
   private Launcher launcher;
+
   private Index index;
 
   private double launchVelo;
