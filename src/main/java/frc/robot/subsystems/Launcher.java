@@ -98,7 +98,7 @@ public class Launcher extends SubsystemBase {
 
   public boolean differenceWithinPercentage(double percent, double targetVelo) {
     double differencePercent = getVelocityDifference() / targetVelo;
-    return (differencePercent <= percent && differencePercent >= -percent);
+    return (differencePercent <= percent);
   }
 
   public boolean readyToLaunch(double targetVelo) {
@@ -110,7 +110,7 @@ public class Launcher extends SubsystemBase {
   }
 
   public void setSwitcherPosition(LaunchDistance launchDistance) {
-    switch(launchDistance){
+    switch (launchDistance) {
       case CLOSE:
         angleSwitcher.set(Constants.LaunchConstants.closeLaunchPosition);
         break;

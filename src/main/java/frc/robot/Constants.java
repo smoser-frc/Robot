@@ -42,7 +42,7 @@ public final class Constants {
     public static final Value closeLaunchPosition = Value.kForward;
     public static final Value farLaunchPosition = Value.kReverse;
 
-    public enum LaunchDistance{
+    public enum LaunchDistance {
       CLOSE,
       FAR
     }

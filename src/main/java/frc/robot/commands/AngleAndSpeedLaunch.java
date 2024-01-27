@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.LaunchConstants.LaunchDistance;
 import frc.robot.subsystems.Index;
@@ -15,7 +14,8 @@ import frc.robot.subsystems.Launcher;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AngleAndSpeedLaunch extends SequentialCommandGroup {
   /** Creates a new AngleAndSpeedLaunch. */
-  public AngleAndSpeedLaunch(Launcher launcher, Index index, double velocity, LaunchDistance launchDistance) {
+  public AngleAndSpeedLaunch(
+      Launcher launcher, Index index, double velocity, LaunchDistance launchDistance) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
