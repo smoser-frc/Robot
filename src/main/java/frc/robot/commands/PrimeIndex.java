@@ -8,16 +8,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Index;
 
 /** An example command that uses an example subsystem. */
-public class PressIndex extends Command {
+public class PrimeIndex extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Index index;
 
   /**
-   * Creates a new PressIndex.
+   * Creates a new PrimeIndex.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public PressIndex(Index index) {
+  public PrimeIndex(Index index) {
     this.index = index;
     addRequirements(index);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -26,7 +26,7 @@ public class PressIndex extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    index.press();
+    index.toggle();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,6 +40,6 @@ public class PressIndex extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return index.isPrimed();
   }
 }

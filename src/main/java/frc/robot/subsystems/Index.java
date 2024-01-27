@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Index extends SubsystemBase {
-  /** Creates a new ExampleSubsystem. */
   public Index() {}
 
   private CANSparkMax motorLower = new CANSparkMax(40, CANSparkLowLevel.MotorType.kBrushless);
@@ -35,11 +34,11 @@ public class Index extends SubsystemBase {
     set(0.0);
   }
 
-  public boolean getSensor0() {
+  public boolean isPrimed() {
     return breakBeam0.get();
   }
 
-  public void press() {
+  public void toggle() {
     if (currentSpeed == 0.0) {
       start();
     }
@@ -73,13 +72,14 @@ public class Index extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if (getSensor0() == true) {
-      stop();
-    }
+
   }
 
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
+    if (isPrimed() == true) {
+      stop();
+    }
   }
 }
