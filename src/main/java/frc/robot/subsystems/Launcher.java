@@ -10,28 +10,29 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Launcher extends SubsystemBase {
   /** Creates a new Launcher. */
-  private CANSparkMax upper = new CANSparkMax(99, MotorType.kBrushless);
+  private CANSparkMax upper = new CANSparkMax(Constants.LaunchConstants.upperCANID, MotorType.kBrushless);
 
-  private CANSparkMax lower = new CANSparkMax(98, MotorType.kBrushless);
+  private CANSparkMax lower = new CANSparkMax(Constants.LaunchConstants.lowerCANID, MotorType.kBrushless);
 
   private boolean tuningPIDS = false;
 
-  private DoubleSolenoid angleSwitcher = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
+  private DoubleSolenoid angleSwitcher = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.LaunchConstants.angleSwitchForwardChannel, Constants.LaunchConstants.angleSwitchReverseChannel);
 
   public Launcher() {
-    upper.getPIDController().setP(Constants.launcherP);
-    upper.getPIDController().setI(Constants.launcherI);
-    upper.getPIDController().setD(Constants.launcherD);
+    upper.getPIDController().setP(Constants.LaunchConstants.launcherP);
+    upper.getPIDController().setI(Constants.LaunchConstants.launcherI);
+    upper.getPIDController().setD(Constants.LaunchConstants.launcherD);
 
-    lower.getPIDController().setP(Constants.launcherP);
-    lower.getPIDController().setI(Constants.launcherI);
-    lower.getPIDController().setD(Constants.launcherD);
+    lower.getPIDController().setP(Constants.LaunchConstants.launcherP);
+    lower.getPIDController().setI(Constants.LaunchConstants.launcherI);
+    lower.getPIDController().setD(Constants.LaunchConstants.launcherD);
 
     SmartDashboard.putNumber("Launch P", upper.getPIDController().getP());
     SmartDashboard.putNumber("Launch I", upper.getPIDController().getI());
