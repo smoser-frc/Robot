@@ -33,7 +33,6 @@ public class RobotContainer {
 
   private final SwerveSubsystem m_swerve =
       new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
-
   private final Intake m_intake = new Intake();
   private final Index m_index = new Index();
 
