@@ -13,9 +13,6 @@ public class SwitchLaunchAngle extends Command {
   /** Creates a new SwitchLaunchAngle. */
   private Launcher m_launcher;
 
-  private Timer timer;
-  private boolean isForward;
-
   public SwitchLaunchAngle(Launcher launcher) {
     m_launcher = launcher;
 
@@ -26,21 +23,12 @@ public class SwitchLaunchAngle extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (m_launcher.getAnglePosition() == Value.kForward) {
-      isForward = true;
-    } else {
-      isForward = false;
-    }
-
-    timer = new Timer();
-    timer.start();
+    m_launcher.switchAngle();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    m_launcher.setAngle(isForward ? Value.kReverse : Value.kForward);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
@@ -49,6 +37,6 @@ public class SwitchLaunchAngle extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (timer.hasElapsed(1));
+    return true;
   }
 }

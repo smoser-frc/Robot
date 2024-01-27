@@ -71,7 +71,7 @@ public class Launcher extends SubsystemBase {
     return angleSwitcher.get();
   }
 
-  public void setAngle(Value value) {
+  public void setSwitcherPosition(Value value) {
     angleSwitcher.set(value);
   }
 
@@ -84,11 +84,16 @@ public class Launcher extends SubsystemBase {
     tuningPIDS = !tuningPIDS;
   }
 
+  public void maintainSwitcherState(){
+    angleSwitcher.set(angleSwitcher.get());
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     if (tuningPIDS) {
       updatePIDFromDashboard();
     }
+    maintainSwitcherState();
   }
 }
