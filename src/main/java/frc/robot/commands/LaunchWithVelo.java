@@ -5,16 +5,19 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Index;
 import frc.robot.subsystems.Launcher;
 
 public class LaunchWithVelo extends Command {
   /** Creates a new LaunchWithVelo. */
   private Launcher launcher;
+  private Index index;
 
   private double launchVelo;
 
-  public LaunchWithVelo(Launcher launcher, double velocity) {
+  public LaunchWithVelo(Launcher launcher, Index index, double velocity) {
     this.launcher = launcher;
+    this.index = index;
     launchVelo = velocity;
     addRequirements(launcher);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -30,7 +33,7 @@ public class LaunchWithVelo extends Command {
   @Override
   public void execute() {
     if (launcher.readyToLaunch(launchVelo)) {
-      // FIXME run index here (no subsystem at time of development)
+      index.start();
     }
   }
 
@@ -38,7 +41,7 @@ public class LaunchWithVelo extends Command {
   @Override
   public void end(boolean interrupted) {
     launcher.setLaunchVelocity(0);
-    // FIXME stop index here (see above)
+    index.stop();
   }
 
   // Returns true when the command should end.
