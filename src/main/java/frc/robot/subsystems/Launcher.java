@@ -62,10 +62,10 @@ public class Launcher extends SubsystemBase {
     lower.getPIDController().setD(d);
   }
 
-  private void updatePIDFromDashboard() {
-    double p = SmartDashboard.getNumber("Launch P", 0);
-    double i = SmartDashboard.getNumber("Launch I", 0);
-    double d = SmartDashboard.getNumber("Launch D", 0);
+  private void updatePIDFromDashboard(String keyWord) {
+    double p = SmartDashboard.getNumber(keyWord + " P", 0);
+    double i = SmartDashboard.getNumber(keyWord + " I", 0);
+    double d = SmartDashboard.getNumber(keyWord + " D", 0);
 
     updatePIDs(p, i, d);
   }
@@ -137,7 +137,7 @@ public class Launcher extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     if (tuningPIDS) {
-      updatePIDFromDashboard();
+      updatePIDFromDashboard("Launch");
     }
     maintainSwitcherState();
   }
