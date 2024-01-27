@@ -26,6 +26,17 @@ public class Launcher extends SubsystemBase {
   private DoubleSolenoid angleSwitcher = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.LaunchConstants.angleSwitchForwardChannel, Constants.LaunchConstants.angleSwitchReverseChannel);
 
   public Launcher() {
+    setPIDsDefault();
+    showPIDs();
+  }
+
+  private void showPIDs(){
+    SmartDashboard.putNumber("Launch P", upper.getPIDController().getP());
+    SmartDashboard.putNumber("Launch I", upper.getPIDController().getI());
+    SmartDashboard.putNumber("Launch D", upper.getPIDController().getD());
+  }
+
+  private void setPIDsDefault(){
     upper.getPIDController().setP(Constants.LaunchConstants.launcherP);
     upper.getPIDController().setI(Constants.LaunchConstants.launcherI);
     upper.getPIDController().setD(Constants.LaunchConstants.launcherD);
@@ -33,10 +44,22 @@ public class Launcher extends SubsystemBase {
     lower.getPIDController().setP(Constants.LaunchConstants.launcherP);
     lower.getPIDController().setI(Constants.LaunchConstants.launcherI);
     lower.getPIDController().setD(Constants.LaunchConstants.launcherD);
+  }
 
-    SmartDashboard.putNumber("Launch P", upper.getPIDController().getP());
-    SmartDashboard.putNumber("Launch I", upper.getPIDController().getI());
-    SmartDashboard.putNumber("Launch D", upper.getPIDController().getD());
+  private void updatePIDs(double p, double i, double d){
+    upper.getPIDController().setP(p);
+    upper.getPIDController().setI(i);
+    upper.getPIDController().setD(d);
+
+    lower.getPIDController().setP(p);
+    lower.getPIDController().setI(i);
+    lower.getPIDController().setD(d);    
+  }
+
+  private void updatePIDFromDashboard(){
+    double p = SmartDashboard.getNumber("Launch P", 0);
+    double i = SmartDashboard.getNumber("Launch I", 0);
+    double d = SmartDashboard.getNumber("Launch D", 0);
   }
 
   public void setLaunchVelocity(double velocity) {
@@ -65,13 +88,7 @@ public class Launcher extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     if (tuningPIDS) {
-      upper.getPIDController().setP(SmartDashboard.getNumber("Launch P", 0));
-      upper.getPIDController().setI(SmartDashboard.getNumber("Launch I", 0));
-      upper.getPIDController().setD(SmartDashboard.getNumber("Launch D", 0));
-
-      lower.getPIDController().setP(SmartDashboard.getNumber("Launch P", 0));
-      lower.getPIDController().setI(SmartDashboard.getNumber("Launch I", 0));
-      lower.getPIDController().setD(SmartDashboard.getNumber("Launch D", 0));
+      updatePIDFromDashboard();
     }
   }
 }
