@@ -48,6 +48,7 @@ public class LaunchWithVelo extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    //Only called on button hold and done when button released
     return false;
   }
 }

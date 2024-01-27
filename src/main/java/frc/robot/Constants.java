@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import swervelib.math.Matter;
 
 /**
@@ -38,6 +39,13 @@ public final class Constants {
     public static final int angleSwitchReverseChannel = 1;
     public static final double allowedVeloPercent = 0.05;
     public static final double allowedDifferencePercent = 0.05;
+    public static final Value closeLaunchPosition = Value.kForward;
+    public static final Value farLaunchPosition = Value.kReverse;
+
+    public enum LaunchDistance{
+      CLOSE,
+      FAR
+    }
   }
 
   public static class OperatorConstants {

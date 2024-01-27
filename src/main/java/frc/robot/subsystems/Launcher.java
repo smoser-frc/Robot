@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.LaunchConstants.LaunchDistance;
 
 public class Launcher extends SubsystemBase {
   /** Creates a new Launcher. */
@@ -65,6 +66,8 @@ public class Launcher extends SubsystemBase {
     double p = SmartDashboard.getNumber("Launch P", 0);
     double i = SmartDashboard.getNumber("Launch I", 0);
     double d = SmartDashboard.getNumber("Launch D", 0);
+
+    updatePIDs(p, i, d);
   }
 
   public void setLaunchVelocity(double velocity) {
@@ -106,8 +109,15 @@ public class Launcher extends SubsystemBase {
     return (differenceReady && veloReady);
   }
 
-  public void setSwitcherPosition(Value value) {
-    angleSwitcher.set(value);
+  public void setSwitcherPosition(LaunchDistance launchDistance) {
+    switch(launchDistance){
+      case CLOSE:
+        angleSwitcher.set(Constants.LaunchConstants.closeLaunchPosition);
+        break;
+      case FAR:
+        angleSwitcher.set(Constants.LaunchConstants.farLaunchPosition);
+        break;
+    }
   }
 
   public void switchAngle() {
