@@ -28,12 +28,17 @@ public class LaunchWithVelo extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if (m_launcher.readyToLaunch(launchVelo)){
+        //FIXME run index here (no subsystem at time of development)
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_launcher.setLaunchVelocity(0);
+    //FIXME stop index here (see above)
   }
 
   // Returns true when the command should end.

@@ -37,6 +37,8 @@ public final class Constants {
     public static final int lowerCANID = 98;
     public static final int angleSwitchForwardChannel = 0;
     public static final int angleSwitchReverseChannel = 1;
+    public static final double allowedVeloPercent = 0.05;
+    public static final double allowedDifferencePercent = 0.05;
   }
 
   public static class OperatorConstants {

@@ -71,6 +71,34 @@ public class Launcher extends SubsystemBase {
     return angleSwitcher.get();
   }
 
+  public double getCurrentVelocity(){
+    double upperVelocity = upper.getEncoder().getVelocity();
+    double lowerVelocity = lower.getEncoder().getVelocity();
+    return (upperVelocity + lowerVelocity) / 2;
+  }
+
+  public double getVelocityDifference(){
+    double upperVelocity = upper.getEncoder().getVelocity();
+    double lowerVelocity = lower.getEncoder().getVelocity();
+    return Math.abs(upperVelocity - lowerVelocity);
+  }
+
+  public boolean isWithinVeloPercentage(double percent, double targetVelo){
+    double currentPercent = getCurrentVelocity() / targetVelo;
+    return (1 - percent <= currentPercent && currentPercent <= 1 + percent);
+  }
+
+  public boolean differenceWithinPercentage(double percent, double targetVelo){
+    double differencePercent = getVelocityDifference() / targetVelo;
+    return (differencePercent <= percent && differencePercent >= -percent);
+  }
+
+  public boolean readyToLaunch(double targetVelo){
+    boolean differenceReady = differenceWithinPercentage(Constants.LaunchConstants.allowedDifferencePercent, targetVelo);
+    boolean veloReady = isWithinVeloPercentage(Constants.LaunchConstants.allowedVeloPercent, targetVelo);
+    return (differenceReady && veloReady);
+  }
+
   public void setSwitcherPosition(Value value) {
     angleSwitcher.set(value);
   }
