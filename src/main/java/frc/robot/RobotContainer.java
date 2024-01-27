@@ -32,12 +32,10 @@ public class RobotContainer {
 
   private final SwerveSubsystem m_swerve =
       new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
-
   private final Intake m_intake = new Intake();
   private final Index m_index = new Index();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-
   private final XboxController driverXbox = new XboxController(0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
