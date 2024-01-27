@@ -11,9 +11,10 @@ import frc.robot.subsystems.Launcher;
 public class SetLaunchAnglePosition extends Command {
   /** Creates a new SetLaunchAnglePosition. */
   private Launcher launcher;
+
   private Value value;
 
-  public SetLaunchAnglePosition(Launcher launcher, Value value){
+  public SetLaunchAnglePosition(Launcher launcher, Value value) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.launcher = launcher;
     this.value = value;

@@ -9,12 +9,12 @@ import frc.robot.subsystems.Launcher;
 
 public class LaunchWithVelo extends Command {
   /** Creates a new LaunchWithVelo. */
-  private Launcher m_launcher;
+  private Launcher launcher;
 
   private double launchVelo;
 
   public LaunchWithVelo(Launcher launcher, double velocity) {
-    m_launcher = launcher;
+    this.launcher = launcher;
     launchVelo = velocity;
     addRequirements(launcher);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -23,22 +23,22 @@ public class LaunchWithVelo extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_launcher.setLaunchVelocity(launchVelo);
+    launcher.setLaunchVelocity(launchVelo);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_launcher.readyToLaunch(launchVelo)){
-        //FIXME run index here (no subsystem at time of development)
+    if (launcher.readyToLaunch(launchVelo)) {
+      // FIXME run index here (no subsystem at time of development)
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_launcher.setLaunchVelocity(0);
-    //FIXME stop index here (see above)
+    launcher.setLaunchVelocity(0);
+    // FIXME stop index here (see above)
   }
 
   // Returns true when the command should end.

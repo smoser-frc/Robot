@@ -9,18 +9,18 @@ import frc.robot.subsystems.Launcher;
 
 public class ToggleLaunchPIDS extends Command {
   /** Creates a new ToggleLaunchPIDS. */
-  private Launcher m_launcher;
+  private Launcher launcher;
 
   public ToggleLaunchPIDS(Launcher launcher) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_launcher = launcher;
+    this.launcher = launcher;
     addRequirements(launcher);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_launcher.togglePIDTuning();
+    launcher.togglePIDTuning();
   }
 
   // Returns true when the command should end.

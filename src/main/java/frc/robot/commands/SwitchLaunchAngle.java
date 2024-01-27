@@ -4,18 +4,15 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Launcher;
 
 public class SwitchLaunchAngle extends Command {
   /** Creates a new SwitchLaunchAngle. */
-  private Launcher m_launcher;
+  private Launcher launcher;
 
   public SwitchLaunchAngle(Launcher launcher) {
-    m_launcher = launcher;
-
+    this.launcher = launcher;
     addRequirements(launcher);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -23,7 +20,7 @@ public class SwitchLaunchAngle extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_launcher.switchAngle();
+    launcher.switchAngle();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -10,33 +10,38 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Launcher extends SubsystemBase {
   /** Creates a new Launcher. */
-  private CANSparkMax upper = new CANSparkMax(Constants.LaunchConstants.upperCANID, MotorType.kBrushless);
+  private CANSparkMax upper =
+      new CANSparkMax(Constants.LaunchConstants.upperCANID, MotorType.kBrushless);
 
-  private CANSparkMax lower = new CANSparkMax(Constants.LaunchConstants.lowerCANID, MotorType.kBrushless);
+  private CANSparkMax lower =
+      new CANSparkMax(Constants.LaunchConstants.lowerCANID, MotorType.kBrushless);
 
   private boolean tuningPIDS = false;
 
-  private DoubleSolenoid angleSwitcher = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.LaunchConstants.angleSwitchForwardChannel, Constants.LaunchConstants.angleSwitchReverseChannel);
+  private DoubleSolenoid angleSwitcher =
+      new DoubleSolenoid(
+          PneumaticsModuleType.CTREPCM,
+          Constants.LaunchConstants.angleSwitchForwardChannel,
+          Constants.LaunchConstants.angleSwitchReverseChannel);
 
   public Launcher() {
     setPIDsDefault();
     showPIDs();
   }
 
-  private void showPIDs(){
+  private void showPIDs() {
     SmartDashboard.putNumber("Launch P", upper.getPIDController().getP());
     SmartDashboard.putNumber("Launch I", upper.getPIDController().getI());
     SmartDashboard.putNumber("Launch D", upper.getPIDController().getD());
   }
 
-  private void setPIDsDefault(){
+  private void setPIDsDefault() {
     upper.getPIDController().setP(Constants.LaunchConstants.launcherP);
     upper.getPIDController().setI(Constants.LaunchConstants.launcherI);
     upper.getPIDController().setD(Constants.LaunchConstants.launcherD);
@@ -46,17 +51,17 @@ public class Launcher extends SubsystemBase {
     lower.getPIDController().setD(Constants.LaunchConstants.launcherD);
   }
 
-  private void updatePIDs(double p, double i, double d){
+  private void updatePIDs(double p, double i, double d) {
     upper.getPIDController().setP(p);
     upper.getPIDController().setI(i);
     upper.getPIDController().setD(d);
 
     lower.getPIDController().setP(p);
     lower.getPIDController().setI(i);
-    lower.getPIDController().setD(d);    
+    lower.getPIDController().setD(d);
   }
 
-  private void updatePIDFromDashboard(){
+  private void updatePIDFromDashboard() {
     double p = SmartDashboard.getNumber("Launch P", 0);
     double i = SmartDashboard.getNumber("Launch I", 0);
     double d = SmartDashboard.getNumber("Launch D", 0);
@@ -71,31 +76,33 @@ public class Launcher extends SubsystemBase {
     return angleSwitcher.get();
   }
 
-  public double getCurrentVelocity(){
+  public double getCurrentVelocity() {
     double upperVelocity = upper.getEncoder().getVelocity();
     double lowerVelocity = lower.getEncoder().getVelocity();
     return (upperVelocity + lowerVelocity) / 2;
   }
 
-  public double getVelocityDifference(){
+  public double getVelocityDifference() {
     double upperVelocity = upper.getEncoder().getVelocity();
     double lowerVelocity = lower.getEncoder().getVelocity();
     return Math.abs(upperVelocity - lowerVelocity);
   }
 
-  public boolean isWithinVeloPercentage(double percent, double targetVelo){
+  public boolean isWithinVeloPercentage(double percent, double targetVelo) {
     double currentPercent = getCurrentVelocity() / targetVelo;
     return (1 - percent <= currentPercent && currentPercent <= 1 + percent);
   }
 
-  public boolean differenceWithinPercentage(double percent, double targetVelo){
+  public boolean differenceWithinPercentage(double percent, double targetVelo) {
     double differencePercent = getVelocityDifference() / targetVelo;
     return (differencePercent <= percent && differencePercent >= -percent);
   }
 
-  public boolean readyToLaunch(double targetVelo){
-    boolean differenceReady = differenceWithinPercentage(Constants.LaunchConstants.allowedDifferencePercent, targetVelo);
-    boolean veloReady = isWithinVeloPercentage(Constants.LaunchConstants.allowedVeloPercent, targetVelo);
+  public boolean readyToLaunch(double targetVelo) {
+    boolean differenceReady =
+        differenceWithinPercentage(Constants.LaunchConstants.allowedDifferencePercent, targetVelo);
+    boolean veloReady =
+        isWithinVeloPercentage(Constants.LaunchConstants.allowedVeloPercent, targetVelo);
     return (differenceReady && veloReady);
   }
 
@@ -112,7 +119,7 @@ public class Launcher extends SubsystemBase {
     tuningPIDS = !tuningPIDS;
   }
 
-  public void maintainSwitcherState(){
+  public void maintainSwitcherState() {
     angleSwitcher.set(angleSwitcher.get());
   }
 
