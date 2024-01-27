@@ -17,7 +17,7 @@ public class AngleAndSpeedLaunch extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        (anglePosition != launcher.getAnglePosition()) ? new SwitchLaunchAngle(launcher) : null,
+        new SetLaunchAnglePosition(launcher, anglePosition),
         new LaunchWithVelo(launcher, velocity));
   }
 }
