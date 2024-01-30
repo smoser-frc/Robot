@@ -43,13 +43,10 @@ public class Launcher extends SubsystemBase {
   }
 
   private void setPIDsDefault() {
-    upper.getPIDController().setP(Constants.LaunchConstants.launcherP);
-    upper.getPIDController().setI(Constants.LaunchConstants.launcherI);
-    upper.getPIDController().setD(Constants.LaunchConstants.launcherD);
-
-    lower.getPIDController().setP(Constants.LaunchConstants.launcherP);
-    lower.getPIDController().setI(Constants.LaunchConstants.launcherI);
-    lower.getPIDController().setD(Constants.LaunchConstants.launcherD);
+    updatePIDs(
+        Constants.LaunchConstants.launcherP,
+        Constants.LaunchConstants.launcherI,
+        Constants.LaunchConstants.launcherD);
   }
 
   private void updatePIDs(double p, double i, double d) {
