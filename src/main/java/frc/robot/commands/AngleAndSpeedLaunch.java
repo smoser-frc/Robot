@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.LaunchConstants.LaunchDistance;
+import frc.robot.Constants.Launch.LaunchPosition;
 import frc.robot.subsystems.Index;
 import frc.robot.subsystems.Launcher;
 
@@ -15,7 +15,7 @@ import frc.robot.subsystems.Launcher;
 public class AngleAndSpeedLaunch extends SequentialCommandGroup {
   /** Creates a new AngleAndSpeedLaunch. */
   public AngleAndSpeedLaunch(
-      Launcher launcher, Index index, double velocity, LaunchDistance launchDistance) {
+      Launcher launcher, Index index, double velocity, LaunchPosition launchDistance) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(

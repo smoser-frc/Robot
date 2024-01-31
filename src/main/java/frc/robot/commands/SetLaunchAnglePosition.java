@@ -5,16 +5,16 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.LaunchConstants.LaunchDistance;
+import frc.robot.Constants.Launch.LaunchPosition;
 import frc.robot.subsystems.Launcher;
 
 public class SetLaunchAnglePosition extends Command {
   /** Creates a new SetLaunchAnglePosition. */
   private Launcher launcher;
 
-  private LaunchDistance launchDistance;
+  private LaunchPosition launchDistance;
 
-  public SetLaunchAnglePosition(Launcher launcher, LaunchDistance launchDistance) {
+  public SetLaunchAnglePosition(Launcher launcher, LaunchPosition launchDistance) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.launcher = launcher;
     this.launchDistance = launchDistance;
@@ -24,7 +24,7 @@ public class SetLaunchAnglePosition extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    launcher.setSwitcherPosition(launchDistance);
+    launcher.setLaunchPosition(launchDistance);
   }
 
   // Returns true when the command should end.
