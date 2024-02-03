@@ -11,13 +11,17 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Climb extends SubsystemBase {
-  private static final int pcmID = 12;
-  private CANSparkMax winch = new CANSparkMax(45, MotorType.kBrushless);
-  private DoubleSolenoid solenoid = new DoubleSolenoid(pcmID, PneumaticsModuleType.CTREPCM, 4, 5);
+  // FIXME; Climb is going to change in some way
+  private CANSparkMax winch = new CANSparkMax(Constants.Climb.leftCANID, MotorType.kBrushless);
+  private DoubleSolenoid solenoid =
+      new DoubleSolenoid(
+          Constants.pneumaticsControlModuleCANID, PneumaticsModuleType.CTREPCM, 4, 5);
   private boolean armExtended = false;
-  private DigitalInput winchLimit = new DigitalInput(0);
+  private DigitalInput winchLimitLeft = new DigitalInput(Constants.Climb.winchLimitLeft);
+  private DigitalInput winchLimitRight = new DigitalInput(Constants.Climb.winchLimitRight);
 
   /** Creates a new Climb. */
   public Climb() {}
@@ -25,7 +29,7 @@ public class Climb extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if (winchLimit.get()) {
+    if (winchLimitLeft.get()) {
       stopWinch();
     }
   }
@@ -36,7 +40,7 @@ public class Climb extends SubsystemBase {
   }
 
   public boolean winchLimitIsReached() {
-    return winchLimit.get();
+    return winchLimitLeft.get();
   }
 
   public void runWinch() {
