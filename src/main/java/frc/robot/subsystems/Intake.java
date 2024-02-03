@@ -21,7 +21,7 @@ public class Intake extends SubsystemBase {
   private CANSparkMax motorRight =
       new CANSparkMax(Constants.Intake.rightCANID, CANSparkLowLevel.MotorType.kBrushless);
 
-  private DigitalInput sensor = new DigitalInput(Constants.Intake.sensorID);
+  private DigitalInput sensor = new DigitalInput(Constants.Intake.breakBeam);
 
   double speed = 0.35;
   double currentSpeed = 0.0;

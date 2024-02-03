@@ -34,14 +34,14 @@ public final class Constants {
   public static class Index {
     public static final int lowerCANID = 40;
     public static final int upperCANID = 41;
-    public static final int breakBeam = 0;
+    public static final int breakBeam = 1;
   }
 
   public static class Intake {
     public static final int leftCANID = 30;
     public static final int centerCANID = 31;
     public static final int rightCANID = 32;
-    public static final int sensorID = 9;
+    public static final int breakBeam = 0;
   }
 
   public static class Launch {
