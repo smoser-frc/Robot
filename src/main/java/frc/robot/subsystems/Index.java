@@ -9,13 +9,16 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Index extends SubsystemBase {
   public Index() {}
 
-  private CANSparkMax motorLower = new CANSparkMax(40, CANSparkLowLevel.MotorType.kBrushless);
-  private CANSparkMax motorUpper = new CANSparkMax(41, CANSparkLowLevel.MotorType.kBrushless);
-  private DigitalInput breakBeam0 = new DigitalInput(0);
+  private CANSparkMax motorLower =
+      new CANSparkMax(Constants.Index.lowerCANID, CANSparkLowLevel.MotorType.kBrushless);
+  private CANSparkMax motorUpper =
+      new CANSparkMax(Constants.Index.upperCANID, CANSparkLowLevel.MotorType.kBrushless);
+  private DigitalInput breakBeam0 = new DigitalInput(Constants.Index.breakBeam);
   // init variables speed and currentSpeed
   double currentSpeed = 0;
   double speed = 3.5;

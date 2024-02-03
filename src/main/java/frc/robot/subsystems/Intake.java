@@ -13,12 +13,15 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
-  private CANSparkMax motorLeft = new CANSparkMax(30, CANSparkLowLevel.MotorType.kBrushless);
+  private CANSparkMax motorLeft =
+      new CANSparkMax(Constants.Intake.leftCANID, CANSparkLowLevel.MotorType.kBrushless);
 
-  private CANSparkMax motorCenter = new CANSparkMax(31, CANSparkLowLevel.MotorType.kBrushless);
-  private CANSparkMax motorRight = new CANSparkMax(32, CANSparkLowLevel.MotorType.kBrushless);
+  private CANSparkMax motorCenter =
+      new CANSparkMax(Constants.Intake.centerCANID, CANSparkLowLevel.MotorType.kBrushless);
+  private CANSparkMax motorRight =
+      new CANSparkMax(Constants.Intake.rightCANID, CANSparkLowLevel.MotorType.kBrushless);
 
-  private DigitalInput sensor = new DigitalInput(Constants.IntakeConstants.sensorID);
+  private DigitalInput sensor = new DigitalInput(Constants.Intake.sensorID);
 
   double speed = 0.35;
   double currentSpeed = 0.0;
