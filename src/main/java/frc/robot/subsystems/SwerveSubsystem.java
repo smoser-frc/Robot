@@ -10,8 +10,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-
-import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -20,17 +18,14 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
-import frc.robot.Robot;
-
 import java.io.File;
-import java.sql.Driver;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import swervelib.SwerveController;
@@ -247,7 +242,10 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+    //updateFromLimelight();
+    swerveDrive.headingCorrection = true;
+  }
 
   @Override
   public void simulationPeriodic() {}
@@ -419,15 +417,18 @@ public class SwerveSubsystem extends SubsystemBase {
         new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
   }
 
-  public void updateFromLimelight(){
+  public void updateFromLimelight() {
     Optional<Alliance> team = DriverStation.getAlliance();
-    if (team.get() == Alliance.Red){
-      swerveDrive.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiRed(Constants.limelightName), Timer.getFPGATimestamp());
-      swerveDrive.setGyroOffset(LimelightHelpers.getBotPose3d_wpiRed(Constants.limelightName).getRotation());
-    }
-    else if (team.get() == Alliance.Blue){
-      swerveDrive.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName), Timer.getFPGATimestamp());
-      swerveDrive.setGyroOffset(LimelightHelpers.getBotPose3d_wpiBlue(Constants.limelightName).getRotation());      
+    if (team.get() == Alliance.Red) {
+      swerveDrive.addVisionMeasurement(
+          LimelightHelpers.getBotPose2d_wpiRed(Constants.limelightName), Timer.getFPGATimestamp());
+      swerveDrive.setGyroOffset(
+          LimelightHelpers.getBotPose3d_wpiRed(Constants.limelightName).getRotation().times(-1));
+    } else if (team.get() == Alliance.Blue) {
+      swerveDrive.addVisionMeasurement(
+          LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName), Timer.getFPGATimestamp());
+      swerveDrive.setGyroOffset(
+          LimelightHelpers.getBotPose3d_wpiBlue(Constants.limelightName).getRotation());
     }
   }
 }
