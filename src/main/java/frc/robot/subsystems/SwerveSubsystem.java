@@ -19,6 +19,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -41,6 +42,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
   /** Swerve drive object. */
   private final SwerveDrive swerveDrive;
+  private final Timer limelightTimer;
+  private double timerTicks;
 
   /** Maximum speed of the robot in meters per second, used to limit acceleration. */
   public double maximumSpeed = Units.feetToMeters(14.5);
@@ -83,6 +86,9 @@ public class SwerveSubsystem extends SubsystemBase {
         false); // Heading correction should only be used while controlling the robot via angle.
 
     setupPathPlanner();
+    limelightTimer = new Timer();
+    limelightTimer.start();
+    timerTicks = 0;
   }
 
   /** Setup AutoBuilder for PathPlanner. */
@@ -198,6 +204,9 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveSubsystem(
       SwerveDriveConfiguration driveCfg, SwerveControllerConfiguration controllerCfg) {
     swerveDrive = new SwerveDrive(driveCfg, controllerCfg, maximumSpeed);
+    limelightTimer = new Timer();
+    limelightTimer.start();
+    timerTicks = 0;
   }
 
   /**
@@ -243,7 +252,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    //updateFromLimelight();
+    if(limelightTimer.hasElapsed(timerTicks)){
+      updateFromLimelight();
+      timerTicks++;
+    }
     swerveDrive.headingCorrection = true;
   }
 
@@ -419,15 +431,17 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void updateFromLimelight() {
     Optional<Alliance> team = DriverStation.getAlliance();
-    if (team.get() == Alliance.Red) {
+    boolean hasTarget = LimelightHelpers.getTV(Constants.limelightName);
+    SmartDashboard.putBoolean("TargetResults Valid", hasTarget);
+    if (team.get() == Alliance.Red && hasTarget) {
       swerveDrive.addVisionMeasurement(
           LimelightHelpers.getBotPose2d_wpiRed(Constants.limelightName), Timer.getFPGATimestamp());
-      swerveDrive.setGyroOffset(
+      swerveDrive.setGyro(
           LimelightHelpers.getBotPose3d_wpiRed(Constants.limelightName).getRotation().times(-1));
-    } else if (team.get() == Alliance.Blue) {
+    } else if (team.get() == Alliance.Blue && hasTarget) {
       swerveDrive.addVisionMeasurement(
-          LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName), Timer.getFPGATimestamp());
-      swerveDrive.setGyroOffset(
+          LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName).times(-1), Timer.getFPGATimestamp());
+      swerveDrive.setGyro(
           LimelightHelpers.getBotPose3d_wpiBlue(Constants.limelightName).getRotation());
     }
   }
