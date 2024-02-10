@@ -12,6 +12,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -257,6 +258,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
     if (limelightTimer.hasElapsed(timerTicks)) {
       updateFromLimelight();
+      resetToLimelight();
       timerTicks++;
     }
     swerveDrive.headingCorrection = true;
@@ -437,18 +439,19 @@ public class SwerveSubsystem extends SubsystemBase {
     Pose2d pose;
     if (Robot.alliance == Alliance.Red && hasTarget) {
       pose = LimelightHelpers.getBotPose2d_wpiRed(Constants.limelightName);
-      swerveDrive.resetOdometry(pose);
+      resetOdometry(pose);
     } else if (Robot.alliance == Alliance.Blue && hasTarget) {
       pose = LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName);
-      swerveDrive.resetOdometry(pose);
+      resetOdometry(pose);
     }
   }
 
   public void resetToPosition(double x, double y, double rotation) {
     Rotation2d rotation2d = new Rotation2d(Units.degreesToRadians(rotation));
     Pose2d pose2d = new Pose2d(x, y, rotation2d);
-    swerveDrive.resetOdometry(pose2d);
-  }
+    resetOdometry(pose2d);
+    swerveDrive.setGyroOffset(new Rotation3d(0, 0, rotation2d.getRadians()));
+  }  
 
   public void resetToDashboard() {
     double x = SmartDashboard.getNumber("Position Set X", 0);
@@ -481,5 +484,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public Command dashboardPositionResetCommand() {
     return this.runOnce(() -> resetToDashboard());
+  }
+
+  public Command limelightPositionResetCommand() {
+    return this.runOnce(() -> resetToLimelight());
   }
 }
