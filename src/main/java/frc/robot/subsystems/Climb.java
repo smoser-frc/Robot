@@ -7,7 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -15,10 +15,9 @@ import frc.robot.Constants;
 
 public class Climb extends SubsystemBase {
   // FIXME; Climb is going to change in some way
-  private CANSparkMax winch = new CANSparkMax(Constants.Climb.leftCANID, MotorType.kBrushless);
-  private DoubleSolenoid solenoid =
-      new DoubleSolenoid(
-          Constants.pneumaticsControlModuleCANID, PneumaticsModuleType.CTREPCM, 4, 5);
+  private CANSparkMax winchRight = new CANSparkMax(Constants.Climb.rightCANID, MotorType.kBrushless);
+  private CANSparkMax winchLeft = new CANSparkMax(Constants.Climb.leftCANID, MotorType.kBrushless);
+  
   private boolean armExtended = false;
   private DigitalInput winchLimitLeft = new DigitalInput(Constants.Climb.winchLimitLeft);
   private DigitalInput winchLimitRight = new DigitalInput(Constants.Climb.winchLimitRight);
@@ -30,13 +29,8 @@ public class Climb extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     if (winchLimitLeft.get()) {
-      stopWinch();
+      stopWinchLeft();
     }
-  }
-
-  public void release() {
-    solenoid.set(Value.kReverse);
-    armExtended = true;
   }
 
   public boolean winchLimitIsReached() {
@@ -45,12 +39,16 @@ public class Climb extends SubsystemBase {
 
   public void runWinch() {
     if (armExtended) {
-      winch.set(-0.4);
+      winchLeft.set(-0.4);
+      winchRight.set(-0.4);
     }
   }
 
-  // This stops the winch
-  public void stopWinch() {
-    winch.set(0);
+  // This stops the left and right winches respectively.
+  public void stopWinchLeft() {
+    winchLeft.set(0);
+  }
+  public void stopWinchRight() {
+    winchRight.set(0);
   }
 }

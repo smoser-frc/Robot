@@ -34,7 +34,8 @@ public class RunClimbWinch extends Command {
   public void end(boolean interrupted) {
     // Calling clime.stopWinch isn't necessary, but we're keeping it to make sure
     // that it doesn't past the end of the winch.
-    climb.stopWinch();
+    climb.stopWinchLeft();
+    climb.stopWinchRight();
   }
 
   // Returns true when the command should end.
