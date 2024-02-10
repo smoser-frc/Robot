@@ -19,15 +19,14 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import java.io.File;
-import java.sql.Driver;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import swervelib.SwerveController;
@@ -43,6 +42,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   /** Swerve drive object. */
   private final SwerveDrive swerveDrive;
+
   private final Timer limelightTimer;
   private double timerTicks;
 
@@ -253,7 +253,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if(limelightTimer.hasElapsed(timerTicks)){
+    if (limelightTimer.hasElapsed(timerTicks)) {
       updateFromLimelight();
       timerTicks++;
     }
@@ -430,20 +430,31 @@ public class SwerveSubsystem extends SubsystemBase {
         new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
   }
 
-  public void hardResetToLimelight(){
+  public void resetToLimelight() {
     Optional<Alliance> team = DriverStation.getAlliance();
     boolean hasTarget = LimelightHelpers.getTV(Constants.limelightName);
-    if (team.get() == Alliance.Red && hasTarget){
-      swerveDrive.swerveDrivePoseEstimator.resetPosition(LimelightHelpers.getBotPose3d_wpiRed(Constants.limelightName).getRotation().toRotation2d(), swerveDrive.getModulePositions(), LimelightHelpers.getBotPose2d_wpiRed(Constants.limelightName));
-    } else if (team.get() == Alliance.Blue && hasTarget){
-      swerveDrive.swerveDrivePoseEstimator.resetPosition(LimelightHelpers.getBotPose3d_wpiBlue(Constants.limelightName).getRotation().toRotation2d(), swerveDrive.getModulePositions(), LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName));
+    if (team.get() == Alliance.Red && hasTarget) {
+      swerveDrive.swerveDrivePoseEstimator.resetPosition(
+          LimelightHelpers.getBotPose3d_wpiRed(Constants.limelightName)
+              .getRotation()
+              .toRotation2d(),
+          swerveDrive.getModulePositions(),
+          LimelightHelpers.getBotPose2d_wpiRed(Constants.limelightName));
+    } else if (team.get() == Alliance.Blue && hasTarget) {
+      swerveDrive.swerveDrivePoseEstimator.resetPosition(
+          LimelightHelpers.getBotPose3d_wpiBlue(Constants.limelightName)
+              .getRotation()
+              .toRotation2d(),
+          swerveDrive.getModulePositions(),
+          LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName));
     }
   }
 
-  public void hardResetToPosition(double x, double y, double rotation){
+  public void resetToPosition(double x, double y, double rotation) {
     Rotation2d rotation2d = new Rotation2d(rotation);
     Pose2d pose2d = new Pose2d(x, y, rotation2d);
-    swerveDrive.swerveDrivePoseEstimator.resetPosition(rotation2d, swerveDrive.getModulePositions(), pose2d);
+    swerveDrive.swerveDrivePoseEstimator.resetPosition(
+        rotation2d, swerveDrive.getModulePositions(), pose2d);
   }
 
   public void updateFromLimelight() {
@@ -457,7 +468,8 @@ public class SwerveSubsystem extends SubsystemBase {
           LimelightHelpers.getBotPose3d_wpiRed(Constants.limelightName).getRotation().times(-1));
     } else if (team.get() == Alliance.Blue && hasTarget) {
       swerveDrive.addVisionMeasurement(
-          LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName).times(-1), Timer.getFPGATimestamp());
+          LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName).times(-1),
+          Timer.getFPGATimestamp());
       swerveDrive.setGyro(
           LimelightHelpers.getBotPose3d_wpiBlue(Constants.limelightName).getRotation());
     }
