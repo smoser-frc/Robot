@@ -12,9 +12,12 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -90,6 +93,7 @@ public class SwerveSubsystem extends SubsystemBase {
     limelightTimer = new Timer();
     limelightTimer.start();
     timerTicks = 0;
+    populateDashboard();
   }
 
   /** Setup AutoBuilder for PathPlanner. */
@@ -208,6 +212,7 @@ public class SwerveSubsystem extends SubsystemBase {
     limelightTimer = new Timer();
     limelightTimer.start();
     timerTicks = 0;
+    populateDashboard();
   }
 
   /**
@@ -432,15 +437,16 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void resetToLimelight() {
     Optional<Alliance> team = DriverStation.getAlliance();
+    boolean hasTeam = team.isPresent();
     boolean hasTarget = LimelightHelpers.getTV(Constants.limelightName);
-    if (team.get() == Alliance.Red && hasTarget) {
+    if (hasTeam && team.get() == Alliance.Red && hasTarget) {
       swerveDrive.swerveDrivePoseEstimator.resetPosition(
           LimelightHelpers.getBotPose3d_wpiRed(Constants.limelightName)
               .getRotation()
               .toRotation2d(),
           swerveDrive.getModulePositions(),
           LimelightHelpers.getBotPose2d_wpiRed(Constants.limelightName));
-    } else if (team.get() == Alliance.Blue && hasTarget) {
+    } else if (hasTeam && team.get() == Alliance.Blue && hasTarget) {
       swerveDrive.swerveDrivePoseEstimator.resetPosition(
           LimelightHelpers.getBotPose3d_wpiBlue(Constants.limelightName)
               .getRotation()
@@ -451,27 +457,45 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void resetToPosition(double x, double y, double rotation) {
-    Rotation2d rotation2d = new Rotation2d(rotation);
+    Rotation2d rotation2d = new Rotation2d(Units.degreesToRadians(rotation));
     Pose2d pose2d = new Pose2d(x, y, rotation2d);
     swerveDrive.swerveDrivePoseEstimator.resetPosition(
         rotation2d, swerveDrive.getModulePositions(), pose2d);
   }
 
+  public void resetToDashboard(){
+    double x = SmartDashboard.getNumber("Position Set X", 0);
+    double y = SmartDashboard.getNumber("Position Set Y", 0);
+    double rotation = SmartDashboard.getNumber("Rotation Set", 0);
+    resetToPosition(x, y, rotation);
+  }
+
   public void updateFromLimelight() {
     Optional<Alliance> team = DriverStation.getAlliance();
+    boolean hasTeam = team.isPresent();
     boolean hasTarget = LimelightHelpers.getTV(Constants.limelightName);
     SmartDashboard.putBoolean("TargetResults Valid", hasTarget);
-    if (team.get() == Alliance.Red && hasTarget) {
+    if (hasTeam && team.get() == Alliance.Red && hasTarget) {
       swerveDrive.addVisionMeasurement(
           LimelightHelpers.getBotPose2d_wpiRed(Constants.limelightName), Timer.getFPGATimestamp());
       swerveDrive.setGyro(
           LimelightHelpers.getBotPose3d_wpiRed(Constants.limelightName).getRotation().times(-1));
-    } else if (team.get() == Alliance.Blue && hasTarget) {
+    } else if (hasTeam && team.get() == Alliance.Blue && hasTarget) {
       swerveDrive.addVisionMeasurement(
           LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName).times(-1),
           Timer.getFPGATimestamp());
       swerveDrive.setGyro(
           LimelightHelpers.getBotPose3d_wpiBlue(Constants.limelightName).getRotation());
     }
+  }
+
+  private void populateDashboard(){
+    SmartDashboard.putNumber("Position Set X", 0);
+    SmartDashboard.putNumber("Position Set Y", 0);
+    SmartDashboard.putNumber("Rotation Set", 0);
+  }
+
+  public Command dashboardPositionResetCommand(){
+    return this.runOnce(() -> resetToDashboard());
   }
 }

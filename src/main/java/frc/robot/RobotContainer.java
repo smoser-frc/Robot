@@ -75,6 +75,9 @@ public class RobotContainer {
     JoystickButton rightBumper =
         new JoystickButton(driverXbox, XboxController.Button.kRightBumper.value);
     rightBumper.onTrue(new PrimeIndex(m_index));
+
+    JoystickButton a = new JoystickButton(driverXbox, XboxController.Button.kA.value);
+    a.onTrue(m_swerve.dashboardPositionResetCommand());
   }
 
   /**
