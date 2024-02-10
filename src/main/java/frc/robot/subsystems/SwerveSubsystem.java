@@ -439,28 +439,20 @@ public class SwerveSubsystem extends SubsystemBase {
     Optional<Alliance> team = DriverStation.getAlliance();
     boolean hasTeam = team.isPresent();
     boolean hasTarget = LimelightHelpers.getTV(Constants.limelightName);
+    Pose2d pose;
     if (hasTeam && team.get() == Alliance.Red && hasTarget) {
-      swerveDrive.swerveDrivePoseEstimator.resetPosition(
-          LimelightHelpers.getBotPose3d_wpiRed(Constants.limelightName)
-              .getRotation()
-              .toRotation2d(),
-          swerveDrive.getModulePositions(),
-          LimelightHelpers.getBotPose2d_wpiRed(Constants.limelightName));
+      pose = LimelightHelpers.getBotPose2d_wpiRed(Constants.limelightName);
+      swerveDrive.resetOdometry(pose);
     } else if (hasTeam && team.get() == Alliance.Blue && hasTarget) {
-      swerveDrive.swerveDrivePoseEstimator.resetPosition(
-          LimelightHelpers.getBotPose3d_wpiBlue(Constants.limelightName)
-              .getRotation()
-              .toRotation2d(),
-          swerveDrive.getModulePositions(),
-          LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName));
+      pose = LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName);
+      swerveDrive.resetOdometry(pose);
     }
   }
 
   public void resetToPosition(double x, double y, double rotation) {
     Rotation2d rotation2d = new Rotation2d(Units.degreesToRadians(rotation));
     Pose2d pose2d = new Pose2d(x, y, rotation2d);
-    swerveDrive.swerveDrivePoseEstimator.resetPosition(
-        rotation2d, swerveDrive.getModulePositions(), pose2d);
+    swerveDrive.resetOdometry(pose2d);
   }
 
   public void resetToDashboard(){
