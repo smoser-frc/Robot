@@ -430,7 +430,7 @@ public class SwerveSubsystem extends SubsystemBase {
         new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
   }
 
-  public void hardResetOdometry(){
+  public void hardResetToLimelight(){
     Optional<Alliance> team = DriverStation.getAlliance();
     boolean hasTarget = LimelightHelpers.getTV(Constants.limelightName);
     if (team.get() == Alliance.Red && hasTarget){
@@ -438,6 +438,12 @@ public class SwerveSubsystem extends SubsystemBase {
     } else if (team.get() == Alliance.Blue && hasTarget){
       swerveDrive.swerveDrivePoseEstimator.resetPosition(LimelightHelpers.getBotPose3d_wpiBlue(Constants.limelightName).getRotation().toRotation2d(), swerveDrive.getModulePositions(), LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName));
     }
+  }
+
+  public void hardResetToPosition(double x, double y, double rotation){
+    Rotation2d rotation2d = new Rotation2d(rotation);
+    Pose2d pose2d = new Pose2d(x, y, rotation2d);
+    swerveDrive.swerveDrivePoseEstimator.resetPosition(rotation2d, swerveDrive.getModulePositions(), pose2d);
   }
 
   public void updateFromLimelight() {
