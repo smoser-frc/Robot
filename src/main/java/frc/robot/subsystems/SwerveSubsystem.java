@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import java.io.File;
+import java.sql.Driver;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import swervelib.SwerveController;
@@ -427,6 +428,16 @@ public class SwerveSubsystem extends SubsystemBase {
   public void addFakeVisionReading() {
     swerveDrive.addVisionMeasurement(
         new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
+  }
+
+  public void hardResetOdometry(){
+    Optional<Alliance> team = DriverStation.getAlliance();
+    boolean hasTarget = LimelightHelpers.getTV(Constants.limelightName);
+    if (team.get() == Alliance.Red && hasTarget){
+      swerveDrive.swerveDrivePoseEstimator.resetPosition(LimelightHelpers.getBotPose3d_wpiRed(Constants.limelightName).getRotation().toRotation2d(), swerveDrive.getModulePositions(), LimelightHelpers.getBotPose2d_wpiRed(Constants.limelightName));
+    } else if (team.get() == Alliance.Blue && hasTarget){
+      swerveDrive.swerveDrivePoseEstimator.resetPosition(LimelightHelpers.getBotPose3d_wpiBlue(Constants.limelightName).getRotation().toRotation2d(), swerveDrive.getModulePositions(), LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName));
+    }
   }
 
   public void updateFromLimelight() {
