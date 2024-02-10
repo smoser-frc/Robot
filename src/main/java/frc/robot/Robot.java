@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import java.util.Optional;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -21,7 +22,7 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  public Alliance alliance;
+  public static Alliance alliance;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -32,10 +33,12 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    alliance =
-        (DriverStation.getAlliance().isPresent()
-            ? DriverStation.getAlliance().get()
-            : Alliance.Red);
+    getAlliance();
+  }
+
+  private void getAlliance() {
+    Optional<Alliance> optionalAlliance = DriverStation.getAlliance();
+    alliance = (optionalAlliance.isPresent() ? optionalAlliance.get() : Alliance.Red);
   }
 
   /**
@@ -57,10 +60,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    alliance =
-        (DriverStation.getAlliance().isPresent()
-            ? DriverStation.getAlliance().get()
-            : Alliance.Red);
+    getAlliance();
   }
 
   @Override
@@ -76,10 +76,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.schedule();
     }
 
-    alliance =
-        (DriverStation.getAlliance().isPresent()
-            ? DriverStation.getAlliance().get()
-            : Alliance.Red);
+    getAlliance();
   }
 
   /** This function is called periodically during autonomous. */
@@ -95,10 +92,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    alliance =
-        (DriverStation.getAlliance().isPresent()
-            ? DriverStation.getAlliance().get()
-            : Alliance.Red);
+    getAlliance();
   }
 
   /** This function is called periodically during operator control. */
@@ -118,10 +112,7 @@ public class Robot extends TimedRobot {
   /** This function is called once when the robot is first started up. */
   @Override
   public void simulationInit() {
-    alliance =
-        (DriverStation.getAlliance().isPresent()
-            ? DriverStation.getAlliance().get()
-            : Alliance.Red);
+    getAlliance();
   }
 
   /** This function is called periodically whilst in simulation. */
