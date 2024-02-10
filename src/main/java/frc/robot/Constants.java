@@ -56,6 +56,7 @@ public final class Constants {
     public static final double allowedDifferencePercent = 0.05;
     public static final Value closeLaunchPosition = Value.kForward;
     public static final Value farLaunchPosition = Value.kReverse;
+    public static final double speedCloseSpeaker = 0.9;
 
     public enum LaunchPosition {
       CLOSE,
