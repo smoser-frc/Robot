@@ -12,12 +12,9 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -29,8 +26,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
+import frc.robot.Robot;
 import java.io.File;
-import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
@@ -436,14 +433,12 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void resetToLimelight() {
-    Optional<Alliance> team = DriverStation.getAlliance();
-    boolean hasTeam = team.isPresent();
     boolean hasTarget = LimelightHelpers.getTV(Constants.limelightName);
     Pose2d pose;
-    if (hasTeam && team.get() == Alliance.Red && hasTarget) {
+    if (Robot.alliance == Alliance.Red && hasTarget) {
       pose = LimelightHelpers.getBotPose2d_wpiRed(Constants.limelightName);
       swerveDrive.resetOdometry(pose);
-    } else if (hasTeam && team.get() == Alliance.Blue && hasTarget) {
+    } else if (Robot.alliance == Alliance.Blue && hasTarget) {
       pose = LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName);
       swerveDrive.resetOdometry(pose);
     }
@@ -455,7 +450,7 @@ public class SwerveSubsystem extends SubsystemBase {
     swerveDrive.resetOdometry(pose2d);
   }
 
-  public void resetToDashboard(){
+  public void resetToDashboard() {
     double x = SmartDashboard.getNumber("Position Set X", 0);
     double y = SmartDashboard.getNumber("Position Set Y", 0);
     double rotation = SmartDashboard.getNumber("Rotation Set", 0);
@@ -463,16 +458,13 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void updateFromLimelight() {
-    Optional<Alliance> team = DriverStation.getAlliance();
-    boolean hasTeam = team.isPresent();
     boolean hasTarget = LimelightHelpers.getTV(Constants.limelightName);
-    SmartDashboard.putBoolean("TargetResults Valid", hasTarget);
-    if (hasTeam && team.get() == Alliance.Red && hasTarget) {
+    if (Robot.alliance == Alliance.Red && hasTarget) {
       swerveDrive.addVisionMeasurement(
           LimelightHelpers.getBotPose2d_wpiRed(Constants.limelightName), Timer.getFPGATimestamp());
       swerveDrive.setGyro(
           LimelightHelpers.getBotPose3d_wpiRed(Constants.limelightName).getRotation().times(-1));
-    } else if (hasTeam && team.get() == Alliance.Blue && hasTarget) {
+    } else if (Robot.alliance == Alliance.Blue && hasTarget) {
       swerveDrive.addVisionMeasurement(
           LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName).times(-1),
           Timer.getFPGATimestamp());
@@ -481,13 +473,13 @@ public class SwerveSubsystem extends SubsystemBase {
     }
   }
 
-  private void populateDashboard(){
+  private void populateDashboard() {
     SmartDashboard.putNumber("Position Set X", 0);
     SmartDashboard.putNumber("Position Set Y", 0);
     SmartDashboard.putNumber("Rotation Set", 0);
   }
 
-  public Command dashboardPositionResetCommand(){
+  public Command dashboardPositionResetCommand() {
     return this.runOnce(() -> resetToDashboard());
   }
 }
