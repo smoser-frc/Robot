@@ -9,6 +9,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -68,6 +70,21 @@ public class RobotContainer {
 
     m_swerve.setDefaultCommand(
         !RobotBase.isSimulation() ? closedAbsoluteDrive : closedAbsoluteDrive);
+
+    // add auto options
+    m_chooser.setDefaultOption("Test Drive", m_swerve.getAutonomousCommand("Test Drive", true));
+
+    m_chooser.addOption(
+        "2 Note Midfield Auton Blue",
+        m_swerve.getAutonomousCommand("2 Note Midfield Auton Blue", true));
+    m_chooser.addOption(
+        "2 Note Midfield Auton Red",
+        m_swerve.getAutonomousCommand("2 Note Midfield Auton Red", true));
+    m_chooser.addOption(
+        "4 Note Auton Blue", m_swerve.getAutonomousCommand("4 Note Auton Blue", true));
+    m_chooser.addOption(
+        "4 Note Auton Red", m_swerve.getAutonomousCommand("4 Note Auton Red", true));
+    SmartDashboard.putData(m_chooser);
   }
 
   /**
@@ -94,9 +111,13 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+
+  // autonselect
+  private final SendableChooser<Command> m_chooser = new SendableChooser<>();
+
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return m_swerve.getAutonomousCommand("4 Note Auton Red", true);
+    return m_chooser.getSelected();
   }
 
   public void setDriveMode() {
