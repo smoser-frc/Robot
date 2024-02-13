@@ -4,11 +4,12 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Index;
 import frc.robot.subsystems.Launcher;
 
-public class LaunchWithVelo extends Command {
+public class LaunchWithVeloAuton extends Command {
   /** Creates a new LaunchWithVelo. */
   private Launcher launcher;
 
@@ -16,11 +17,14 @@ public class LaunchWithVelo extends Command {
 
   private double launchVelo;
 
-  public LaunchWithVelo(Launcher launcher, Index index, double velocity) {
+  private Timer switchTimer;
+
+  public LaunchWithVeloAuton(Launcher launcher, Index index, double velocity) {
     this.launcher = launcher;
     this.index = index;
     launchVelo = velocity;
     addRequirements(launcher);
+    switchTimer = new Timer();
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -29,6 +33,7 @@ public class LaunchWithVelo extends Command {
   public void initialize() {
     System.out.println("Launcher is initializing");
     launcher.setLaunchVelocity(launchVelo);
+    switchTimer.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -36,6 +41,7 @@ public class LaunchWithVelo extends Command {
   public void execute() {
     if (launcher.readyToLaunch(launchVelo)) {
       index.start();
+      switchTimer.start();
     }
   }
 
@@ -50,6 +56,6 @@ public class LaunchWithVelo extends Command {
   @Override
   public boolean isFinished() {
     // Only called on button hold and done when button released
-    return false;
+    return switchTimer.hasElapsed(.5);
   }
 }
