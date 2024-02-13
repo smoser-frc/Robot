@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Launch.LaunchPosition;
+import frc.robot.Robot;
 
 public class Launcher extends SubsystemBase {
   /** Creates a new Launcher. */
@@ -52,6 +53,8 @@ public class Launcher extends SubsystemBase {
 
     setPIDsDefault();
     showPIDs();
+
+    switchTimer = new Timer();
   }
 
   private void showPIDs() {
@@ -110,6 +113,9 @@ public class Launcher extends SubsystemBase {
   }
 
   public boolean readyToLaunch(double targetVelo) {
+    if (Robot.isSimulation()) {
+      return true;
+    }
     boolean differenceReady =
         differenceWithinPercentage(Constants.Launch.allowedDifferencePercent, targetVelo);
     boolean veloReady = isWithinVeloPercentage(Constants.Launch.allowedVeloPercent, targetVelo);

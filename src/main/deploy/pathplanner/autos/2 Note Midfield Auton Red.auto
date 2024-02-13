@@ -18,9 +18,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 3.0
+            "name": "launch"
           }
         },
         {
@@ -36,21 +36,34 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "intake"
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Auton 3 pt4"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Auton 3 pt4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "index"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 3.0
+            "name": "launch"
           }
         }
       ]

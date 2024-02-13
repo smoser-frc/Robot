@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -16,10 +17,12 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AbsoluteDrive;
+import frc.robot.commands.LaunchWithVeloAuton;
 import frc.robot.commands.PrimeIndex;
 import frc.robot.commands.ToggleIntake;
 import frc.robot.subsystems.Index;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Launcher;
 import frc.robot.subsystems.SwerveSubsystem;
 import java.io.File;
 
@@ -36,12 +39,20 @@ public class RobotContainer {
       new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
   private final Intake m_intake = new Intake();
   private final Index m_index = new Index();
+  private final Launcher m_launch = new Launcher();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final XboxController driverXbox = new XboxController(0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    // Create commands for PathPlanner
+    NamedCommands.registerCommand(
+        "launch", new LaunchWithVeloAuton(m_launch, m_index, Constants.Launch.speedCloseSpeaker));
+    NamedCommands.registerCommand("intake", new ToggleIntake(m_intake));
+    NamedCommands.registerCommand("index", new PrimeIndex(m_index));
+
     // Configure the trigger bindings
     configureBindings();
 
