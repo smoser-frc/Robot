@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.Constants.Launch.LaunchPosition;
 
 public class Launcher extends SubsystemBase {
@@ -112,6 +113,9 @@ public class Launcher extends SubsystemBase {
   }
 
   public boolean readyToLaunch(double targetVelo) {
+    if (Robot.isSimulation()){
+      return true;
+    }
     boolean differenceReady =
         differenceWithinPercentage(Constants.Launch.allowedDifferencePercent, targetVelo);
     boolean veloReady = isWithinVeloPercentage(Constants.Launch.allowedVeloPercent, targetVelo);
