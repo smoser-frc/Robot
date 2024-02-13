@@ -52,6 +52,8 @@ public class Launcher extends SubsystemBase {
 
     setPIDsDefault();
     showPIDs();
+
+    switchTimer = new Timer();
   }
 
   private void showPIDs() {

@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AbsoluteDrive;
 import frc.robot.commands.LaunchWithVelo;
+import frc.robot.commands.LaunchWithVeloAuton;
 import frc.robot.commands.PrimeIndex;
 import frc.robot.commands.ToggleIntake;
 import frc.robot.subsystems.Index;
@@ -47,7 +48,7 @@ public class RobotContainer {
 
     // Create commands for PathPlanner
     NamedCommands.registerCommand(
-        "launch", new LaunchWithVelo(m_launch, m_index, Constants.Launch.speedCloseSpeaker));
+        "launch", new LaunchWithVeloAuton(m_launch, m_index, Constants.Launch.speedCloseSpeaker));
     NamedCommands.registerCommand("intake", new ToggleIntake(m_intake));
     NamedCommands.registerCommand("index", new PrimeIndex(m_index));
 
@@ -95,7 +96,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return m_swerve.getAutonomousCommand("Test Drive", true);
+    return m_swerve.getAutonomousCommand("4 Note Auton Red", true);
   }
 
   public void setDriveMode() {
