@@ -101,8 +101,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    JoystickButton leftBumper =
-        new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    JoystickButton leftBumper = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     leftBumper.onTrue(new ToggleIntake(m_intake));
 
     JoystickButton rightBumper =

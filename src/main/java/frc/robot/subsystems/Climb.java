@@ -5,21 +5,19 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
-import java.util.function.DoubleSupplier;
-
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import java.util.function.DoubleSupplier;
 
 public class Climb extends SubsystemBase {
-  private CANSparkMax winchRight = new CANSparkMax(Constants.Climb.rightCANID, MotorType.kBrushless);
+  private CANSparkMax winchRight =
+      new CANSparkMax(Constants.Climb.rightCANID, MotorType.kBrushless);
   private CANSparkMax winchLeft = new CANSparkMax(Constants.Climb.leftCANID, MotorType.kBrushless);
   private double speed;
-  
-  private boolean armExtended = false;
+
   private DigitalInput winchLimitLeft = new DigitalInput(Constants.Climb.winchLimitLeft);
   private DigitalInput winchLimitRight = new DigitalInput(Constants.Climb.winchLimitRight);
 
@@ -44,11 +42,12 @@ public class Climb extends SubsystemBase {
   public void stopWinchLeft() {
     winchLeft.set(0);
   }
+
   public void stopWinchRight() {
     winchRight.set(0);
   }
 
-  public void setWinch(double speed){
+  public void setWinch(double speed) {
     double convertedSpeed = speed * Constants.Climb.motorSpeedFactor;
     this.speed = speed;
     winchLeft.set(convertedSpeed);
