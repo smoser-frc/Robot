@@ -452,7 +452,7 @@ public class SwerveSubsystem extends SubsystemBase {
     Pose2d pose2d = new Pose2d(x, y, rotation2d);
     resetOdometry(pose2d);
     swerveDrive.setGyroOffset(new Rotation3d(0, 0, rotation2d.getRadians()));
-  }  
+  }
 
   public void resetToDashboard() {
     double x = SmartDashboard.getNumber("Position Set X", 0);
@@ -463,18 +463,18 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void updateFromLimelight() {
     boolean hasTarget = LimelightHelpers.getTV(Constants.limelightName);
-    if (!hasTarget){
+    if (!hasTarget) {
       return;
     }
     double curTime = Timer.getFPGATimestamp();
     Pose2d pose2d;
     Pose3d pose3d;
     if (Robot.alliance == Alliance.Red) {
-          pose2d = LimelightHelpers.getBotPose2d_wpiRed(Constants.limelightName);
-          pose3d = LimelightHelpers.getBotPose3d_wpiRed(Constants.limelightName);
+      pose2d = LimelightHelpers.getBotPose2d_wpiRed(Constants.limelightName);
+      pose3d = LimelightHelpers.getBotPose3d_wpiRed(Constants.limelightName);
     } else {
-          pose2d = LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName);
-          pose3d = LimelightHelpers.getBotPose3d_wpiBlue(Constants.limelightName);
+      pose2d = LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName);
+      pose3d = LimelightHelpers.getBotPose3d_wpiBlue(Constants.limelightName);
     }
     swerveDrive.addVisionMeasurement(pose2d, curTime);
     swerveDrive.setGyro(pose3d.getRotation().times(-1));
