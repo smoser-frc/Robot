@@ -5,18 +5,19 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
-
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Climb extends SubsystemBase {
-  // FIXME; Climb is going to change in some way
   private CANSparkMax winchRight = new CANSparkMax(Constants.Climb.rightCANID, MotorType.kBrushless);
   private CANSparkMax winchLeft = new CANSparkMax(Constants.Climb.leftCANID, MotorType.kBrushless);
+  private double speed;
   
   private boolean armExtended = false;
   private DigitalInput winchLimitLeft = new DigitalInput(Constants.Climb.winchLimitLeft);
@@ -27,20 +28,15 @@ public class Climb extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if (speed > 0) {
+      return;
+    }
     // This method will be called once per scheduler run
     if (winchLimitLeft.get()) {
       stopWinchLeft();
     }
-  }
-
-  public boolean winchLimitIsReached() {
-    return winchLimitLeft.get();
-  }
-
-  public void runWinch() {
-    if (armExtended) {
-      winchLeft.set(-0.4);
-      winchRight.set(-0.4);
+    if (winchLimitRight.get()) {
+      stopWinchRight();
     }
   }
 
@@ -50,5 +46,16 @@ public class Climb extends SubsystemBase {
   }
   public void stopWinchRight() {
     winchRight.set(0);
+  }
+
+  public void setWinch(double speed){
+    double convertedSpeed = speed * Constants.Climb.motorSpeedFactor;
+    this.speed = speed;
+    winchLeft.set(convertedSpeed);
+    winchRight.set(convertedSpeed);
+  }
+
+  public Command setWinchCommand(DoubleSupplier speed) {
+    return this.run(() -> setWinch(speed.getAsDouble()));
   }
 }

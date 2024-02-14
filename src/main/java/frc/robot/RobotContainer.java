@@ -20,6 +20,7 @@ import frc.robot.commands.AbsoluteDrive;
 import frc.robot.commands.LaunchWithVeloAuton;
 import frc.robot.commands.PrimeIndex;
 import frc.robot.commands.ToggleIntake;
+import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Index;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Launcher;
@@ -40,9 +41,11 @@ public class RobotContainer {
   private final Intake m_intake = new Intake();
   private final Index m_index = new Index();
   private final Launcher m_launch = new Launcher();
+  private final Climb m_climb = new Climb();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final XboxController driverXbox = new XboxController(0);
+  private final XboxController driver = new XboxController(0);
+  private final XboxController coDriver = new XboxController(1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -62,13 +65,15 @@ public class RobotContainer {
             // Applies deadbands and inverts controls because joysticks
             // are back-right positive while robot
             // controls are front-left positive
-            () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-            () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-            () -> driverXbox.getRightX(),
-            () -> -driverXbox.getRightY());
+            () -> MathUtil.applyDeadband(driver.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+            () -> MathUtil.applyDeadband(driver.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+            () -> driver.getRightX(),
+            () -> -driver.getRightY());
 
     m_swerve.setDefaultCommand(
         !RobotBase.isSimulation() ? closedAbsoluteDrive : closedAbsoluteDrive);
+
+    m_climb.setDefaultCommand(m_climb.setWinchCommand(coDriver::getLeftY));
 
     // add auto options
     m_chooser.setDefaultOption("Test Drive", m_swerve.getAutonomousCommand("Test Drive", true));
@@ -97,11 +102,11 @@ public class RobotContainer {
    */
   private void configureBindings() {
     JoystickButton leftBumper =
-        new JoystickButton(driverXbox, XboxController.Button.kLeftBumper.value);
+        new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     leftBumper.onTrue(new ToggleIntake(m_intake));
 
     JoystickButton rightBumper =
-        new JoystickButton(driverXbox, XboxController.Button.kRightBumper.value);
+        new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     rightBumper.onTrue(new PrimeIndex(m_index));
   }
 
