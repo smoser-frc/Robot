@@ -11,17 +11,24 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
+import frc.robot.Robot;
 import java.io.File;
 import java.util.function.DoubleSupplier;
 import swervelib.SwerveController;
@@ -37,6 +44,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
   /** Swerve drive object. */
   private final SwerveDrive swerveDrive;
+
+  private final Timer limelightTimer;
+  private double timerTicks;
 
   /** Maximum speed of the robot in meters per second, used to limit acceleration. */
   public double maximumSpeed = Units.feetToMeters(14.5);
@@ -79,6 +89,10 @@ public class SwerveSubsystem extends SubsystemBase {
         false); // Heading correction should only be used while controlling the robot via angle.
 
     setupPathPlanner();
+    limelightTimer = new Timer();
+    limelightTimer.start();
+    timerTicks = 0;
+    populateDashboard();
   }
 
   /** Setup AutoBuilder for PathPlanner. */
@@ -194,6 +208,10 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveSubsystem(
       SwerveDriveConfiguration driveCfg, SwerveControllerConfiguration controllerCfg) {
     swerveDrive = new SwerveDrive(driveCfg, controllerCfg, maximumSpeed);
+    limelightTimer = new Timer();
+    limelightTimer.start();
+    timerTicks = 0;
+    populateDashboard();
   }
 
   /**
@@ -238,7 +256,14 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+    if (limelightTimer.hasElapsed(timerTicks)) {
+      updateFromLimelight();
+      resetToLimelight();
+      timerTicks++;
+    }
+    swerveDrive.headingCorrection = true;
+  }
 
   @Override
   public void simulationPeriodic() {}
@@ -408,5 +433,64 @@ public class SwerveSubsystem extends SubsystemBase {
   public void addFakeVisionReading() {
     swerveDrive.addVisionMeasurement(
         new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
+  }
+
+  public void resetToLimelight() {
+    boolean hasTarget = LimelightHelpers.getTV(Constants.limelightName);
+    Pose2d pose;
+    if (Robot.alliance == Alliance.Red && hasTarget) {
+      pose = LimelightHelpers.getBotPose2d_wpiRed(Constants.limelightName);
+      resetOdometry(pose);
+    } else if (Robot.alliance == Alliance.Blue && hasTarget) {
+      pose = LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName);
+      resetOdometry(pose);
+    }
+  }
+
+  public void resetToPosition(double x, double y, double rotation) {
+    Rotation2d rotation2d = new Rotation2d(Units.degreesToRadians(rotation));
+    Pose2d pose2d = new Pose2d(x, y, rotation2d);
+    resetOdometry(pose2d);
+    swerveDrive.setGyroOffset(new Rotation3d(0, 0, rotation2d.getRadians()));
+  }
+
+  public void resetToDashboard() {
+    double x = SmartDashboard.getNumber("Position Set X", 0);
+    double y = SmartDashboard.getNumber("Position Set Y", 0);
+    double rotation = SmartDashboard.getNumber("Rotation Set", 0);
+    resetToPosition(x, y, rotation);
+  }
+
+  public void updateFromLimelight() {
+    boolean hasTarget = LimelightHelpers.getTV(Constants.limelightName);
+    if (!hasTarget) {
+      return;
+    }
+    double curTime = Timer.getFPGATimestamp();
+    Pose2d pose2d;
+    Pose3d pose3d;
+    if (Robot.alliance == Alliance.Red) {
+      pose2d = LimelightHelpers.getBotPose2d_wpiRed(Constants.limelightName);
+      pose3d = LimelightHelpers.getBotPose3d_wpiRed(Constants.limelightName);
+    } else {
+      pose2d = LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName);
+      pose3d = LimelightHelpers.getBotPose3d_wpiBlue(Constants.limelightName);
+    }
+    swerveDrive.addVisionMeasurement(pose2d, curTime);
+    swerveDrive.setGyro(pose3d.getRotation().times(-1));
+  }
+
+  private void populateDashboard() {
+    SmartDashboard.putNumber("Position Set X", 0);
+    SmartDashboard.putNumber("Position Set Y", 0);
+    SmartDashboard.putNumber("Rotation Set", 0);
+  }
+
+  public Command dashboardPositionResetCommand() {
+    return this.runOnce(() -> resetToDashboard());
+  }
+
+  public Command limelightPositionResetCommand() {
+    return this.runOnce(() -> resetToLimelight());
   }
 }
