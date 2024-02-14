@@ -77,6 +77,8 @@ public final class Constants {
     public static final double motorSpeedFactor = 0.5;
   }
 
+  public static final String limelightName = "limelight";
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final double LEFT_X_DEADBAND = 0.01;
