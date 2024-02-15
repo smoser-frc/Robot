@@ -36,7 +36,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final SwerveSubsystem m_swerve =
-      new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
+      new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerves/KrakenSwerve"));
   private final Intake m_intake = new Intake();
   private final Index m_index = new Index();
   private final Launcher m_launch = new Launcher();
