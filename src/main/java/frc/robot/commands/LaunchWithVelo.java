@@ -42,7 +42,8 @@ public class LaunchWithVelo extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    launcher.setMotorSpeed(0);;
+    launcher.setMotorSpeed(0);
+    ;
     index.stop();
   }
 

@@ -83,7 +83,7 @@ public class Launcher extends SubsystemBase {
     shoot.getPIDController().setReference(velocity, ControlType.kSmartVelocity);
   }
 
-  public void setMotorSpeed(double speed){
+  public void setMotorSpeed(double speed) {
     shoot.set(speed);
   }
 
