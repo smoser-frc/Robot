@@ -23,13 +23,13 @@ public class Intake extends SubsystemBase {
 
   private DigitalInput sensor = new DigitalInput(Constants.Intake.breakBeam);
 
-  double speed = 0.35;
+  double speed = Constants.Intake.speed;
   double currentSpeed = 0.0;
 
   public Intake() {
-    motorLeft.setInverted(false);
-    motorCenter.setInverted(false);
-    motorRight.setInverted(true);
+    motorLeft.setInverted(Constants.Intake.leftInverted);
+    motorCenter.setInverted(Constants.Intake.centerInverted);
+    motorRight.setInverted(Constants.Intake.rightInverted);
     stop();
   }
 
