@@ -35,6 +35,9 @@ public final class Constants {
     public static final int lowerCANID = 40;
     public static final int whooperCANID = 41;
     public static final int upperCANID = 42;
+    public static final boolean lowerInverted = true;
+    public static final boolean upperInverted = true;
+    public static final boolean whooperInverted = false;
     public static final int breakBeam = 1;
   }
 
@@ -43,6 +46,10 @@ public final class Constants {
     public static final int centerCANID = 31;
     public static final int rightCANID = 32;
     public static final int breakBeam = 0;
+    public static final boolean leftInverted = false;
+    public static final boolean centerInverted = true;
+    public static final boolean rightInverted = true;
+    public static final double speed = 0.6;
   }
 
   public static class Launch {
