@@ -19,9 +19,7 @@ import frc.robot.Robot;
 
 public class Launcher extends SubsystemBase {
   /** Creates a new Launcher. */
-  private CANSparkMax upper = new CANSparkMax(Constants.Launch.upperCANID, MotorType.kBrushless);
-
-  private CANSparkMax lower = new CANSparkMax(Constants.Launch.lowerCANID, MotorType.kBrushless);
+  private CANSparkMax shoot = new CANSparkMax(Constants.Launch.shootCANID, MotorType.kBrushless);
 
   private boolean tuningPIDS = false;
 
@@ -58,9 +56,9 @@ public class Launcher extends SubsystemBase {
   }
 
   private void showPIDs() {
-    SmartDashboard.putNumber("Launch P", upper.getPIDController().getP());
-    SmartDashboard.putNumber("Launch I", upper.getPIDController().getI());
-    SmartDashboard.putNumber("Launch D", upper.getPIDController().getD());
+    SmartDashboard.putNumber("Launch P", shoot.getPIDController().getP());
+    SmartDashboard.putNumber("Launch I", shoot.getPIDController().getI());
+    SmartDashboard.putNumber("Launch D", shoot.getPIDController().getD());
   }
 
   private void setPIDsDefault() {
@@ -68,13 +66,9 @@ public class Launcher extends SubsystemBase {
   }
 
   private void updatePIDs(double p, double i, double d) {
-    upper.getPIDController().setP(p);
-    upper.getPIDController().setI(i);
-    upper.getPIDController().setD(d);
-
-    lower.getPIDController().setP(p);
-    lower.getPIDController().setI(i);
-    lower.getPIDController().setD(d);
+    shoot.getPIDController().setP(p);
+    shoot.getPIDController().setI(i);
+    shoot.getPIDController().setD(d);
   }
 
   private void updatePIDFromDashboard(String keyWord) {
@@ -86,20 +80,11 @@ public class Launcher extends SubsystemBase {
   }
 
   public void setLaunchVelocity(double velocity) {
-    upper.getPIDController().setReference(velocity, ControlType.kSmartVelocity);
-    lower.getPIDController().setReference(velocity, ControlType.kSmartVelocity);
+    shoot.getPIDController().setReference(velocity, ControlType.kSmartVelocity);
   }
 
   public double getCurrentVelocity() {
-    double upperVelocity = upper.getEncoder().getVelocity();
-    double lowerVelocity = lower.getEncoder().getVelocity();
-    return (upperVelocity + lowerVelocity) / 2;
-  }
-
-  public double getVelocityDifference() {
-    double upperVelocity = upper.getEncoder().getVelocity();
-    double lowerVelocity = lower.getEncoder().getVelocity();
-    return Math.abs(upperVelocity - lowerVelocity);
+    return shoot.getEncoder().getVelocity();
   }
 
   public boolean isWithinVeloPercentage(double percent, double targetVelo) {
@@ -107,19 +92,11 @@ public class Launcher extends SubsystemBase {
     return (1 - percent <= currentPercent && currentPercent <= 1 + percent);
   }
 
-  public boolean differenceWithinPercentage(double percent, double targetVelo) {
-    double differencePercent = getVelocityDifference() / targetVelo;
-    return (differencePercent <= percent);
-  }
-
   public boolean readyToLaunch(double targetVelo) {
     if (Robot.isSimulation()) {
       return true;
     }
-    boolean differenceReady =
-        differenceWithinPercentage(Constants.Launch.allowedDifferencePercent, targetVelo);
-    boolean veloReady = isWithinVeloPercentage(Constants.Launch.allowedVeloPercent, targetVelo);
-    return (differenceReady && veloReady);
+    return isWithinVeloPercentage(Constants.Launch.allowedVeloPercent, targetVelo);
   }
 
   public void setLaunchPosition(LaunchPosition launchPosition) {
