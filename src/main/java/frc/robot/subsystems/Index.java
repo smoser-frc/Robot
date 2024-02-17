@@ -12,10 +12,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Index extends SubsystemBase {
-  public Index() {}
-
   private CANSparkMax motorLower =
       new CANSparkMax(Constants.Index.lowerCANID, CANSparkLowLevel.MotorType.kBrushless);
+  private CANSparkMax motorWhooper =
+      new CANSparkMax(Constants.Index.whooperCANID, CANSparkLowLevel.MotorType.kBrushless);
   private CANSparkMax motorUpper =
       new CANSparkMax(Constants.Index.upperCANID, CANSparkLowLevel.MotorType.kBrushless);
   private DigitalInput breakBeam0 = new DigitalInput(Constants.Index.breakBeam);
@@ -23,8 +23,11 @@ public class Index extends SubsystemBase {
   double currentSpeed = 0;
   double speed = 3.5;
 
+  public Index() {}
+
   private void set(double power) {
     motorLower.set(power);
+    motorWhooper.set(power);
     motorUpper.set(power);
     currentSpeed = power;
   }
