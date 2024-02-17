@@ -72,8 +72,9 @@ public final class Constants {
     public static final int rightForwardChannel = 4;
     public static final int rightBackChannel = 5;
     // These are break beam sensor IDS
-    public static final int winchLimitLeft = 1;
-    public static final int winchLimitRight = 2;
+    public static final int winchLimitLeft = 2;
+    public static final int winchLimitRight = 3;
+    public static final double motorSpeedFactor = 0.5;
   }
 
   public static final String limelightName = "limelight";
