@@ -54,6 +54,7 @@ public final class Constants {
     public static final double launchAngleMin = 0;
     public static final double launchAngleHigh = 50;
     public static final double launchAngleLow = 0;
+    public static final double launchAngleEncoderOffset = 0;
     public static final int angleSwitchForwardChannel = 0;
     public static final int angleSwitchReverseChannel = 1;
     public static final double allowedVeloPercent = 0.05;
