@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -19,7 +20,7 @@ import frc.robot.Robot;
 
 public class Launcher extends SubsystemBase {
   /** Creates a new Launcher. */
-  private CANSparkMax shoot = new CANSparkMax(Constants.Launch.shootCANID, MotorType.kBrushless);
+  private CANSparkFlex shoot = new CANSparkFlex(Constants.Launch.shootCANID, MotorType.kBrushless);
 
   private boolean tuningPIDS = false;
 
