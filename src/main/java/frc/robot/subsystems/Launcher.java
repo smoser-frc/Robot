@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkFlex;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -20,7 +22,8 @@ import frc.robot.Robot;
 public class Launcher extends SubsystemBase {
   /** Creates a new Launcher. */
   private CANSparkFlex shoot = new CANSparkFlex(Constants.Launch.shootCANID, MotorType.kBrushless);
-
+  private CANSparkMax angleMotor = new CANSparkMax(Constants.Launch.angleCANID, MotorType.kBrushless);
+  private SparkAbsoluteEncoder angleEncoder;
   private boolean tuningPIDS = false;
 
   private DoubleSolenoid angleSwitcher =
@@ -34,20 +37,9 @@ public class Launcher extends SubsystemBase {
   private Timer switchTimer;
 
   public Launcher() {
-    switch (angleSwitcher.get()) {
-      case kForward:
-        curPosition = Constants.Launch.LaunchPosition.CLOSE;
-        break;
-      case kOff:
-        angleSwitcher.set(Value.kForward);
-        curPosition = Constants.Launch.LaunchPosition.CLOSE;
-        break;
-      case kReverse:
-        curPosition = Constants.Launch.LaunchPosition.FAR;
-        break;
-    }
-
-    goalPosition = curPosition;
+    angleEncoder = angleMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+    angleEncoder.setZeroOffset(Constants.Launch.launchAngleEncoderOffset);
+    System.out.println("encodervalue =" + angleEncoder.getPosition() + ", 0offset =" + angleEncoder.getZeroOffset());
 
     setPIDsDefault();
     showPIDs();
@@ -141,3 +133,4 @@ public class Launcher extends SubsystemBase {
     }
   }
 }
+// Ayyo we don't got a robot yet fr fr.
