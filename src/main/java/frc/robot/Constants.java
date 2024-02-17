@@ -48,8 +48,7 @@ public final class Constants {
     public static final double launcherP = 0.1;
     public static final double launcherI = 0;
     public static final double launcherD = 0;
-    public static final int upperCANID = 45;
-    public static final int lowerCANID = 46;
+    public static final int shootCANID = 45;
     public static final int angleSwitchForwardChannel = 0;
     public static final int angleSwitchReverseChannel = 1;
     public static final double allowedVeloPercent = 0.05;
