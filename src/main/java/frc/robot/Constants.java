@@ -48,6 +48,9 @@ public final class Constants {
     public static final double launcherP = 0.1;
     public static final double launcherI = 0;
     public static final double launcherD = 0;
+    public static final double angleP = 0.1;
+    public static final double angleI = 0;
+    public static final double angleD = 0;
     public static final int shootCANID = 45;
     public static final int angleCANID = 46;
     public static final double launchAngleMax = 50;

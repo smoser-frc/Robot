@@ -24,7 +24,7 @@ public class SetLaunchAnglePosition extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    launcher.setLaunchPosition(launchDistance);
+    // FIXMEEEE
   }
 
   // Returns true when the command should end.
