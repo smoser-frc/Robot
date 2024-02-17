@@ -33,7 +33,8 @@ public final class Constants {
 
   public static class Index {
     public static final int lowerCANID = 40;
-    public static final int upperCANID = 41;
+    public static final int whooperCANID = 41;
+    public static final int upperCANID = 42;
     public static final int breakBeam = 1;
   }
 
