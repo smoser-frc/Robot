@@ -5,9 +5,11 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVLibError;
 import com.revrobotics.SparkAbsoluteEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,9 +25,21 @@ public class Launcher extends SubsystemBase {
   private SparkAbsoluteEncoder angleEncoder;
   private boolean tuningPIDS = false;
 
+  static String labelLaunchPre = "Launch ";
+  static String labelAnglePre = "Angle ";
+
+  double goalAngle, curAngle;
+
   public Launcher() {
     angleEncoder = angleMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
     angleEncoder.setZeroOffset(Constants.Launch.launchAngleEncoderOffset);
+
+    angleMotor.getPIDController().setFeedbackDevice(angleEncoder);
+    angleMotor.setSoftLimit(SoftLimitDirection.kForward, (float) Constants.Launch.launchAngleMax);
+    angleMotor.setSoftLimit(SoftLimitDirection.kReverse, (float) Constants.Launch.launchAngleMin);
+    angleMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+    angleMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+
     System.out.println(
         "encodervalue ="
             + angleEncoder.getPosition()
@@ -37,15 +51,16 @@ public class Launcher extends SubsystemBase {
   }
 
   private void showPIDs() {
-    SmartDashboard.putNumber("Launch P", shoot.getPIDController().getP());
-    SmartDashboard.putNumber("Launch I", shoot.getPIDController().getI());
-    SmartDashboard.putNumber("Launch D", shoot.getPIDController().getD());
+    String n = labelLaunchPre;
+    SmartDashboard.putNumber(n + "P", shoot.getPIDController().getP());
+    SmartDashboard.putNumber(n + "I", shoot.getPIDController().getI());
+    SmartDashboard.putNumber(n + "D", shoot.getPIDController().getD());
 
-    SmartDashboard.putNumber("Angle P", angleMotor.getPIDController().getP());
-    SmartDashboard.putNumber("Angle I", angleMotor.getPIDController().getI());
-    SmartDashboard.putNumber("Angle D", angleMotor.getPIDController().getD());
-
-    SmartDashboard.putNumber("Angle Pos", angleEncoder.getPosition());
+    n = labelAnglePre;
+    SmartDashboard.putNumber(n + "P", angleMotor.getPIDController().getP());
+    SmartDashboard.putNumber(n + "I", angleMotor.getPIDController().getI());
+    SmartDashboard.putNumber(n + "D", angleMotor.getPIDController().getD());
+    SmartDashboard.putNumber(n + "Pos", angleEncoder.getPosition());
   }
 
   private void setPIDsDefault() {
@@ -60,18 +75,26 @@ public class Launcher extends SubsystemBase {
     shoot.getPIDController().setD(d);
   }
 
+  private void updateShootPIDFromDashboard() {
+    String n = labelLaunchPre;
+    updateShootPIDs(
+        SmartDashboard.getNumber(n + " P", 0),
+        SmartDashboard.getNumber(n + " I", 0),
+        SmartDashboard.getNumber(n + " D", 0));
+  }
+
   private void updateAnglePIDs(double p, double i, double d) {
     angleMotor.getPIDController().setP(p);
     angleMotor.getPIDController().setI(i);
     angleMotor.getPIDController().setD(d);
   }
 
-  private void updatePIDFromDashboard(String keyWord) {
-    double p = SmartDashboard.getNumber(keyWord + " P", 0);
-    double i = SmartDashboard.getNumber(keyWord + " I", 0);
-    double d = SmartDashboard.getNumber(keyWord + " D", 0);
-
-    updateShootPIDs(p, i, d);
+  private void updateAnglePIDFromDashboard() {
+    String n = labelAnglePre;
+    updateAnglePIDs(
+        SmartDashboard.getNumber(n + " P", 0),
+        SmartDashboard.getNumber(n + " I", 0),
+        SmartDashboard.getNumber(n + " D", 0));
   }
 
   public void setLaunchVelocity(double velocity) {
@@ -79,12 +102,19 @@ public class Launcher extends SubsystemBase {
   }
 
   public void setAngle(double angle) {
-    angleMotor.getPIDController().setReference(angle, ControlType.kPosition);
+    goalAngle = angle;
+    REVLibError err = angleMotor.getPIDController().setReference(angle, ControlType.kSmartMotion);
+    if (err != REVLibError.kOk) {
+      System.out.println("YIKES! setAngle(" + angle + ") err is " + err);
+    }
   }
 
   public void switchAngle() {
-    // FIXMEEEE
-    setAngle(Constants.Launch.launchAngleHigh);
+    double newTarget = Constants.Launch.launchAngleLow;
+    if (goalAngle == Constants.Launch.launchAngleLow) {
+      newTarget = Constants.Launch.launchAngleHigh;
+    }
+    setAngle(newTarget);
   }
 
   public double getCurrentVelocity() {
@@ -111,7 +141,8 @@ public class Launcher extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     if (tuningPIDS) {
-      updatePIDFromDashboard("Launch");
+      updateShootPIDFromDashboard();
+      updateAnglePIDFromDashboard();
     }
   }
 }
