@@ -64,8 +64,8 @@ public final class Constants {
     public static final int angleID = 46;
     public static final double allowedVeloPercent = 0.05;
     public static final double allowedDifferencePercent = 0.05;
-    public static final double closeLaunchPosition = 0.207; // FIXME
-    public static final double farLaunchPosition = 0.162; // FIXME
+    public static final double closeLaunchPosition = 0.207;
+    public static final double farLaunchPosition = 0.162;
     public static final double angleMin = 0.161;
     public static final double angleMax = 0.234;
     public static final double speedCloseSpeaker = 0.9;
