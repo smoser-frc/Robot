@@ -81,10 +81,6 @@ public final class Constants {
   public static class Climb {
     public static final int leftCANID = 50;
     public static final int rightCANID = 51;
-    public static final int leftForwardChannel = 2;
-    public static final int leftBackChannel = 3;
-    public static final int rightForwardChannel = 4;
-    public static final int rightBackChannel = 5;
     // These are break beam sensor IDS
     public static final int winchLimitLeft = 2;
     public static final int winchLimitRight = 3;

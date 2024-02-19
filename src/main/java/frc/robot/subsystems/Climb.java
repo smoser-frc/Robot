@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -26,16 +27,10 @@ public class Climb extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (speed > 0) {
-      return;
-    }
-    // This method will be called once per scheduler run
-    if (winchLimitLeft.get()) {
-      stopWinchLeft();
-    }
-    if (winchLimitRight.get()) {
-      stopWinchRight();
-    }
+    SmartDashboard.putNumber("Left Climb Position", winchLeft.getEncoder().getPosition());
+    SmartDashboard.putNumber("Right Climb Position", winchRight.getEncoder().getPosition());
+    SmartDashboard.putBoolean("Right Climb Limit", winchLimitRight.get());
+    SmartDashboard.putBoolean("Left Climb Limit", winchLimitLeft.get());
   }
 
   // This stops the left and right winches respectively.
@@ -50,8 +45,18 @@ public class Climb extends SubsystemBase {
   public void setWinch(double speed) {
     double convertedSpeed = speed * Constants.Climb.motorSpeedFactor;
     this.speed = speed;
-    winchLeft.set(convertedSpeed);
-    winchRight.set(convertedSpeed);
+    if (winchLimitLeft.get() || convertedSpeed <= 0){
+      winchLeft.set(convertedSpeed);
+    } else {
+      stopWinchLeft();
+      winchLeft.getEncoder().setPosition(0);
+    }
+    if (winchLimitRight.get() || convertedSpeed <= 0){
+      winchRight.set(convertedSpeed);
+    } else {
+      stopWinchRight();
+      winchRight.getEncoder().setPosition(0);
+    }
   }
 
   public Command setWinchCommand(DoubleSupplier speed) {
