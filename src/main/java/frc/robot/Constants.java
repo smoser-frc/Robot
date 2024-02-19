@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import swervelib.math.Matter;
 
 /**
@@ -43,19 +42,25 @@ public final class Constants {
     public static final int rightCANID = 32;
     public static final int breakBeam = 0;
   }
+
   public static class Launch {
     public static final double launcherP = 0.1;
     public static final double launcherI = 0;
     public static final double launcherD = 0;
-    public static final int upperCANID = 45;
+    public static final double winchP = 0.1;
+    public static final double winchI = 0;
+    public static final double winchD = 0;
+    public static final int motorID = 45;
     public static final int winchID = 46;
     public static final int angleSwitchForwardChannel = 0;
     public static final int angleSwitchReverseChannel = 1;
     public static final double allowedVeloPercent = 0.05;
     public static final double allowedDifferencePercent = 0.05;
-    public static final Value closeLaunchPosition = Value.kForward;
-    public static final Value farLaunchPosition = Value.kReverse;
+    public static final double closeLaunchPosition = 0; // FIXME
+    public static final double farLaunchPosition = 1; // FIXME
     public static final double speedCloseSpeaker = 0.9;
+    public static final double winchConversionFactor = 1; // FIXME
+    public static final double motorConversionFactor = 1; // FIXME
 
     public enum LaunchPosition {
       CLOSE,
