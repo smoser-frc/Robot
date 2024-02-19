@@ -52,23 +52,25 @@ public final class Constants {
   }
 
   public static class Launch {
-    public static final double launcherP = 0.1;
+    public static final double launcherP = 0;
     public static final double launcherI = 0;
     public static final double launcherD = 0;
-    public static final double winchP = 0.1;
-    public static final double winchI = 0;
-    public static final double winchD = 0;
-    public static final int motorID = 45;
-    public static final int winchID = 46;
-    public static final int angleSwitchForwardChannel = 0;
-    public static final int angleSwitchReverseChannel = 1;
+    public static final double launcherFF = 0.000156;
+    public static final double angleP = 0.004;
+    public static final double angleI = 0;
+    public static final double angleD = 0;
+    public static final double angleFF = 0;
+    public static final int launcherID = 45;
+    public static final int angleID = 46;
     public static final double allowedVeloPercent = 0.05;
     public static final double allowedDifferencePercent = 0.05;
-    public static final double closeLaunchPosition = 0; // FIXME
-    public static final double farLaunchPosition = 1; // FIXME
+    public static final double closeLaunchPosition = 0.207; // FIXME
+    public static final double farLaunchPosition = 0.162; // FIXME
+    public static final double angleMin = 0.161;
+    public static final double angleMax = 0.234;
     public static final double speedCloseSpeaker = 0.9;
-    public static final double winchConversionFactor = 1; // FIXME
-    public static final double motorConversionFactor = 1; // FIXME
+    public static final double angleConversionFactor = 1;
+    public static final double launcherConversionFactor = 1; // FIXME
 
     public enum LaunchPosition {
       CLOSE,

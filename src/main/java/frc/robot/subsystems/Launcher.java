@@ -23,14 +23,14 @@ import java.lang.reflect.Method;
 
 public class Launcher extends SubsystemBase {
   /** Creates a new Launcher. */
-  private CANSparkFlex motor = new CANSparkFlex(Constants.Launch.motorID, MotorType.kBrushless);
+  private CANSparkFlex launcher = new CANSparkFlex(Constants.Launch.launcherID, MotorType.kBrushless);
 
-  private SparkPIDController motorController;
-  private RelativeEncoder motorEncoder;
+  private SparkPIDController launcherController;
+  private RelativeEncoder launcherEncoder;
 
-  private CANSparkMax winch = new CANSparkMax(Constants.Launch.winchID, MotorType.kBrushless);
-  private SparkPIDController winchController;
-  private SparkAbsoluteEncoder winchEncoder;
+  private CANSparkMax angle = new CANSparkMax(Constants.Launch.angleID, MotorType.kBrushless);
+  private SparkPIDController angleController;
+  private SparkAbsoluteEncoder angleEncoder;
 
   private boolean tuningPIDS = false;
 
@@ -40,48 +40,50 @@ public class Launcher extends SubsystemBase {
 
   public Launcher() {
 
-    winchController = winch.getPIDController();
-    motorController = motor.getPIDController();
+    angleController = angle.getPIDController();
+    launcherController = launcher.getPIDController();
 
-    motorEncoder = motor.getEncoder();
-    winchEncoder = winch.getAbsoluteEncoder(Type.kDutyCycle);
+    launcherEncoder = launcher.getEncoder();
+    angleEncoder = angle.getAbsoluteEncoder(Type.kDutyCycle);
 
-    motorController.setFeedbackDevice(motorEncoder);
-    winchController.setFeedbackDevice(winchEncoder);
+    launcherController.setFeedbackDevice(launcherEncoder);
+    angleController.setFeedbackDevice(angleEncoder);
 
-    motorEncoder.setVelocityConversionFactor(Constants.Launch.motorConversionFactor);
-    winchEncoder.setPositionConversionFactor(Constants.Launch.winchConversionFactor);
+    launcherEncoder.setVelocityConversionFactor(Constants.Launch.launcherConversionFactor);
+    angleEncoder.setPositionConversionFactor(Constants.Launch.angleConversionFactor);
 
     setPIDsDefault();
     showPIDs();
   }
 
   private void showPIDs() {
-    SmartDashboard.putNumber("Launch P", motorController.getP());
-    SmartDashboard.putNumber("Launch I", motorController.getI());
-    SmartDashboard.putNumber("Launch D", motorController.getD());
+    SmartDashboard.putNumber("Launch P", launcherController.getP());
+    SmartDashboard.putNumber("Launch I", launcherController.getI());
+    SmartDashboard.putNumber("Launch D", launcherController.getD());
+    SmartDashboard.putNumber("Launch Velo", getCurrentVelocity());
 
-    SmartDashboard.putNumber("Winch P", winchController.getP());
-    SmartDashboard.putNumber("Winch I", winchController.getI());
-    SmartDashboard.putNumber("Winch D", winchController.getD());
+    SmartDashboard.putNumber("Angle P", angleController.getP());
+    SmartDashboard.putNumber("Angle I", angleController.getI());
+    SmartDashboard.putNumber("Angle D", angleController.getD());
+    SmartDashboard.putNumber("Angle Position", angleEncoder.getPosition());
   }
 
   private void setPIDsDefault() {
-    updateLaunchPIDs(
+    updateLauncherPIDs(
         Constants.Launch.launcherP, Constants.Launch.launcherI, Constants.Launch.launcherD);
-    updateWinchPIDs(Constants.Launch.winchP, Constants.Launch.winchI, Constants.Launch.winchD);
+    updateAnglePIDs(Constants.Launch.angleP, Constants.Launch.angleI, Constants.Launch.angleD);
   }
 
-  private void updateLaunchPIDs(double p, double i, double d) {
-    motorController.setP(p);
-    motorController.setI(i);
-    motorController.setD(d);
+  private void updateLauncherPIDs(double p, double i, double d) {
+    launcherController.setP(p);
+    launcherController.setI(i);
+    launcherController.setD(d);
   }
 
-  private void updateWinchPIDs(double p, double i, double d) {
-    winchController.setP(p);
-    winchController.setI(i);
-    winchController.setD(d);
+  private void updateAnglePIDs(double p, double i, double d) {
+    angleController.setP(p);
+    angleController.setI(i);
+    angleController.setD(d);
   }
 
   private void updatePIDFromDashboard(String keyWord) {
@@ -111,15 +113,15 @@ public class Launcher extends SubsystemBase {
   }
 
   public void setLaunchVelocity(double velocity) {
-    motorController.setReference(velocity, ControlType.kVelocity);
+    launcherController.setReference(velocity, ControlType.kVelocity);
   }
 
   public double getCurrentVelocity() {
-    return motorEncoder.getVelocity();
+    return launcherEncoder.getVelocity();
   }
 
-  public void setMotorSpeed(double speed) {
-    motor.set(speed);
+  public void setLauncherSpeed(double speed) {
+    launcher.set(speed);
   }
 
   public boolean isWithinVeloPercentage(double percent, double targetVelo) {
@@ -155,13 +157,13 @@ public class Launcher extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     if (tuningPIDS) {
-      updatePIDFromDashboard("Launch");
-      updatePIDFromDashboard("Winch");
+      updatePIDFromDashboard("Launcher");
+      updatePIDFromDashboard("Angle");
     }
     if (goalPosition == LaunchPosition.FAR) {
-      winchController.setReference(Constants.Launch.farLaunchPosition, ControlType.kPosition);
+      angleController.setReference(Constants.Launch.farLaunchPosition, ControlType.kPosition);
     } else {
-      winchController.setReference(Constants.Launch.closeLaunchPosition, ControlType.kPosition);
+      angleController.setReference(Constants.Launch.closeLaunchPosition, ControlType.kPosition);
     }
   }
 }
