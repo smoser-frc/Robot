@@ -22,7 +22,7 @@ public class Index extends SubsystemBase {
   double currentSpeed = 0;
   double speed = 3.5;
 
-  public Index(){
+  public Index() {
     motorLower.setInverted(Constants.Index.lowerInverted);
     motorWhooper.setInverted(Constants.Index.whooperInverted);
     motorUpper.setInverted(Constants.Index.upperInverted);

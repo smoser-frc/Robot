@@ -118,7 +118,7 @@ public class Launcher extends SubsystemBase {
     return motorEncoder.getVelocity();
   }
 
-  public void setMotorSpeed(double speed){
+  public void setMotorSpeed(double speed) {
     motor.set(speed);
   }
 
