@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -22,7 +23,7 @@ import java.lang.reflect.Method;
 
 public class Launcher extends SubsystemBase {
   /** Creates a new Launcher. */
-  private CANSparkMax motor = new CANSparkMax(Constants.Launch.motorID, MotorType.kBrushless);
+  private CANSparkFlex motor = new CANSparkFlex(Constants.Launch.motorID, MotorType.kBrushless);
 
   private SparkPIDController motorController;
   private RelativeEncoder motorEncoder;
@@ -117,6 +118,10 @@ public class Launcher extends SubsystemBase {
     return motorEncoder.getVelocity();
   }
 
+  public void setMotorSpeed(double speed){
+    motor.set(speed);
+  }
+
   public boolean isWithinVeloPercentage(double percent, double targetVelo) {
     double currentPercent = getCurrentVelocity() / targetVelo;
     return (1 - percent <= currentPercent && currentPercent <= 1 + percent);
@@ -126,8 +131,7 @@ public class Launcher extends SubsystemBase {
     if (Robot.isSimulation()) {
       return true;
     }
-    boolean veloReady = isWithinVeloPercentage(Constants.Launch.allowedVeloPercent, targetVelo);
-    return veloReady;
+    return isWithinVeloPercentage(Constants.Launch.allowedVeloPercent, targetVelo);
   }
 
   public void setLaunchPosition(LaunchPosition launchPosition) {
