@@ -5,82 +5,70 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkAbsoluteEncoder;
-import com.revrobotics.SparkAbsoluteEncoder.Type;
-import com.revrobotics.SparkPIDController;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Launch.LaunchPosition;
 import frc.robot.Robot;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 public class Launcher extends SubsystemBase {
   /** Creates a new Launcher. */
-  private CANSparkMax motor = new CANSparkMax(Constants.Launch.motorID, MotorType.kBrushless);
-
-  private SparkPIDController motorController;
-  private RelativeEncoder motorEncoder;
-
-  private CANSparkMax winch = new CANSparkMax(Constants.Launch.winchID, MotorType.kBrushless);
-  private SparkPIDController winchController;
-  private SparkAbsoluteEncoder winchEncoder;
+  private CANSparkFlex shoot = new CANSparkFlex(Constants.Launch.shootCANID, MotorType.kBrushless);
 
   private boolean tuningPIDS = false;
+
+  private DoubleSolenoid angleSwitcher =
+      new DoubleSolenoid(
+          PneumaticsModuleType.CTREPCM,
+          Constants.Launch.angleSwitchForwardChannel,
+          Constants.Launch.angleSwitchReverseChannel);
 
   private LaunchPosition goalPosition, curPosition;
 
   private Timer switchTimer;
 
   public Launcher() {
+    switch (angleSwitcher.get()) {
+      case kForward:
+        curPosition = Constants.Launch.LaunchPosition.CLOSE;
+        break;
+      case kOff:
+        angleSwitcher.set(Value.kForward);
+        curPosition = Constants.Launch.LaunchPosition.CLOSE;
+        break;
+      case kReverse:
+        curPosition = Constants.Launch.LaunchPosition.FAR;
+        break;
+    }
 
-    winchController = winch.getPIDController();
-    motorController = motor.getPIDController();
-
-    motorEncoder = motor.getEncoder();
-    winchEncoder = winch.getAbsoluteEncoder(Type.kDutyCycle);
-
-    motorController.setFeedbackDevice(motorEncoder);
-    winchController.setFeedbackDevice(winchEncoder);
-
-    motorEncoder.setVelocityConversionFactor(Constants.Launch.motorConversionFactor);
-    winchEncoder.setPositionConversionFactor(Constants.Launch.winchConversionFactor);
+    goalPosition = curPosition;
 
     setPIDsDefault();
     showPIDs();
+
+    switchTimer = new Timer();
   }
 
   private void showPIDs() {
-    SmartDashboard.putNumber("Launch P", motorController.getP());
-    SmartDashboard.putNumber("Launch I", motorController.getI());
-    SmartDashboard.putNumber("Launch D", motorController.getD());
-
-    SmartDashboard.putNumber("Winch P", winchController.getP());
-    SmartDashboard.putNumber("Winch I", winchController.getI());
-    SmartDashboard.putNumber("Winch D", winchController.getD());
+    SmartDashboard.putNumber("Launch P", shoot.getPIDController().getP());
+    SmartDashboard.putNumber("Launch I", shoot.getPIDController().getI());
+    SmartDashboard.putNumber("Launch D", shoot.getPIDController().getD());
   }
 
   private void setPIDsDefault() {
-    updateLaunchPIDs(
-        Constants.Launch.launcherP, Constants.Launch.launcherI, Constants.Launch.launcherD);
-    updateWinchPIDs(Constants.Launch.winchP, Constants.Launch.winchI, Constants.Launch.winchD);
+    updatePIDs(Constants.Launch.launcherP, Constants.Launch.launcherI, Constants.Launch.launcherD);
   }
 
-  private void updateLaunchPIDs(double p, double i, double d) {
-    motorController.setP(p);
-    motorController.setI(i);
-    motorController.setD(d);
-  }
-
-  private void updateWinchPIDs(double p, double i, double d) {
-    winchController.setP(p);
-    winchController.setI(i);
-    winchController.setD(d);
+  private void updatePIDs(double p, double i, double d) {
+    shoot.getPIDController().setP(p);
+    shoot.getPIDController().setI(i);
+    shoot.getPIDController().setD(d);
   }
 
   private void updatePIDFromDashboard(String keyWord) {
@@ -88,33 +76,19 @@ public class Launcher extends SubsystemBase {
     double i = SmartDashboard.getNumber(keyWord + " I", 0);
     double d = SmartDashboard.getNumber(keyWord + " D", 0);
 
-    String desiredMethod = "update" + keyWord + "PIDs";
-    Class<?>[] paramTypes = {double.class, double.class, double.class};
-    Method method;
-    try {
-      method = this.getClass().getMethod(desiredMethod, paramTypes);
-    } catch (SecurityException e) {
-      return;
-    } catch (NoSuchMethodException e) {
-      return;
-    }
-    try {
-      method.invoke(this, p, i, d);
-    } catch (IllegalArgumentException e) {
-      return;
-    } catch (IllegalAccessException e) {
-      return;
-    } catch (InvocationTargetException e) {
-      return;
-    }
+    updatePIDs(p, i, d);
   }
 
   public void setLaunchVelocity(double velocity) {
-    motorController.setReference(velocity, ControlType.kVelocity);
+    shoot.getPIDController().setReference(velocity, ControlType.kSmartVelocity);
+  }
+
+  public void setMotorSpeed(double speed) {
+    shoot.set(speed);
   }
 
   public double getCurrentVelocity() {
-    return motorEncoder.getVelocity();
+    return shoot.getEncoder().getVelocity();
   }
 
   public boolean isWithinVeloPercentage(double percent, double targetVelo) {
@@ -126,12 +100,23 @@ public class Launcher extends SubsystemBase {
     if (Robot.isSimulation()) {
       return true;
     }
-    boolean veloReady = isWithinVeloPercentage(Constants.Launch.allowedVeloPercent, targetVelo);
-    return veloReady;
+    return isWithinVeloPercentage(Constants.Launch.allowedVeloPercent, targetVelo);
   }
 
   public void setLaunchPosition(LaunchPosition launchPosition) {
+    if (goalPosition == launchPosition) {
+      return;
+    }
+    switch (launchPosition) {
+      case CLOSE:
+        angleSwitcher.set(Constants.Launch.closeLaunchPosition);
+        break;
+      case FAR:
+        angleSwitcher.set(Constants.Launch.farLaunchPosition);
+        break;
+    }
     goalPosition = launchPosition;
+    switchTimer.start();
   }
 
   public LaunchPosition getLaunchPosition() {
@@ -139,8 +124,8 @@ public class Launcher extends SubsystemBase {
   }
 
   public void switchAngle() {
-    boolean isFar = (goalPosition == LaunchPosition.FAR);
-    goalPosition = (isFar ? LaunchPosition.CLOSE : LaunchPosition.FAR);
+    boolean switcherForward = (angleSwitcher.get() == Value.kForward);
+    angleSwitcher.set(switcherForward ? Value.kReverse : Value.kForward);
   }
 
   public void togglePIDTuning() {
@@ -152,12 +137,11 @@ public class Launcher extends SubsystemBase {
     // This method will be called once per scheduler run
     if (tuningPIDS) {
       updatePIDFromDashboard("Launch");
-      updatePIDFromDashboard("Winch");
     }
-    if (goalPosition == LaunchPosition.FAR) {
-      winchController.setReference(Constants.Launch.farLaunchPosition, ControlType.kPosition);
-    } else {
-      winchController.setReference(Constants.Launch.closeLaunchPosition, ControlType.kPosition);
+    if (switchTimer.hasElapsed(.5)) {
+      curPosition = goalPosition;
+      switchTimer.stop();
+      switchTimer.reset();
     }
   }
 }
