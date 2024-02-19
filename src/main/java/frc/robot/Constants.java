@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import swervelib.math.Matter;
 
 /**
@@ -33,11 +32,7 @@ public final class Constants {
 
   public static class Index {
     public static final int lowerCANID = 40;
-    public static final int whooperCANID = 41;
-    public static final int upperCANID = 42;
-    public static final boolean lowerInverted = true;
-    public static final boolean upperInverted = true;
-    public static final boolean whooperInverted = false;
+    public static final int upperCANID = 41;
     public static final int breakBeam = 1;
   }
 
@@ -46,24 +41,26 @@ public final class Constants {
     public static final int centerCANID = 31;
     public static final int rightCANID = 32;
     public static final int breakBeam = 0;
-    public static final boolean leftInverted = false;
-    public static final boolean centerInverted = true;
-    public static final boolean rightInverted = true;
-    public static final double speed = 0.6;
   }
 
   public static class Launch {
     public static final double launcherP = 0.1;
     public static final double launcherI = 0;
     public static final double launcherD = 0;
-    public static final int shootCANID = 45;
+    public static final double winchP = 0.1;
+    public static final double winchI = 0;
+    public static final double winchD = 0;
+    public static final int motorID = 45;
+    public static final int winchID = 46;
     public static final int angleSwitchForwardChannel = 0;
     public static final int angleSwitchReverseChannel = 1;
     public static final double allowedVeloPercent = 0.05;
     public static final double allowedDifferencePercent = 0.05;
-    public static final Value closeLaunchPosition = Value.kForward;
-    public static final Value farLaunchPosition = Value.kReverse;
+    public static final double closeLaunchPosition = 0; // FIXME
+    public static final double farLaunchPosition = 1; // FIXME
     public static final double speedCloseSpeaker = 0.9;
+    public static final double winchConversionFactor = 1; // FIXME
+    public static final double motorConversionFactor = 1; // FIXME
 
     public enum LaunchPosition {
       CLOSE,
@@ -79,8 +76,8 @@ public final class Constants {
     public static final int rightForwardChannel = 4;
     public static final int rightBackChannel = 5;
     // These are break beam sensor IDS
-    public static final int winchLimitLeft = 2;
-    public static final int winchLimitRight = 3;
+    public static final int winchLimitLeft = 1;
+    public static final int winchLimitRight = 2;
     public static final double motorSpeedFactor = 0.5;
   }
 
