@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.SoftLimitDirection;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,16 +16,25 @@ import frc.robot.Constants;
 import java.util.function.DoubleSupplier;
 
 public class Climb extends SubsystemBase {
+  private CANSparkMax winchLeft = new CANSparkMax(Constants.Climb.leftCANID, MotorType.kBrushless);
   private CANSparkMax winchRight =
       new CANSparkMax(Constants.Climb.rightCANID, MotorType.kBrushless);
-  private CANSparkMax winchLeft = new CANSparkMax(Constants.Climb.leftCANID, MotorType.kBrushless);
   private double speed;
 
   private DigitalInput winchLimitLeft = new DigitalInput(Constants.Climb.winchLimitLeft);
   private DigitalInput winchLimitRight = new DigitalInput(Constants.Climb.winchLimitRight);
 
   /** Creates a new Climb. */
-  public Climb() {}
+  public Climb() {
+    winchLeft.setInverted(false);
+    winchRight.setInverted(true);    
+    winchLeft.setSoftLimit(SoftLimitDirection.kForward, Constants.Climb.winchTopLimit);
+    winchRight.setSoftLimit(SoftLimitDirection.kForward, Constants.Climb.winchTopLimit);
+    winchLeft.enableSoftLimit(SoftLimitDirection.kForward, true);
+    winchRight.enableSoftLimit(SoftLimitDirection.kForward, true);
+    winchLeft.enableSoftLimit(SoftLimitDirection.kReverse, false);
+    winchRight.enableSoftLimit(SoftLimitDirection.kReverse, false);
+  }
 
   @Override
   public void periodic() {
@@ -45,13 +56,18 @@ public class Climb extends SubsystemBase {
   public void setWinch(double speed) {
     double convertedSpeed = speed * Constants.Climb.motorSpeedFactor;
     this.speed = speed;
-    if (winchLimitLeft.get() || convertedSpeed <= 0){
+    SmartDashboard.putNumber("Left Position", winchLeft.getEncoder().getPosition());
+    SmartDashboard.putNumber("Right Position", winchRight.getEncoder().getPosition());
+    SmartDashboard.putBoolean("Right Limit", winchLimitRight.get());
+    SmartDashboard.putBoolean("Left Limit", winchLimitLeft.get());
+
+    if (winchLimitLeft.get() || convertedSpeed >= 0){
       winchLeft.set(convertedSpeed);
     } else {
       stopWinchLeft();
       winchLeft.getEncoder().setPosition(0);
     }
-    if (winchLimitRight.get() || convertedSpeed <= 0){
+    if (winchLimitRight.get() || convertedSpeed >= 0){
       winchRight.set(convertedSpeed);
     } else {
       stopWinchRight();

@@ -81,10 +81,11 @@ public final class Constants {
   public static class Climb {
     public static final int leftCANID = 50;
     public static final int rightCANID = 51;
+    public static final float winchTopLimit = 280;
     // These are break beam sensor IDS
     public static final int winchLimitLeft = 2;
     public static final int winchLimitRight = 3;
-    public static final double motorSpeedFactor = 0.5;
+    public static final double motorSpeedFactor = -0.5;
   }
 
   public static final String limelightName = "limelight";
