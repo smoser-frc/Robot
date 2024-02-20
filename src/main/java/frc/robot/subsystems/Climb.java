@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -34,6 +35,8 @@ public class Climb extends SubsystemBase {
     winchRight.enableSoftLimit(SoftLimitDirection.kForward, true);
     winchLeft.enableSoftLimit(SoftLimitDirection.kReverse, false);
     winchRight.enableSoftLimit(SoftLimitDirection.kReverse, false);
+    winchLeft.setIdleMode(IdleMode.kBrake);
+    winchRight.setIdleMode(IdleMode.kBrake);
   }
 
   @Override
