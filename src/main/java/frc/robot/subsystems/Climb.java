@@ -45,13 +45,13 @@ public class Climb extends SubsystemBase {
   public void setWinch(double speed) {
     double convertedSpeed = speed * Constants.Climb.motorSpeedFactor;
     this.speed = speed;
-    if (winchLimitLeft.get() || convertedSpeed <= 0){
+    if (winchLimitLeft.get() || convertedSpeed <= 0) {
       winchLeft.set(convertedSpeed);
     } else {
       stopWinchLeft();
       winchLeft.getEncoder().setPosition(0);
     }
-    if (winchLimitRight.get() || convertedSpeed <= 0){
+    if (winchLimitRight.get() || convertedSpeed <= 0) {
       winchRight.set(convertedSpeed);
     } else {
       stopWinchRight();
