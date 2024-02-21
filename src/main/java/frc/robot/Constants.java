@@ -37,7 +37,9 @@ public final class Constants {
     public static final boolean lowerInverted = true;
     public static final boolean upperInverted = true;
     public static final boolean whooperInverted = false;
-    public static final int breakBeam = 1;
+    public static final int upperBeam = 1;
+    public static final int lowerBeam = 2;
+    public static final double speed = 0.9;
   }
 
   public static class Intake {
