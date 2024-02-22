@@ -18,10 +18,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Launch.LaunchPosition;
 import frc.robot.Robot;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import org.ejml.equation.Operation;
 
 public class Launcher extends SubsystemBase {
   /** Creates a new Launcher. */

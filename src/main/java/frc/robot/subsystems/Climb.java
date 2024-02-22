@@ -42,16 +42,24 @@ public class Climb extends SubsystemBase {
     winchRight.set(0);
   }
 
+  public boolean leftLimitHit() {
+    return !winchLimitLeft.get();
+  }
+
+  public boolean rightLimitHit() {
+    return !winchLimitRight.get();
+  }
+
   public void setWinch(double speed) {
     double convertedSpeed = speed * Constants.Climb.motorSpeedFactor;
     this.speed = speed;
-    if (winchLimitLeft.get() || convertedSpeed <= 0) {
+    if (!leftLimitHit() || convertedSpeed <= 0) {
       winchLeft.set(convertedSpeed);
     } else {
       stopWinchLeft();
       winchLeft.getEncoder().setPosition(0);
     }
-    if (winchLimitRight.get() || convertedSpeed <= 0) {
+    if (!rightLimitHit() || convertedSpeed <= 0) {
       winchRight.set(convertedSpeed);
     } else {
       stopWinchRight();
