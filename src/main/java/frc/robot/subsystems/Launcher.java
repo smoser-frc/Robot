@@ -19,12 +19,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Launch.LaunchPosition;
 import frc.robot.Robot;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 public class Launcher extends SubsystemBase {
   /** Creates a new Launcher. */
-  private CANSparkFlex launcher = new CANSparkFlex(Constants.Launch.launcherID, MotorType.kBrushless);
+  private CANSparkFlex launcher =
+      new CANSparkFlex(Constants.Launch.launcherID, MotorType.kBrushless);
 
   private SparkPIDController launcherController;
   private RelativeEncoder launcherEncoder;
@@ -95,30 +94,12 @@ public class Launcher extends SubsystemBase {
     angleController.setD(d);
   }
 
-  private void updatePIDFromDashboard(String keyWord) {
+  private void updatePIDFromDashboard(String keyWord, MyMethod runnable) {
     double p = SmartDashboard.getNumber(keyWord + " P", 0);
     double i = SmartDashboard.getNumber(keyWord + " I", 0);
     double d = SmartDashboard.getNumber(keyWord + " D", 0);
 
-    String desiredMethod = "update" + keyWord + "PIDs";
-    Class<?>[] paramTypes = {double.class, double.class, double.class};
-    Method method;
-    try {
-      method = this.getClass().getMethod(desiredMethod, paramTypes);
-    } catch (SecurityException e) {
-      return;
-    } catch (NoSuchMethodException e) {
-      return;
-    }
-    try {
-      method.invoke(this, p, i, d);
-    } catch (IllegalArgumentException e) {
-      return;
-    } catch (IllegalAccessException e) {
-      return;
-    } catch (InvocationTargetException e) {
-      return;
-    }
+    runnable.apply(p, i, d);
   }
 
   public void setLaunchVelocity(double velocity) {
@@ -162,12 +143,18 @@ public class Launcher extends SubsystemBase {
     tuningPIDS = !tuningPIDS;
   }
 
+  @FunctionalInterface
+  private interface MyMethod {
+    void apply(double p, double i, double d);
+  }
+
   @Override
   public void periodic() {
+    this.updateAnglePIDs(0, 0, 0);
     // This method will be called once per scheduler run
     if (tuningPIDS) {
-      updatePIDFromDashboard("Launcher");
-      updatePIDFromDashboard("Angle");
+      updatePIDFromDashboard("Launcher", this::updateLauncherPIDs);
+      updatePIDFromDashboard("Angle", this::updateAnglePIDs);
     }
     if (goalPosition == LaunchPosition.FAR) {
       angleController.setReference(Constants.Launch.farLaunchPosition, ControlType.kSmartMotion);

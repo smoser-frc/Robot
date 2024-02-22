@@ -76,7 +76,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being
     // created.
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.NONE;
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW;
     try {
       swerveDrive = new SwerveParser(directory).createSwerveDrive(maximumSpeed);
       // Alternative method if you don't want to supply the conversion factor via JSON files.
@@ -363,6 +363,16 @@ public class SwerveSubsystem extends SubsystemBase {
         maximumSpeed);
   }
 
+  public ChassisSpeeds getTargetSpeeds(
+      double dx, double dy, double angle, double currentAngle, double maxSpeed) {
+    return swerveDrive.getSwerveController().getTargetSpeeds(dx, dy, angle, currentAngle, maxSpeed);
+  }
+
+  public void setRotation(double angle) {
+    ChassisSpeeds desired = getTargetSpeeds(0, 0, angle, getHeading().getRadians(), maximumSpeed);
+    swerveDrive.drive(desired);
+  }
+
   /**
    * Get the chassis speeds based on controller input of 1 joystick and one angle. Control the robot
    * at an offset of 90deg.
@@ -441,9 +451,11 @@ public class SwerveSubsystem extends SubsystemBase {
     if (Robot.alliance == Alliance.Red && hasTarget) {
       pose = LimelightHelpers.getBotPose2d_wpiRed(Constants.limelightName);
       resetOdometry(pose);
+      setRotation(pose.getRotation().getRadians());
     } else if (Robot.alliance == Alliance.Blue && hasTarget) {
       pose = LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName);
       resetOdometry(pose);
+      setRotation(pose.getRotation().getRadians());
     }
   }
 
@@ -451,7 +463,17 @@ public class SwerveSubsystem extends SubsystemBase {
     Rotation2d rotation2d = new Rotation2d(Units.degreesToRadians(rotation));
     Pose2d pose2d = new Pose2d(x, y, rotation2d);
     resetOdometry(pose2d);
-    swerveDrive.setGyroOffset(new Rotation3d(0, 0, rotation2d.getRadians()));
+    swerveDrive.setGyroOffset(new Rotation3d(0, 0, Units.degreesToRadians(-rotation)));
+    setRotation(-rotation);
+  }
+
+  public void align() {
+    boolean hasTarget = LimelightHelpers.getTV("Limelight");
+    if (hasTarget) {
+      double newRotation =
+          getHeading().getRadians() + Units.degreesToRadians(LimelightHelpers.getTA("Limelight"));
+      setRotation(newRotation);
+    }
   }
 
   public void resetToDashboard() {

@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -20,8 +19,6 @@ public class Intake extends SubsystemBase {
       new CANSparkMax(Constants.Intake.centerCANID, CANSparkLowLevel.MotorType.kBrushless);
   private CANSparkMax motorRight =
       new CANSparkMax(Constants.Intake.rightCANID, CANSparkLowLevel.MotorType.kBrushless);
-
-  private DigitalInput sensor = new DigitalInput(Constants.Intake.breakBeam);
 
   double speed = Constants.Intake.speed;
   double currentSpeed = 0.0;
@@ -46,10 +43,6 @@ public class Intake extends SubsystemBase {
     } else {
       stop();
     }
-  }
-
-  public boolean noteAtSquishPoint() {
-    return sensor.get();
   }
 
   public void start() {

@@ -37,14 +37,15 @@ public final class Constants {
     public static final boolean lowerInverted = true;
     public static final boolean upperInverted = true;
     public static final boolean whooperInverted = false;
-    public static final int breakBeam = 1;
+    public static final int upperBeam = 1;
+    public static final int lowerBeam = 0;
+    public static final double speed = 0.9;
   }
 
   public static class Intake {
     public static final int leftCANID = 30;
     public static final int centerCANID = 31;
     public static final int rightCANID = 32;
-    public static final int breakBeam = 0;
     public static final boolean leftInverted = false;
     public static final boolean centerInverted = true;
     public static final boolean rightInverted = true;

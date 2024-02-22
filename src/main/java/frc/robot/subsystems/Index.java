@@ -20,7 +20,8 @@ public class Index extends SubsystemBase {
       new CANSparkMax(Constants.Index.whooperCANID, CANSparkLowLevel.MotorType.kBrushless);
   private CANSparkMax motorUpper =
       new CANSparkMax(Constants.Index.upperCANID, CANSparkLowLevel.MotorType.kBrushless);
-  private DigitalInput breakBeam0 = new DigitalInput(Constants.Index.breakBeam);
+  private DigitalInput lowerBreakBeam = new DigitalInput(Constants.Index.lowerBeam);
+  private DigitalInput upperBreakBeam = new DigitalInput(Constants.Index.upperBeam);
   // init variables speed and currentSpeed
   double currentSpeed = 0;
   double speed = 3.5;
@@ -38,6 +39,30 @@ public class Index extends SubsystemBase {
     currentSpeed = power;
   }
 
+  public void setUpper(double speed) {
+    motorUpper.set(speed);
+  }
+
+  public void setLower(double speed) {
+    motorLower.set(speed);
+  }
+
+  public void setWhooper(double speed) {
+    motorWhooper.set(speed);
+  }
+
+  public void runUpper() {
+    setUpper(Constants.Index.speed);
+  }
+
+  public void runWhooper() {
+    setWhooper(Constants.Index.speed);
+  }
+
+  public void runLower() {
+    setLower(Constants.Index.speed);
+  }
+
   public void start() {
     set(speed);
   }
@@ -47,7 +72,11 @@ public class Index extends SubsystemBase {
   }
 
   public boolean isPrimed() {
-    return breakBeam0.get();
+    return upperBreakBeam.get();
+  }
+
+  public boolean isInUpper() {
+    return lowerBreakBeam.get();
   }
 
   public void toggle() {
