@@ -52,7 +52,7 @@ public final class Constants {
   }
 
   public static class Launch {
-    public static final double launcherP = 0;
+    public static final double launcherP = 0.0005;
     public static final double launcherI = 0;
     public static final double launcherD = 0;
     public static final double launcherFF = 0.000156;
@@ -62,7 +62,7 @@ public final class Constants {
     public static final double angleFF = 0;
     public static final int launcherID = 45;
     public static final int angleID = 46;
-    public static final double allowedVeloPercent = 0.05;
+    public static final double allowedVeloPercent = 10;
     public static final double allowedDifferencePercent = 0.05;
     public static final double closeLaunchPosition = 0.207;
     public static final double farLaunchPosition = 0.162;

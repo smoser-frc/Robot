@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Index;
 import frc.robot.subsystems.Launcher;
@@ -27,8 +28,10 @@ public class LaunchWithVelo extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("Launcher is initializing");
-    launcher.setLauncherSpeed(0.95);
+    System.out.println("Launcher is initializing at + " + SmartDashboard.getNumber("Launch Velo", 0));
+    launcher.setLaunchVelocity(SmartDashboard.getNumber("Launch Velo", 0));
+    launchVelo = SmartDashboard.getNumber("Launch Velo", 0);
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.

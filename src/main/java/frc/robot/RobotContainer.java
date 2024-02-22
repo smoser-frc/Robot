@@ -21,6 +21,7 @@ import frc.robot.commands.LaunchWithVelo;
 import frc.robot.commands.LaunchWithVeloAuton;
 import frc.robot.commands.PrimeIndex;
 import frc.robot.commands.ToggleIntake;
+import frc.robot.commands.ToggleLaunchPIDS;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Index;
 import frc.robot.subsystems.Intake;
@@ -74,6 +75,8 @@ public class RobotContainer {
     m_swerve.setDefaultCommand(
         !RobotBase.isSimulation() ? closedAbsoluteDrive : closedAbsoluteDrive);
 
+    m_index.setDefaultCommand(m_index.manualIntake(coDriver::getRightY));
+
     m_climb.setDefaultCommand(m_climb.setWinchCommand(coDriver::getLeftY));
 
     // add auto options
@@ -114,6 +117,12 @@ public class RobotContainer {
 
     JoystickButton b = new JoystickButton(driver, XboxController.Button.kB.value);
     b.whileTrue(new LaunchWithVelo(m_launch, m_index, 100));
+
+    JoystickButton y = new JoystickButton(driver, XboxController.Button.kY.value);
+    y.onTrue(m_launch.switchAngleCommand());
+
+    JoystickButton coA = new JoystickButton(coDriver, XboxController.Button.kA.value);
+    coA.onTrue(new ToggleLaunchPIDS(m_launch));
   }
 
   /**
