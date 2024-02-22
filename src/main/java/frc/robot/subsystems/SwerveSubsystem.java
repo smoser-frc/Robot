@@ -467,6 +467,15 @@ public class SwerveSubsystem extends SubsystemBase {
     setRotation(-rotation);
   }
 
+  public void align() {
+    boolean hasTarget = LimelightHelpers.getTV("Limelight");
+    if (hasTarget) {
+      double newRotation =
+          getHeading().getRadians() + Units.degreesToRadians(LimelightHelpers.getTA("Limelight"));
+      setRotation(newRotation);
+    }
+  }
+
   public void resetToDashboard() {
     double x = SmartDashboard.getNumber("Position Set X", 0);
     double y = SmartDashboard.getNumber("Position Set Y", 0);
