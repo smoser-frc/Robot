@@ -114,6 +114,9 @@ public class RobotContainer {
 
     JoystickButton b = new JoystickButton(driver, XboxController.Button.kB.value);
     b.whileTrue(new LaunchWithVelo(m_launch, m_index, 100));
+
+    JoystickButton three = new JoystickButton(driver, 3);
+    three.onTrue(m_swerve.dashboardPositionResetCommand());
   }
 
   /**
