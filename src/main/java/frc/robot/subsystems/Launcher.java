@@ -23,7 +23,8 @@ import java.lang.reflect.Method;
 
 public class Launcher extends SubsystemBase {
   /** Creates a new Launcher. */
-  private CANSparkFlex launcher = new CANSparkFlex(Constants.Launch.launcherID, MotorType.kBrushless);
+  private CANSparkFlex launcher =
+      new CANSparkFlex(Constants.Launch.launcherID, MotorType.kBrushless);
 
   private SparkPIDController launcherController;
   private RelativeEncoder launcherEncoder;
