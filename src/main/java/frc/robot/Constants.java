@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import swervelib.math.Matter;
 
 /**
@@ -53,17 +52,25 @@ public final class Constants {
   }
 
   public static class Launch {
-    public static final double launcherP = 0.1;
+    public static final double launcherP = 0;
     public static final double launcherI = 0;
     public static final double launcherD = 0;
-    public static final int shootCANID = 45;
-    public static final int angleSwitchForwardChannel = 0;
-    public static final int angleSwitchReverseChannel = 1;
+    public static final double launcherFF = 0.000156;
+    public static final double angleP = 0.004;
+    public static final double angleI = 0;
+    public static final double angleD = 0;
+    public static final double angleFF = 0;
+    public static final int launcherID = 45;
+    public static final int angleID = 46;
     public static final double allowedVeloPercent = 0.05;
     public static final double allowedDifferencePercent = 0.05;
-    public static final Value closeLaunchPosition = Value.kForward;
-    public static final Value farLaunchPosition = Value.kReverse;
+    public static final double closeLaunchPosition = 0.207;
+    public static final double farLaunchPosition = 0.162;
+    public static final double angleMin = 0.161;
+    public static final double angleMax = 0.234;
     public static final double speedCloseSpeaker = 0.9;
+    public static final double angleConversionFactor = 1;
+    public static final double launcherConversionFactor = 1; // FIXME
 
     public enum LaunchPosition {
       CLOSE,
@@ -74,10 +81,6 @@ public final class Constants {
   public static class Climb {
     public static final int leftCANID = 50;
     public static final int rightCANID = 51;
-    public static final int leftForwardChannel = 2;
-    public static final int leftBackChannel = 3;
-    public static final int rightForwardChannel = 4;
-    public static final int rightBackChannel = 5;
     // These are break beam sensor IDS
     public static final int winchLimitLeft = 2;
     public static final int winchLimitRight = 3;

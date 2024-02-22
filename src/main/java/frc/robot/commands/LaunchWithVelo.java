@@ -28,7 +28,7 @@ public class LaunchWithVelo extends Command {
   @Override
   public void initialize() {
     System.out.println("Launcher is initializing");
-    launcher.setMotorSpeed(0.95);
+    launcher.setLauncherSpeed(0.95);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,8 +42,7 @@ public class LaunchWithVelo extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    launcher.setMotorSpeed(0);
-    ;
+    launcher.setLauncherSpeed(0);
     index.stop();
   }
 
