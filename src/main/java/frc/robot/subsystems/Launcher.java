@@ -12,7 +12,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,11 +21,15 @@ import frc.robot.Robot;
 
 public class Launcher extends SubsystemBase {
   /** Creates a new Launcher. */
-  private CANSparkFlex launcher =
-      new CANSparkFlex(Constants.Launch.launcherID, MotorType.kBrushless);
+  private CANSparkFlex upperLauncher =
+      new CANSparkFlex(Constants.Launch.upperLauncherID, MotorType.kBrushless);
+    private CANSparkFlex lowerLauncher =
+      new CANSparkFlex(Constants.Launch.lowerLauncherID, MotorType.kBrushless);
 
-  private SparkPIDController launcherController;
-  private RelativeEncoder launcherEncoder;
+  private SparkPIDController upperLauncherController;
+  private SparkPIDController lowerLauncherController;
+  private RelativeEncoder upperLauncherEncoder;
+  private RelativeEncoder lowerLauncherEncoder;
 
   private CANSparkMax angle = new CANSparkMax(Constants.Launch.angleID, MotorType.kBrushless);
   private SparkPIDController angleController;
@@ -39,15 +42,19 @@ public class Launcher extends SubsystemBase {
   public Launcher() {
 
     angleController = angle.getPIDController();
-    launcherController = launcher.getPIDController();
+    upperLauncherController = upperLauncher.getPIDController();
+    lowerLauncherController = lowerLauncher.getPIDController();
 
-    launcherEncoder = launcher.getEncoder();
+    upperLauncherEncoder = upperLauncher.getEncoder();
+    lowerLauncherEncoder = lowerLauncher.getEncoder();
     angleEncoder = angle.getAbsoluteEncoder(Type.kDutyCycle);
 
-    launcherController.setFeedbackDevice(launcherEncoder);
+    upperLauncherController.setFeedbackDevice(upperLauncherEncoder);
+    lowerLauncherController.setFeedbackDevice(lowerLauncherEncoder);
     angleController.setFeedbackDevice(angleEncoder);
 
-    launcherEncoder.setVelocityConversionFactor(Constants.Launch.launcherConversionFactor);
+    upperLauncherEncoder.setVelocityConversionFactor(Constants.Launch.launcherConversionFactor);
+    lowerLauncherEncoder.setVelocityConversionFactor(Constants.Launch.launcherConversionFactor);
     angleEncoder.setPositionConversionFactor(Constants.Launch.angleConversionFactor);
 
     setPIDsDefault();
@@ -64,9 +71,9 @@ public class Launcher extends SubsystemBase {
   }
 
   private void showPIDs() {
-    SmartDashboard.putNumber("Launch P", launcherController.getP());
-    SmartDashboard.putNumber("Launch I", launcherController.getI());
-    SmartDashboard.putNumber("Launch D", launcherController.getD());
+    SmartDashboard.putNumber("Launch P", upperLauncherController.getP());
+    SmartDashboard.putNumber("Launch I", upperLauncherController.getI());
+    SmartDashboard.putNumber("Launch D", upperLauncherController.getD());
     SmartDashboard.putNumber("Launch Velo", getCurrentVelocity());
 
     SmartDashboard.putNumber("Angle P", angleController.getP());
@@ -78,40 +85,49 @@ public class Launcher extends SubsystemBase {
   private void setPIDsDefault() {
     updateLauncherPIDs(
         Constants.Launch.launcherP, Constants.Launch.launcherI, Constants.Launch.launcherD, Constants.Launch.launcherFF);
-    updateAnglePIDs(Constants.Launch.angleP, Constants.Launch.angleI, Constants.Launch.angleD);
+    updateAnglePIDs(Constants.Launch.angleP, Constants.Launch.angleI, Constants.Launch.angleD, 0);
   }
 
   private void updateLauncherPIDs(double p, double i, double d, double ff) {
-    launcherController.setP(p);
-    launcherController.setI(i);
-    launcherController.setD(d);
-    launcherController.setFF(ff);
+    upperLauncherController.setP(p);
+    upperLauncherController.setI(i);
+    upperLauncherController.setD(d);
+    upperLauncherController.setFF(ff);
+
+    lowerLauncherController.setP(p);
+    lowerLauncherController.setI(i);
+    lowerLauncherController.setD(d);
+    lowerLauncherController.setFF(ff);   
   }
 
-  private void updateAnglePIDs(double p, double i, double d) {
+  private void updateAnglePIDs(double p, double i, double d, double ff) {
     angleController.setP(p);
     angleController.setI(i);
     angleController.setD(d);
+    angleController.setFF(ff);
   }
 
   private void updatePIDFromDashboard(String keyWord, MyMethod runnable) {
     double p = SmartDashboard.getNumber(keyWord + " P", 0);
     double i = SmartDashboard.getNumber(keyWord + " I", 0);
     double d = SmartDashboard.getNumber(keyWord + " D", 0);
+    double ff = SmartDashboard.getNumber(keyWord + "ff", 0);
 
-    runnable.apply(p, i, d);
+    runnable.apply(p, i, d, ff);
   }
 
   public void setLaunchVelocity(double velocity) {
-    launcherController.setReference(velocity, ControlType.kVelocity);
+    upperLauncherController.setReference(velocity, ControlType.kVelocity);
+    lowerLauncherController.setReference(velocity, ControlType.kVelocity);
   }
 
   public double getCurrentVelocity() {
-    return launcherEncoder.getVelocity();
+    return (upperLauncherEncoder.getVelocity() + lowerLauncherEncoder.getVelocity()) / 2;
   }
 
   public void setLauncherSpeed(double speed) {
-    launcher.set(speed);
+    upperLauncher.set(speed);
+    lowerLauncher.set(speed);
   }
 
   public boolean isWithinVeloPercentage(double percent, double targetVelo) {
@@ -119,11 +135,17 @@ public class Launcher extends SubsystemBase {
     return (1 - (percent * 0.01) <= currentPercent && currentPercent <= 1 + (percent * 0.01));
   }
 
+  public boolean motorDifferenceWithinPercent(double percent){
+    double currentPercent = Math.abs(lowerLauncherEncoder.getVelocity() - upperLauncherEncoder.getVelocity()) / getCurrentVelocity();
+    return (1 - (percent * 0.01) <= currentPercent && currentPercent <= 1 + (percent * 0.01));
+  }
+
   public boolean readyToLaunch(double targetVelo) {
     if (Robot.isSimulation()) {
       return true;
     }
-    return isWithinVeloPercentage(Constants.Launch.allowedVeloPercent, targetVelo);
+    boolean isReady = isWithinVeloPercentage(Constants.Launch.allowedVeloPercent, targetVelo) && motorDifferenceWithinPercent(Constants.Launch.allowedDifferencePercent);
+    return isReady;
   }
 
   public void setLaunchPosition(LaunchPosition launchPosition) {
@@ -145,12 +167,11 @@ public class Launcher extends SubsystemBase {
 
   @FunctionalInterface
   private interface MyMethod {
-    void apply(double p, double i, double d);
+    void apply(double p, double i, double d, double ff);
   }
 
   @Override
   public void periodic() {
-    this.updateAnglePIDs(0, 0, 0);
     // This method will be called once per scheduler run
     if (tuningPIDS) {
       updatePIDFromDashboard("Launcher", this::updateLauncherPIDs);

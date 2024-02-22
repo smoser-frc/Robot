@@ -18,8 +18,6 @@ import swervelib.math.Matter;
  */
 public final class Constants {
 
-  public static final int pneumaticsControlModuleCANID = 2;
-
   public static final boolean kLeftFrontDriveInverted = false;
   public static final boolean kLeftBackDriveInverted = false;
   public static final boolean kRightBackDriveInverted = false;
@@ -61,10 +59,11 @@ public final class Constants {
     public static final double angleI = 0;
     public static final double angleD = 0;
     public static final double angleFF = 0;
-    public static final int launcherID = 45;
+    public static final int lowerLauncherID = 44;
+    public static final int upperLauncherID = 45;
     public static final int angleID = 46;
     public static final double allowedVeloPercent = 10;
-    public static final double allowedDifferencePercent = 0.05;
+    public static final double allowedDifferencePercent = 5;
     public static final double closeLaunchPosition = 0.207;
     public static final double farLaunchPosition = 0.162;
     public static final double angleMin = 0.161;
