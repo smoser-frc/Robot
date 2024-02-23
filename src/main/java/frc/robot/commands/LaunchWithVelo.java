@@ -14,12 +14,14 @@ public class LaunchWithVelo extends Command {
   private Launcher launcher;
 
   private Index index;
+  private boolean fromDash;
 
   private double launchVelo;
 
-  public LaunchWithVelo(Launcher launcher, Index index, double velocity) {
+  public LaunchWithVelo(Launcher launcher, Index index, double velocity, boolean fromDash) {
     this.launcher = launcher;
     this.index = index;
+    this.fromDash = fromDash;
     launchVelo = velocity;
     addRequirements(launcher);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -28,10 +30,12 @@ public class LaunchWithVelo extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("Launcher is initializing at + " + SmartDashboard.getNumber("Launch Velo", 0));
-    launcher.setLaunchVelocity(SmartDashboard.getNumber("Launch Velo", 0));
-    launchVelo = SmartDashboard.getNumber("Launch Velo", 0);
-
+    if (fromDash){
+      launcher.setLaunchVelocity(SmartDashboard.getNumber("Launch Velo", 0));
+      launchVelo = SmartDashboard.getNumber("Launch Velo", 0);
+    } else{
+      launcher.setLaunchVelocity(launchVelo);
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.

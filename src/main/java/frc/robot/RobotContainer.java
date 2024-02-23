@@ -9,6 +9,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.simulation.XboxControllerSim;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -39,7 +40,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final SwerveSubsystem m_swerve =
-      new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerves/KrakenSwerve"));
+      new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerves/AllNeoSwerve"));
   private final Intake m_intake = new Intake();
   private final Index m_index = new Index();
   private final Launcher m_launch = new Launcher();
@@ -116,7 +117,7 @@ public class RobotContainer {
     a.onTrue(m_swerve.limelightPositionResetCommand());
 
     JoystickButton b = new JoystickButton(driver, XboxController.Button.kB.value);
-    b.whileTrue(new LaunchWithVelo(m_launch, m_index, 100));
+    b.whileTrue(new LaunchWithVelo(m_launch, m_index, 0, true));
 
     JoystickButton y = new JoystickButton(driver, XboxController.Button.kY.value);
     y.onTrue(m_launch.switchAngleCommand());
@@ -124,8 +125,8 @@ public class RobotContainer {
     JoystickButton coA = new JoystickButton(coDriver, XboxController.Button.kA.value);
     coA.onTrue(new ToggleLaunchPIDS(m_launch));
 
-    JoystickButton three = new JoystickButton(driver, 3);
-    three.onTrue(m_swerve.dashboardPositionResetCommand());
+    JoystickButton x = new JoystickButton(driver, XboxController.Button.kX.value);
+    x.onTrue(m_swerve.dashboardPositionResetCommand());
   }
 
   /**

@@ -20,6 +20,6 @@ public class AngleAndSpeedLaunch extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new SetLaunchAnglePosition(launcher, launchDistance),
-        new LaunchWithVelo(launcher, index, velocity));
+        new LaunchWithVelo(launcher, index, velocity, false));
   }
 }

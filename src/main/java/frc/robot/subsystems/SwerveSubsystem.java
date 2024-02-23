@@ -515,4 +515,8 @@ public class SwerveSubsystem extends SubsystemBase {
   public Command limelightPositionResetCommand() {
     return this.runOnce(() -> resetToLimelight());
   }
+
+  public Command alignCommand() {
+    return this.runOnce(() -> align());
+  }
 }
