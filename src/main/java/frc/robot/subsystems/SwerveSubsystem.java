@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.music.Orchestra;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -47,6 +48,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
   private final Timer limelightTimer;
   private double timerTicks;
+
+  Orchestra _orchestra;
 
   /** Maximum speed of the robot in meters per second, used to limit acceleration. */
   public double maximumSpeed = Units.feetToMeters(14.5);
@@ -174,6 +177,31 @@ public class SwerveSubsystem extends SubsystemBase {
                   headingX.getAsDouble(),
                   headingY.getAsDouble()));
         });
+  }
+
+  public void MusicPlayer(int SongValue) {
+
+    if (SongValue == 0) {
+      if (_orchestra.isPlaying()) {
+        _orchestra.pause();
+      } else {
+        _orchestra.loadMusic("FinalShort.chrp");
+        _orchestra.play();
+      }
+    }
+
+    if (SongValue == 1) {
+      if (_orchestra.isPlaying()) {
+        _orchestra.pause();
+      } else {
+        _orchestra.loadMusic("LRiderShort.chrp");
+        _orchestra.play();
+      }
+    }
+  }
+
+  public Command MusicPlayerCommand(int SongValue) {
+    return this.run(() -> MusicPlayer(SongValue));
   }
 
   /**
