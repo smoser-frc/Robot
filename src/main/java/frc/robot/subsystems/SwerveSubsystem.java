@@ -4,7 +4,9 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.music.Orchestra;
+import com.ctre.phoenix6.Orchestra;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.hardware.core.CoreTalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -34,7 +36,9 @@ import java.io.File;
 import java.util.function.DoubleSupplier;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
+import swervelib.SwerveModule;
 import swervelib.math.SwerveMath;
+import swervelib.motors.TalonFXSwerve;
 import swervelib.parser.SwerveControllerConfiguration;
 import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
@@ -91,11 +95,35 @@ public class SwerveSubsystem extends SubsystemBase {
     swerveDrive.setHeadingCorrection(
         false); // Heading correction should only be used while controlling the robot via angle.
 
+    setupOrchestra();
     setupPathPlanner();
     limelightTimer = new Timer();
     limelightTimer.start();
     timerTicks = 0;
     populateDashboard();
+  }
+
+  private void setupOrchestra() {
+    _orchestra = new Orchestra();
+
+    TalonFXSwerve sm;
+    CoreTalonFX c;
+    for (SwerveModule module : swerveDrive.getModules()) {
+      if (module.getAngleMotor() instanceof TalonFXSwerve) {
+        sm = (TalonFXSwerve) module.getAngleMotor();
+        c = (CoreTalonFX) sm.getMotor();
+        if (c instanceof TalonFX) {
+          _orchestra.addInstrument((TalonFX) c);
+        }
+      }
+      if (module.getDriveMotor() instanceof TalonFXSwerve) {
+        sm = (TalonFXSwerve) module.getDriveMotor();
+        c = (CoreTalonFX) sm.getMotor();
+        if (c instanceof TalonFX) {
+          _orchestra.addInstrument((TalonFX) c);
+        }
+      }
+    }
   }
 
   /** Setup AutoBuilder for PathPlanner. */
