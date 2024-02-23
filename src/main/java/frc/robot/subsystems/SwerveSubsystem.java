@@ -495,11 +495,11 @@ public class SwerveSubsystem extends SubsystemBase {
       pose2d = LimelightHelpers.getBotPose2d_wpiRed(Constants.limelightName);
       pose3d = LimelightHelpers.getBotPose3d_wpiRed(Constants.limelightName);
     } else {
-      pose2d = LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName);
+      pose2d = LimelightHelpers.getBotPose2d_wpiBlue(Constants.limelightName).times(-1);
       pose3d = LimelightHelpers.getBotPose3d_wpiBlue(Constants.limelightName);
     }
     swerveDrive.addVisionMeasurement(pose2d, curTime);
-    swerveDrive.setGyro(pose3d.getRotation().times(-1));
+    swerveDrive.setGyro(pose3d.getRotation());
   }
 
   private void populateDashboard() {
