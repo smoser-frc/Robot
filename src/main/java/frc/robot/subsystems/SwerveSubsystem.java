@@ -471,7 +471,7 @@ public class SwerveSubsystem extends SubsystemBase {
     boolean hasTarget = LimelightHelpers.getTV("Limelight");
     if (hasTarget) {
       double newRotation =
-          getHeading().getRadians() + Units.degreesToRadians(LimelightHelpers.getTA("Limelight"));
+          getHeading().getRadians() - Units.degreesToRadians(LimelightHelpers.getTA("Limelight"));
       setRotation(newRotation);
     }
   }
