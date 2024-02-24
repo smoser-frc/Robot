@@ -64,10 +64,10 @@ public final class Constants {
     public static final int angleID = 46;
     public static final double allowedVeloPercent = 10;
     public static final double allowedDifferencePercent = 5;
-    public static final double closeLaunchPosition = 750;
-    public static final double farLaunchPosition = 820;
-    public static final double angleMin = 749.3;
-    public static final double angleMax = 825;
+    public static final double closeLaunchPosition = 585;
+    public static final double farLaunchPosition = 655;
+    public static final double angleMin = 581;
+    public static final double angleMax = 660;
     public static final boolean angleMotorInverted = true;
     public static final boolean angleEncoderInverted = true;
     public static final boolean lowerMotorInverted = true;
