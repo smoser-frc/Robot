@@ -40,7 +40,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final SwerveSubsystem m_swerve =
-      new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerves/AllNeoSwerve"));
+      new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerves/KrakenSwerve"));
   private final Intake m_intake = new Intake();
   private final Index m_index = new Index();
   private final Launcher m_launch = new Launcher();
@@ -114,7 +114,7 @@ public class RobotContainer {
     rightBumper.onTrue(new PrimeIndex(m_index));
 
     JoystickButton a = new JoystickButton(driver, XboxController.Button.kA.value);
-    a.onTrue(m_swerve.limelightPositionResetCommand());
+    a.whileTrue(m_swerve.alignCommand());
 
     JoystickButton b = new JoystickButton(driver, XboxController.Button.kB.value);
     b.whileTrue(new LaunchWithVelo(m_launch, m_index, 0, true));

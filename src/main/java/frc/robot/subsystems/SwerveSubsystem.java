@@ -517,6 +517,6 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public Command alignCommand() {
-    return this.runOnce(() -> align());
+    return this.run(() -> align());
   }
 }

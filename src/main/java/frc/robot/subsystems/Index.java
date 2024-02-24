@@ -9,6 +9,7 @@ import java.util.function.DoubleSupplier;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -72,17 +73,25 @@ public class Index extends SubsystemBase {
   }
 
   public boolean isPrimed() {
-    return upperBreakBeam.get();
+    return getUpperSensorHit();
   }
 
   public boolean isInUpper() {
-    return lowerBreakBeam.get();
+    return getLowerSensorHit();
   }
 
   public void toggle() {
     if (currentSpeed == 0.0) {
       start();
     }
+  }
+
+  public boolean getUpperSensorHit(){
+    return !upperBreakBeam.get();
+  }
+
+  public boolean getLowerSensorHit() {
+    return !lowerBreakBeam.get();
   }
 
   public Command manualIntake(DoubleSupplier speedSupplier){
@@ -92,6 +101,8 @@ public class Index extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("Upper Break-Beam", getUpperSensorHit());
+    SmartDashboard.putBoolean("Lower Break-Beam", getLowerSensorHit());
   }
 
   @Override

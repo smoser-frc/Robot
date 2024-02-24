@@ -27,6 +27,8 @@ public class Climb extends SubsystemBase {
 
   /** Creates a new Climb. */
   public Climb() {
+    winchLeft.restoreFactoryDefaults();
+    winchRight.restoreFactoryDefaults();
     winchLeft.setInverted(false);
     winchRight.setInverted(true);    
     winchLeft.setSoftLimit(SoftLimitDirection.kForward, Constants.Climb.winchTopLimit);
@@ -72,13 +74,13 @@ public class Climb extends SubsystemBase {
     SmartDashboard.putBoolean("Right Limit", winchLimitRight.get());
     SmartDashboard.putBoolean("Left Limit", winchLimitLeft.get());
 
-    if (!leftLimitHit() || convertedSpeed <= 0) {
+    if (!leftLimitHit() || convertedSpeed >= 0) {
       winchLeft.set(convertedSpeed);
     } else {
       stopWinchLeft();
       winchLeft.getEncoder().setPosition(0);
     }
-    if (!rightLimitHit() || convertedSpeed <= 0) {
+    if (!rightLimitHit() || convertedSpeed >= 0) {
       winchRight.set(convertedSpeed);
     } else {
       stopWinchRight();

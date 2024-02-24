@@ -12,6 +12,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
+
+import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,6 +23,7 @@ import frc.robot.Robot;
 
 public class Launcher extends SubsystemBase {
   /** Creates a new Launcher. */
+
   private CANSparkFlex upperLauncher =
       new CANSparkFlex(Constants.Launch.upperLauncherID, MotorType.kBrushless);
     private CANSparkFlex lowerLauncher =
@@ -41,6 +44,10 @@ public class Launcher extends SubsystemBase {
 
   public Launcher() {
 
+    angle.setInverted(Constants.Launch.angleMotorInverted);
+    upperLauncher.setInverted(Constants.Launch.upperMotorInverted);
+    lowerLauncher.setInverted(Constants.Launch.lowerMotorInverted);
+
     angleController = angle.getPIDController();
     upperLauncherController = upperLauncher.getPIDController();
     lowerLauncherController = lowerLauncher.getPIDController();
@@ -48,6 +55,7 @@ public class Launcher extends SubsystemBase {
     upperLauncherEncoder = upperLauncher.getEncoder();
     lowerLauncherEncoder = lowerLauncher.getEncoder();
     angleEncoder = angle.getAbsoluteEncoder(Type.kDutyCycle);
+    angleEncoder.setInverted(Constants.Launch.angleEncoderInverted);
 
     upperLauncherController.setFeedbackDevice(upperLauncherEncoder);
     lowerLauncherController.setFeedbackDevice(lowerLauncherEncoder);
@@ -56,6 +64,7 @@ public class Launcher extends SubsystemBase {
     upperLauncherEncoder.setVelocityConversionFactor(Constants.Launch.launcherConversionFactor);
     lowerLauncherEncoder.setVelocityConversionFactor(Constants.Launch.launcherConversionFactor);
     angleEncoder.setPositionConversionFactor(Constants.Launch.angleConversionFactor);
+    angleEncoder.setVelocityConversionFactor(Constants.Launch.angleConversionFactor);
 
     setPIDsDefault();
     showPIDs();
@@ -144,7 +153,7 @@ public class Launcher extends SubsystemBase {
     if (Robot.isSimulation()) {
       return true;
     }
-    boolean isReady = isWithinVeloPercentage(Constants.Launch.allowedVeloPercent, targetVelo) && motorDifferenceWithinPercent(Constants.Launch.allowedDifferencePercent);
+    boolean isReady = isWithinVeloPercentage(Constants.Launch.allowedVeloPercent, targetVelo);// && motorDifferenceWithinPercent(Constants.Launch.allowedDifferencePercent);
     return isReady;
   }
 

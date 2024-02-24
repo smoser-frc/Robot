@@ -55,7 +55,7 @@ public final class Constants {
     public static final double launcherI = 0;
     public static final double launcherD = 0;
     public static final double launcherFF = 0.000156;
-    public static final double angleP = 0.004;
+    public static final double angleP = 0.00025;
     public static final double angleI = 0;
     public static final double angleD = 0;
     public static final double angleFF = 0;
@@ -64,13 +64,17 @@ public final class Constants {
     public static final int angleID = 46;
     public static final double allowedVeloPercent = 10;
     public static final double allowedDifferencePercent = 5;
-    public static final double closeLaunchPosition = 0.207;
-    public static final double farLaunchPosition = 0.162;
-    public static final double angleMin = 0.161;
-    public static final double angleMax = 0.234;
+    public static final double closeLaunchPosition = 750;
+    public static final double farLaunchPosition = 820;
+    public static final double angleMin = 749.3;
+    public static final double angleMax = 825;
+    public static final boolean angleMotorInverted = true;
+    public static final boolean angleEncoderInverted = true;
+    public static final boolean lowerMotorInverted = true;
+    public static final boolean upperMotorInverted = false;
     public static final double speedCloseSpeaker = 0.9;
-    public static final double angleConversionFactor = 1;
-    public static final double launcherConversionFactor = 1; // FIXME
+    public static final double angleConversionFactor = 1000;
+    public static final double launcherConversionFactor = 1;
 
     public enum LaunchPosition {
       CLOSE,
