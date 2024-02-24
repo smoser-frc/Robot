@@ -26,9 +26,12 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.Robot;
+import frc.robot.LimelightHelpers.LimelightResults;
+
 import java.io.File;
 import java.util.function.DoubleSupplier;
 import swervelib.SwerveController;
@@ -468,10 +471,13 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void align() {
-    boolean hasTarget = LimelightHelpers.getTV("Limelight");
-    if (hasTarget) {
-      double newRotation =
-          getHeading().getRadians() - Units.degreesToRadians(LimelightHelpers.getTA("Limelight"));
+    boolean hasTarget = LimelightHelpers.getTV("");
+    double targetValue = LimelightHelpers.getLimelightNTTableEntry("limelight", "tid").getDouble(0);
+    double offset = Units.degreesToRadians(LimelightHelpers.getTX(Constants.limelightName));
+    boolean isSpeaker = targetValue == 4 || targetValue == 7;
+    System.out.println("Limelight has target === " + hasTarget + " with vlaue === " + targetValue + " at offset " + offset);
+    if (hasTarget && isSpeaker) {
+      double newRotation = getHeading().getRadians() - offset;
       setRotation(newRotation);
     }
   }
@@ -517,6 +523,6 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public Command alignCommand() {
-    return this.run(() -> align());
+    return this.runOnce(() -> align());
   }
 }
