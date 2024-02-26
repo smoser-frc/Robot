@@ -34,6 +34,7 @@ public class LaunchWithVeloAuton extends Command {
     System.out.println("Launcher is initializing");
     launcher.setLaunchVelocity(launchVelo);
     switchTimer.reset();
+    switchTimer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

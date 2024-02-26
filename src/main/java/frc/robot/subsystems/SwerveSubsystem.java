@@ -26,11 +26,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.Robot;
-import frc.robot.LimelightHelpers.LimelightResults;
 
 import java.io.File;
 import java.util.function.DoubleSupplier;
@@ -260,11 +258,11 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (limelightTimer.hasElapsed(timerTicks)) {
-      updateFromLimelight();
-      resetToLimelight();
-      timerTicks++;
-    }
+    //if (limelightTimer.hasElapsed(timerTicks)) {
+    //  updateFromLimelight();
+    //  resetToLimelight();
+    //  timerTicks++;
+    //}
     swerveDrive.headingCorrection = true;
   }
 
@@ -523,6 +521,10 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public Command alignCommand() {
-    return this.runOnce(() -> align());
+    return this.run(() -> align());
+  }
+
+  public Command updatePositionCommand() {
+    return this.runOnce(() -> updateFromLimelight());
   }
 }
