@@ -64,6 +64,10 @@ public class Index extends SubsystemBase {
     setLower(Constants.Index.speed);
   }
 
+  public boolean isRunning() {
+    return !(motorUpper.get() == 0);
+  }
+
   public void start() {
     set(speed);
   }
