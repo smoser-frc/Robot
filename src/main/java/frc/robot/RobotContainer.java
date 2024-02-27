@@ -9,7 +9,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.simulation.XboxControllerSim;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -93,6 +92,8 @@ public class RobotContainer {
         "4 Note Auton Blue", m_swerve.getAutonomousCommand("4 Note Auton Blue", true));
     m_chooser.addOption(
         "4 Note Auton Red", m_swerve.getAutonomousCommand("4 Note Auton Red", true));
+    m_chooser.addOption("Turn Auton", m_swerve.getAutonomousCommand("Turn Auton", true));
+    ;
     SmartDashboard.putData(m_chooser);
   }
 

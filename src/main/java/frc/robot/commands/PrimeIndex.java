@@ -28,11 +28,10 @@ public class PrimeIndex extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (!wasRunning){
+    if (!wasRunning) {
       System.out.println("Index is initializing");
       index.start();
-    }
-    else {
+    } else {
       index.stop();
     }
   }
@@ -57,8 +56,7 @@ public class PrimeIndex extends Command {
   public boolean isFinished() {
     if (wasRunning) {
       return true;
-    }
-    else {
+    } else {
       return index.isPrimed();
     }
   }

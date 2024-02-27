@@ -30,10 +30,10 @@ public class LaunchWithVelo extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (fromDash){
+    if (fromDash) {
       launcher.setLaunchVelocity(SmartDashboard.getNumber("Launch Velo", 0));
       launchVelo = SmartDashboard.getNumber("Launch Velo", 0);
-    } else{
+    } else {
       launcher.setLaunchVelocity(launchVelo);
     }
   }

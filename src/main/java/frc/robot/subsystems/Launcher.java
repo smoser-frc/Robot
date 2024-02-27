@@ -12,8 +12,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
-
-import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,10 +21,10 @@ import frc.robot.Robot;
 
 public class Launcher extends SubsystemBase {
   /** Creates a new Launcher. */
-
   private CANSparkFlex upperLauncher =
       new CANSparkFlex(Constants.Launch.upperLauncherID, MotorType.kBrushless);
-    private CANSparkFlex lowerLauncher =
+
+  private CANSparkFlex lowerLauncher =
       new CANSparkFlex(Constants.Launch.lowerLauncherID, MotorType.kBrushless);
 
   private SparkPIDController upperLauncherController;
@@ -93,7 +91,10 @@ public class Launcher extends SubsystemBase {
 
   private void setPIDsDefault() {
     updateLauncherPIDs(
-        Constants.Launch.launcherP, Constants.Launch.launcherI, Constants.Launch.launcherD, Constants.Launch.launcherFF);
+        Constants.Launch.launcherP,
+        Constants.Launch.launcherI,
+        Constants.Launch.launcherD,
+        Constants.Launch.launcherFF);
     updateAnglePIDs(Constants.Launch.angleP, Constants.Launch.angleI, Constants.Launch.angleD, 0);
   }
 
@@ -106,7 +107,7 @@ public class Launcher extends SubsystemBase {
     lowerLauncherController.setP(p);
     lowerLauncherController.setI(i);
     lowerLauncherController.setD(d);
-    lowerLauncherController.setFF(ff);   
+    lowerLauncherController.setFF(ff);
   }
 
   private void updateAnglePIDs(double p, double i, double d, double ff) {
@@ -144,8 +145,10 @@ public class Launcher extends SubsystemBase {
     return (1 - (percent * 0.01) <= currentPercent && currentPercent <= 1 + (percent * 0.01));
   }
 
-  public boolean motorDifferenceWithinPercent(double percent){
-    double currentPercent = Math.abs(lowerLauncherEncoder.getVelocity() - upperLauncherEncoder.getVelocity()) / getCurrentVelocity();
+  public boolean motorDifferenceWithinPercent(double percent) {
+    double currentPercent =
+        Math.abs(lowerLauncherEncoder.getVelocity() - upperLauncherEncoder.getVelocity())
+            / getCurrentVelocity();
     return (1 - (percent * 0.01) <= currentPercent && currentPercent <= 1 + (percent * 0.01));
   }
 
@@ -153,7 +156,8 @@ public class Launcher extends SubsystemBase {
     if (Robot.isSimulation()) {
       return true;
     }
-    boolean isReady = isWithinVeloPercentage(Constants.Launch.allowedVeloPercent, targetVelo);// && motorDifferenceWithinPercent(Constants.Launch.allowedDifferencePercent);
+    boolean isReady = isWithinVeloPercentage(Constants.Launch.allowedVeloPercent, targetVelo); // &&
+    // motorDifferenceWithinPercent(Constants.Launch.allowedDifferencePercent);
     return isReady;
   }
 
@@ -200,7 +204,7 @@ public class Launcher extends SubsystemBase {
     SmartDashboard.putNumber("Angle Position", angleEncoder.getPosition());
   }
 
-  public Command switchAngleCommand(){
+  public Command switchAngleCommand() {
     return this.runOnce(() -> switchAngle());
   }
 }

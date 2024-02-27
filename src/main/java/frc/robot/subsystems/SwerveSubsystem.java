@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.Robot;
-
 import java.io.File;
 import java.util.function.DoubleSupplier;
 import swervelib.SwerveController;
@@ -77,7 +76,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being
     // created.
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW;
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     try {
       swerveDrive = new SwerveParser(directory).createSwerveDrive(maximumSpeed);
       // Alternative method if you don't want to supply the conversion factor via JSON files.
@@ -258,11 +257,11 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    //if (limelightTimer.hasElapsed(timerTicks)) {
+    // if (limelightTimer.hasElapsed(timerTicks)) {
     //  updateFromLimelight();
     //  resetToLimelight();
     //  timerTicks++;
-    //}
+    // }
     swerveDrive.headingCorrection = true;
   }
 
@@ -473,7 +472,13 @@ public class SwerveSubsystem extends SubsystemBase {
     double targetValue = LimelightHelpers.getLimelightNTTableEntry("limelight", "tid").getDouble(0);
     double offset = Units.degreesToRadians(LimelightHelpers.getTX(Constants.limelightName));
     boolean isSpeaker = targetValue == 4 || targetValue == 7;
-    System.out.println("Limelight has target === " + hasTarget + " with vlaue === " + targetValue + " at offset " + offset);
+    System.out.println(
+        "Limelight has target === "
+            + hasTarget
+            + " with vlaue === "
+            + targetValue
+            + " at offset "
+            + offset);
     if (hasTarget && isSpeaker) {
       double newRotation = getHeading().getRadians() - offset;
       setRotation(newRotation);
