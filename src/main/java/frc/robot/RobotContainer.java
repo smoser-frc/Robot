@@ -92,8 +92,8 @@ public class RobotContainer {
         "4 Note Auton Blue", m_swerve.getAutonomousCommand("4 Note Auton Blue", true));
     m_chooser.addOption(
         "4 Note Auton Red", m_swerve.getAutonomousCommand("4 Note Auton Red", true));
-    m_chooser.addOption("Turn Auton", m_swerve.getAutonomousCommand("Turn Auton", true));
-    ;
+    m_chooser.addOption("Turn Auto", m_swerve.getAutonomousCommand("Turn Auto", false));
+    m_chooser.addOption("Drive and Turn", m_swerve.getAutonomousCommand("drive and turn", false));
     SmartDashboard.putData(m_chooser);
   }
 
@@ -127,7 +127,7 @@ public class RobotContainer {
     coA.onTrue(new ToggleLaunchPIDS(m_launch));
 
     JoystickButton x = new JoystickButton(driver, XboxController.Button.kX.value);
-    x.onTrue(m_swerve.dashboardPositionResetCommand());
+    x.onTrue(m_swerve.updatePositionCommand());
   }
 
   /**

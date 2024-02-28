@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -86,7 +87,7 @@ public class SwerveSubsystem extends SubsystemBase {
       throw new RuntimeException(e);
     }
     swerveDrive.setHeadingCorrection(
-        false); // Heading correction should only be used while controlling the robot via angle.
+        true); // Heading correction should only be used while controlling the robot via angle.
 
     setupPathPlanner();
     limelightTimer = new Timer();
@@ -337,7 +338,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return The yaw angle
    */
   public Rotation2d getHeading() {
-    return swerveDrive.getYaw();
+    return getPose().getRotation();
   }
 
   /**
@@ -359,7 +360,7 @@ public class SwerveSubsystem extends SubsystemBase {
         yInput,
         headingX,
         headingY,
-        getHeading().getRadians() * (RobotBase.isReal() ? -1 : 1),
+        getHeading().getRadians() * (RobotBase.isSimulation() || DriverStation.isAutonomous() ? 1 : -1),
         maximumSpeed);
   }
 
@@ -493,6 +494,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void updateFromLimelight() {
+    System.out.println("Updating");
     boolean hasTarget = LimelightHelpers.getTV(Constants.limelightName);
     if (!hasTarget) {
       return;
@@ -530,6 +532,6 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public Command updatePositionCommand() {
-    return this.runOnce(() -> updateFromLimelight());
+    return this.runOnce(() -> resetToLimelight());
   }
 }

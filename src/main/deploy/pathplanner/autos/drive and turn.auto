@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.87441515025548,
-      "y": 1.2089700188901578
+      "x": 2,
+      "y": 2
     },
     "rotation": 0
   },
@@ -14,13 +14,25 @@
         {
           "type": "path",
           "data": {
+            "pathName": "drive 1m"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "Rotate 90"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 5.0
+            "waitTime": 3.0
           }
         }
       ]
