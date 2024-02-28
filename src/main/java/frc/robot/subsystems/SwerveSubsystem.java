@@ -45,9 +45,6 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class SwerveSubsystem extends SubsystemBase
 {
-  private final Timer limelightTimer = new Timer();
-  private double timerTicks;
-
   /**
    * Swerve drive object.
    */
@@ -541,8 +538,6 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   private void setupCustom () {
-    limelightTimer.start();
-    timerTicks = 0;
     populateDashboard();
   }
 
