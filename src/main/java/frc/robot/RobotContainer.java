@@ -80,20 +80,16 @@ public class RobotContainer {
     m_climb.setDefaultCommand(m_climb.setWinchCommand(coDriver::getLeftY));
 
     // add auto options
-    m_chooser.setDefaultOption("Test Drive", m_swerve.getAutonomousCommand("Test Drive", true));
+    m_chooser.setDefaultOption("Test Drive", m_swerve.getAutonomousCommand("Test Drive"));
 
     m_chooser.addOption(
-        "2 Note Midfield Auton Blue",
-        m_swerve.getAutonomousCommand("2 Note Midfield Auton Blue", true));
+        "2 Note Midfield Auton Blue", m_swerve.getAutonomousCommand("2 Note Midfield Auton Blue"));
     m_chooser.addOption(
-        "2 Note Midfield Auton Red",
-        m_swerve.getAutonomousCommand("2 Note Midfield Auton Red", true));
-    m_chooser.addOption(
-        "4 Note Auton Blue", m_swerve.getAutonomousCommand("4 Note Auton Blue", true));
-    m_chooser.addOption(
-        "4 Note Auton Red", m_swerve.getAutonomousCommand("4 Note Auton Red", true));
-    m_chooser.addOption("Turn Auto", m_swerve.getAutonomousCommand("Turn Auto", false));
-    m_chooser.addOption("Drive and Turn", m_swerve.getAutonomousCommand("drive and turn", false));
+        "2 Note Midfield Auton Red", m_swerve.getAutonomousCommand("2 Note Midfield Auton Red"));
+    m_chooser.addOption("4 Note Auton Blue", m_swerve.getAutonomousCommand("4 Note Auton Blue"));
+    m_chooser.addOption("4 Note Auton Red", m_swerve.getAutonomousCommand("4 Note Auton Red"));
+    m_chooser.addOption("Turn Auto", m_swerve.getAutonomousCommand("Turn Auto"));
+    m_chooser.addOption("Drive and Turn", m_swerve.getAutonomousCommand("drive and turn"));
     SmartDashboard.putData(m_chooser);
   }
 
